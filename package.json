@@ -1,0 +1,33 @@
+{
+  "name": "matsystem",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "chart.js": "^2.7.3",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0",
+    "react": "^16.8.4",
+    "react-chartjs-2": "^2.7.4",
+    "react-dom": "^16.8.4",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.8",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "socketio": "^1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

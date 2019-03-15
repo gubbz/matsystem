@@ -1,0 +1,38 @@
+.Planning {
+    background: white;
+    padding: 1em;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16);
+}
+
+.WeekSelector {
+    display: flex;
+    margin-bottom: 1em;
+}
+
+.WeekSelector p {
+    margin-right: 2em;
+}
+
+.PlanTable {
+    display: flex;
+    flex-direction: column;
+}
+
+.TableLabels {
+    display: flex;
+    justify-content: space-between;
+}
+
+hr {
+    margin: 1em 0;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    padding: 0;
+}
+
+.TableLabels h3 {
+    width: 30%;
+}

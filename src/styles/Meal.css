@@ -1,0 +1,7 @@
+.Meal {
+    display: flex;
+    margin-bottom: 1.6em;
+}
+.MealTitle {
+    margin-right: auto;
+}

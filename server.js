@@ -11,7 +11,7 @@ const app = express()
 const server = http.createServer(app)
 
 const io = socketIO(server)
-
+/*
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -23,7 +23,7 @@ con.connect(function(err) {
   if (err) throw err;
   console.log("Connected to db!");
 })
-
+*/
 // This is what the socket.io syntax is like, we will work this later
 io.on('connection', socket => {
   console.log('User connected')
@@ -43,7 +43,7 @@ io.on('connection', socket => {
   })
 
 })
-
+/*
 function sendVoteToDB(typeOfVote) {
 
 }
@@ -65,4 +65,5 @@ function checkLogin(username, password) {
   });
   return loginInfo;
 }
+*/
 server.listen(port, () => console.log(`Listening on port ${port}`))

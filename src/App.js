@@ -16,7 +16,7 @@ class App extends Component {
     super();
 
     this.state = {
-      endpoint: "localhost:4000"
+      endpoint: "https://matsystem.herokuapp.com/"
     };
   }
 

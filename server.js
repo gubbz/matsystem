@@ -1,13 +1,10 @@
-const path = require('path')
-const express = require('express')
-const http = require('http')
-const socketIO = require('socket.io')
-var mysql = require('mysql')
-const port = process.env.PORT || 8080
-const app = express()
-const server = http.createServer(app)
-const io = socketIO(server)
 
+const express = require('express')
+const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
+
+const PORT = process.env.PORT || 8080
 /*
 var con = mysql.createConnection({
   host: "localhost",
@@ -22,8 +19,7 @@ con.connect(function(err) {
 })
 */
 
-//app.use(express.static(path.join(__dirname, '/src')))
-
+app.use( express.static(__dirname + '/../../build'))
 io.on('connection', socket => {
   console.log('User connected')
   io.emit('msg', "HELLO")
@@ -67,4 +63,4 @@ function checkLogin(username, password) {
   return loginInfo;
 }
 */
-server.listen(port, () => console.log(`Listening on port ${port}`))
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`))

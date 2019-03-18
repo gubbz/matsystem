@@ -10,26 +10,28 @@ import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import socketIOClient from 'socket.io-client'
 
+const socketURL = "/"
 class App extends Component {
 
   constructor() {
     super();
 
-    /*
     this.state = {
-      endpoint: "https://matsystem.herokuapp.com/"
+      socket:null
     };
-    */
+
   }
 
-  send = (socket) => {
-    console.log("send")
+  componentWillMount() {
+    this.initSocket()
   }
 
-  render() {
-    console.log("render");
-    //const socket = socketIOClient("localhost:8080");
-    const socket = socketIOClient();
+  initSocket = () => {
+    const socket = socketIOClient(socketURL);
+    socket.on('connect', () => {
+      console.log("Connected");
+      socket.emit('msg', "HELLO SERVER")
+    })
 
     socket.on('vote', (typeOfVote) => {
       console.log(typeOfVote)
@@ -38,6 +40,14 @@ class App extends Component {
     socket.on('msg', (txt) => {
       console.log(txt)
     })
+
+    this.setState({socket});
+  }
+
+  render() {
+    console.log("render");
+    //const socket = socketIOClient();
+
     return (
       <Router>
         <div>

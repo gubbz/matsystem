@@ -10,7 +10,7 @@ import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import socketIOClient from 'socket.io-client'
 
-const socketURL = "localhost:8080"
+const socketURL = "/"
 class App extends Component {
 
   constructor() {

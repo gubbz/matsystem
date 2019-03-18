@@ -3,10 +3,10 @@ import '../styles/TodayGrid.css';
 import TodayInfo from './TodayInfo.js';
 import Chart from './Chart';
 export default class TodayGrid extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            chartData: {}
+            chartData: this.props.chartData,
         }
     }
 
@@ -24,10 +24,10 @@ export default class TodayGrid extends Component {
                     {
                         label: 'Population',
                         data: [
-                            617594,
-                            517594,
-                            547594,
-                            417594,
+                            242,
+                            321,
+                            156,
+                            82,
                         ],
                         backgroundColor: [
                             'rgba(100, 186, 29, 0.6)',

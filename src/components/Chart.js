@@ -22,11 +22,15 @@ class Chart extends Component {
       <div className="chart">
         <Bar
           data={this.state.chartData}
+          width={450}
+          height={350}
           options={{
+            
+            
             legend: {
               display: false,
             },
-            responsive: true,
+            //responsive: true,
             maintainAspectRatio: false,
             scales: {
               yAxes: [{

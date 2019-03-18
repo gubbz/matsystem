@@ -18,9 +18,9 @@
     "socket.io-client": "^2.2.0"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node src/server/index.js",
     "dev": "concurrently \"npm run react\" \"npm run server\"",
-    "server": "nodemon server.js",
+    "server": "nodemon src/server/index.js",
     "react": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

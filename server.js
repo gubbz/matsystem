@@ -1,16 +1,13 @@
+const path = require('path')
 const express = require('express')
 const http = require('http')
 const socketIO = require('socket.io')
-
 var mysql = require('mysql')
-
-const port = process.env.PORT || 4000
-
+const port = process.env.PORT || 8080
 const app = express()
-
 const server = http.createServer(app)
-
 const io = socketIO(server)
+
 /*
 var con = mysql.createConnection({
   host: "localhost",
@@ -24,9 +21,12 @@ con.connect(function(err) {
   console.log("Connected to db!");
 })
 */
-// This is what the socket.io syntax is like, we will work this later
+
+//app.use(express.static(path.join(__dirname, '/src')))
+
 io.on('connection', socket => {
   console.log('User connected')
+  io.emit('msg', "HELLO")
 
   socket.on('disconnect', () => {
     console.log('user disconnected')
@@ -43,6 +43,7 @@ io.on('connection', socket => {
   })
 
 })
+
 /*
 function sendVoteToDB(typeOfVote) {
 

@@ -15,9 +15,11 @@ class App extends Component {
   constructor() {
     super();
 
+    /*
     this.state = {
       endpoint: "https://matsystem.herokuapp.com/"
     };
+    */
   }
 
   send = (socket) => {
@@ -26,10 +28,15 @@ class App extends Component {
 
   render() {
     console.log("render");
-    const socket = socketIOClient(this.state.endpoint);
-    this.send(socket);
+    //const socket = socketIOClient("localhost:8080");
+    const socket = socketIOClient();
+
     socket.on('vote', (typeOfVote) => {
-      console.log(typeOfVote);
+      console.log(typeOfVote)
+    })
+
+    socket.on('msg', (txt) => {
+      console.log(txt)
     })
     return (
       <Router>
@@ -44,7 +51,7 @@ class App extends Component {
         </div>
       </Router>
     );
-    this.send();
+
   }
 
 }

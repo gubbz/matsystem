@@ -10,13 +10,14 @@ import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import socketIOClient from 'socket.io-client'
 
-const socketURL = "/"
+const socketURL = "localhost:8080"
 class App extends Component {
 
   constructor() {
     super();
 
     this.state = {
+      chartData: {},
       socket:null
     };
 
@@ -52,8 +53,8 @@ class App extends Component {
       <Router>
         <div>
           <Header />
-          <Route exact path="/" component={TodayGrid}/>
-          <Route path="/today" component={TodayGrid}/>
+          <Route exact path="/" component={TodayGrid} chartData={this.state.chartData}/>
+          <Route path="/today" component={TodayGrid} chartData={this.state.chartData}/>
           <Route path="/planning" component={Planning}/>
           <Route path="/planning" component={Planning} />
           <Route path="/statistics" component={Statistics} />

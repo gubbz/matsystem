@@ -46,7 +46,7 @@ io.on('connection', socket => {
 
   socket.on('vote', (typeOfVote) => {
     //skicka vilken röst sorts röst och eventuellt hur många.
-    console.log("röst mottagen")
+    console.log("röst mottagen");
     io.emit('vote', typeOfVote);
   })
 

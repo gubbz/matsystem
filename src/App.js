@@ -40,12 +40,12 @@ class App extends Component {
       socket.emit('msg', "HELLO SERVER")
     })
     socket.on('vote', (typeOfVote) => {
-      console.log("röst mottagen" + typeOfVote);
       var url = window.location.toString();
+      
       if (url.substring(url.lastIndexOf("/")) === "/" || url.substring(url.lastIndexOf("/")) === "/today") {
+        console.log("röst mottagen " + typeOfVote); 
         this.chartElement.current.updateChart(typeOfVote);
       }
-
 
     })
 

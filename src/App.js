@@ -46,7 +46,9 @@ class App extends Component {
 
       if (url.substring(url.lastIndexOf("/")) === "/" || url.substring(url.lastIndexOf("/")) === "/today") {
         console.log("röst mottagen " + typeOfVote);
+        console.log(this.state.data);
         this.chartElement.current.updateChart(typeOfVote);
+        this.forceUpdate();
       }
 
     })

@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Header from './components/Header.js';
 import MainContainer from './components/MainContainer.js';
 import Meals from './components/Meals.js';
 import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
+import QuestionView from './components/QuestionView.js'
 import socketIOClient from 'socket.io-client'
 
 const socketURL = "/"
@@ -38,7 +40,12 @@ class App extends Component {
       socket.emit('msg', "HELLO SERVER")
     })
     socket.on('vote', (typeOfVote) => {
-      this.chartElement.current.updateChart(typeOfVote);
+      var url = window.location.toString();
+      if (url.substring(url.lastIndexOf("/")) === "/" || url.substring(url.lastIndexOf("/")) === "/today") {
+        this.chartElement.current.updateChart(typeOfVote);
+      }
+
+
     })
 
     socket.on('msg', (txt) => {
@@ -54,21 +61,26 @@ class App extends Component {
       <Router>
         <div>
           <Header />
-          <Route path="/" render={() => <TodayGrid
+          <Route exact path="/" render={() => <TodayGrid
             vGood={this.state.vGood}
             good={this.state.good}
             bad={this.state.bad}
             vBad={this.state.vBad}
             ref={this.chartElement}
-          />} 
-            
+          />}
           />
-
-
-          <Route path="/planning" component={Planning} />
+          <Route path="/today" render={() => <TodayGrid
+            vGood={this.state.vGood}
+            good={this.state.good}
+            bad={this.state.bad}
+            vBad={this.state.vBad}
+            ref={this.chartElement}
+          />}
+          />
           <Route path="/planning" component={Planning} />
           <Route path="/statistics" component={Statistics} />
           <Route path="/meals" component={Meals} />
+          <Route path="/admin/question" component={QuestionView} />
         </div>
       </Router>
     );

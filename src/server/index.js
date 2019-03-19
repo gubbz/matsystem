@@ -32,6 +32,8 @@ io.on('connection', socket => {
   socket.on('msg', (txt) => {
     console.log(txt)
   })
+
+  /*
   var i = 1;
   setInterval(function () {
     if(i===5) {
@@ -40,7 +42,7 @@ io.on('connection', socket => {
     io.emit('vote', i);
     i++;
   }, 2000);
-
+*/
 
   socket.on('vote', (typeOfVote) => {
     //skicka vilken röst sorts röst och eventuellt hur många.

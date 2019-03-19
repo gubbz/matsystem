@@ -15,6 +15,7 @@ export default class Statistics extends Component {
     }
 
     getChartData() {
+        
         // Ajax calls here
 
         this.setState({

@@ -33,17 +33,6 @@ io.on('connection', socket => {
     console.log(txt)
   })
 
-  /*
-  var i = 1;
-  setInterval(function () {
-    if(i===5) {
-      i=1;
-    }
-    io.emit('vote', i);
-    i++;
-  }, 2000);
-*/
-
   socket.on('vote', (typeOfVote) => {
     //skicka vilken röst sorts röst och eventuellt hur många.
     console.log("röst mottagen");

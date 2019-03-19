@@ -16,8 +16,8 @@ export default class TodayGrid extends Component {
         }
     }
     updateChart(data) {
-        
-        
+
+
         switch (data) {
             case 1:
                 this.setState({
@@ -42,7 +42,9 @@ export default class TodayGrid extends Component {
                     vGood: this.state.vGood + 1,
                     data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
                 });
+                break;
         }
+        render();
     }
     getChartData() {
         return {

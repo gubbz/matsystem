@@ -35,15 +35,17 @@ class App extends Component {
 
   initSocket = () => {
     const socket = socketIOClient(socketURL);
+
     socket.on('connect', () => {
       console.log("Connected");
       socket.emit('msg', "HELLO SERVER")
     })
+
     socket.on('vote', (typeOfVote) => {
       var url = window.location.toString();
-      
+
       if (url.substring(url.lastIndexOf("/")) === "/" || url.substring(url.lastIndexOf("/")) === "/today") {
-        console.log("röst mottagen " + typeOfVote); 
+        console.log("röst mottagen " + typeOfVote);
         this.chartElement.current.updateChart(typeOfVote);
       }
 

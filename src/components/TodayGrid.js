@@ -44,7 +44,7 @@ export default class TodayGrid extends Component {
                 });
                 break;
         }
-        render();
+        this.forceUpdate();
     }
     getChartData() {
         return {

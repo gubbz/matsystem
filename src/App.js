@@ -15,10 +15,14 @@ class App extends Component {
 
   constructor() {
     super();
-
+    this.chartElement = React.createRef();
     this.state = {
-      chartData: {},
-      socket:null
+      vGood: 2,
+      good: 2,
+      bad: 2,
+      vBad: 2,
+      socket: null,
+      yeet: "yeet"
     };
 
   }
@@ -33,29 +37,35 @@ class App extends Component {
       console.log("Connected");
       socket.emit('msg', "HELLO SERVER")
     })
-
     socket.on('vote', (typeOfVote) => {
-      console.log(typeOfVote)
+      this.chartElement.current.updateChart(typeOfVote);
     })
 
     socket.on('msg', (txt) => {
       console.log(txt)
     })
 
-    this.setState({socket});
+    this.setState({ socket });
   }
 
   render() {
-    console.log("render");
     //const socket = socketIOClient();
-
     return (
       <Router>
         <div>
           <Header />
-          <Route exact path="/" component={TodayGrid} chartData={this.state.chartData}/>
-          <Route path="/today" component={TodayGrid} chartData={this.state.chartData}/>
-          <Route path="/planning" component={Planning}/>
+          <Route path="/" render={() => <TodayGrid
+            vGood={this.state.vGood}
+            good={this.state.good}
+            bad={this.state.bad}
+            vBad={this.state.vBad}
+            ref={this.chartElement}
+          />} 
+            
+          />
+
+
+          <Route path="/planning" component={Planning} />
           <Route path="/planning" component={Planning} />
           <Route path="/statistics" component={Statistics} />
           <Route path="/meals" component={Meals} />
@@ -69,3 +79,16 @@ class App extends Component {
 
 
 export default App;
+
+
+
+/*
+<Route path="/today" component={TodayGrid}
+            chartData={this.state.chartData}
+            vGood={this.state.vGood}
+            good={this.state.good}
+            bad={this.state.bad}
+            vBad={this.state.vBad}
+            yeet="yeet"
+          />
+*/

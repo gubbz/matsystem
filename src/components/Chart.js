@@ -25,8 +25,6 @@ class Chart extends Component {
           width={450}
           height={350}
           options={{
-            
-            
             legend: {
               display: false,
             },

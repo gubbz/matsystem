@@ -40,6 +40,7 @@ class App extends Component {
       socket.emit('msg', "HELLO SERVER")
     })
     socket.on('vote', (typeOfVote) => {
+      console.log("röst mottagen" + typeOfVote);
       var url = window.location.toString();
       if (url.substring(url.lastIndexOf("/")) === "/" || url.substring(url.lastIndexOf("/")) === "/today") {
         this.chartElement.current.updateChart(typeOfVote);
@@ -80,7 +81,7 @@ class App extends Component {
           <Route path="/planning" component={Planning} />
           <Route path="/statistics" component={Statistics} />
           <Route path="/meals" component={Meals} />
-          <Route path="/admin/question" component={QuestionView} />
+          <Route path="/admin/question" exact component={QuestionView} />
         </div>
       </Router>
     );

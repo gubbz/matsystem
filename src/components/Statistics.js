@@ -6,7 +6,8 @@ export default class Statistics extends Component {
     constructor() {
         super();
         this.state = {
-            chartData: {}
+            chartData: {},
+            pieData: {}
         }
     }
 
@@ -15,20 +16,41 @@ export default class Statistics extends Component {
     }
 
     getChartData() {
-        
+
         // Ajax calls here
 
         this.setState({
             chartData: {
-                labels: ['Mycket bra', 'Bra', 'Dåligt', 'Mycket dåligt'],
+                labels: ["Jan", "Feb", "Mar", "Apr", "Maj"],
                 datasets: [
                     {
                         label: 'Population',
                         data: [
-                            617594,
-                            517594,
-                            547594,
-                            417594,
+                            54,
+                            57,
+                            56,
+                            59,
+                            62,
+                        ],
+                        backgroundColor: [
+                            'rgba(100, 186, 29, 0.6)',
+                            'rgba(216, 230, 8, 0.6)',
+                            'rgba(242, 163, 7, 0.6)',
+                            'rgba(232, 46, 9, 0.6)',
+                        ]
+                    }
+                ]
+            },
+            pieData: {
+                labels: ["Mycket bra", "Bra", "Dålig", "Mycket dålig"],
+                datasets: [
+                    {
+                        label: 'Population',
+                        data: [
+                            63,
+                            47,
+                            34,
+                            29,
                         ],
                         backgroundColor: [
                             'rgba(100, 186, 29, 0.6)',
@@ -55,12 +77,12 @@ export default class Statistics extends Component {
                     <div className="StatGrid">
                         <div className="StatLeftColumn">
                             <Pie
-                                data={this.state.chartData}
+                                data={this.state.pieData}
                                 options={{
                                     legend: {
                                         display: true,
                                         position: 'bottom',
-                                    }
+                                    },
                                 }}
                             />
                         </div>

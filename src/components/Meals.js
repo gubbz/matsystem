@@ -13,20 +13,20 @@ export default class Meals extends Component {
                     </div>
                     <hr />
                     <Meal
-                        mealTitle="Köttbullar"
-                        mealRating="54%"
+                        mealTitle="Köttbullar & potatis"
+                        mealRating="73%"
                     />
                     <Meal
-                        mealTitle="Köttbullar"
-                        mealRating="54%"
+                        mealTitle="Tomatsoppa"
+                        mealRating="64%"
                     />
                     <Meal
-                        mealTitle="Köttbullar"
-                        mealRating="54%"
+                        mealTitle="Kycklinggryta & ris"
+                        mealRating="46%"
                     />
                     <Meal
-                        mealTitle="Köttbullar"
-                        mealRating="54%"
+                        mealTitle="Fiskgratäng & ris"
+                        mealRating="42%"
                     />
                 </div>
             </div>

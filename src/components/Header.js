@@ -16,7 +16,7 @@ export default class Header extends Component {
 
                 <div className="HeaderContainer">
                     <ul className="Header">
-                        <li><h1>Matsystem</h1></li>
+                        <li><h1>MealRate</h1></li>
                         <HeaderItem
                             text="IDAG"
                             route="/today"

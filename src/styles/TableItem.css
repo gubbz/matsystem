@@ -1,0 +1,9 @@
+.TableItem {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.6em;
+}
+
+.TableItem p {
+    width: 30%;
+}

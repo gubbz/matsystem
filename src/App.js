@@ -12,11 +12,12 @@ import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
 import socketIOClient from 'socket.io-client'
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 class App extends Component {
 
   constructor() {
     super();
+    this.url = window.location.toString();
     this.chartElement = React.createRef();
     this.state = {
       vGood: 2,
@@ -35,33 +36,37 @@ class App extends Component {
 
   initSocket = () => {
     const socket = socketIOClient(socketURL);
+    this.setState({ socket });
 
     socket.on('connect', () => {
       console.log("Connected");
-      socket.emit('msg', "HELLO SERVER")
+      if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
+        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES");
+      }
     })
 
     socket.on('vote', (typeOfVote) => {
-      var url = window.location.toString();
-
-      if (url.substring(url.lastIndexOf("/")) === "/" || url.substring(url.lastIndexOf("/")) === "/today") {
+      if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         console.log("röst mottagen " + typeOfVote);
         console.log(this.state.data);
-        this.chartElement.current.updateChart(typeOfVote);
+        this.chartElement.current.updateChart(typeOfVote, 1);
         this.forceUpdate();
       }
 
     })
 
-    socket.on('msg', (txt) => {
-      console.log(txt)
+    socket.on('grades', (arr) => {
+      console.log(arr)
+      for (var i = 0; i < arr.length; i++) {
+        for (var j = 0; j < arr[i].length; j += 2) {
+            this.chartElement.current.updateChart(arr[i][j], parseInt(arr[i][j + 1]));
+        }
+      }
     })
 
-    this.setState({ socket });
   }
 
   render() {
-    //const socket = socketIOClient();
     return (
       <Router>
         <div>

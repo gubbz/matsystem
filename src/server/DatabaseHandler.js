@@ -1,7 +1,7 @@
 'use strict'
 const pg = require('pg');
 const mysql = require('mysql');
-
+const SchoolFoodScraper = require('./SchoolFoodScraper.js');
 /**
   Database communication and functionality
 **/
@@ -28,13 +28,14 @@ module.exports = class DatabaseHandler {
       if (err) return console.log(err);
       else {
         console.log("CONNECTED TO DB");
+        this.insertFood();
       }
     });
+
   }
 
   getGrades(socket) {
     //Get Grades from DB when client first opens the webapplication
-    console.log("retrieveGradesFromDB");
     var grades = [];
     var today = this.date.toISOString().substring(0, 10);
 
@@ -44,7 +45,6 @@ module.exports = class DatabaseHandler {
     }
     // callback
     this.con.query(query, (err, res) => {
-      console.log("query");
       if (err) {
         return console.log(err.stack);
       } else {
@@ -62,12 +62,17 @@ module.exports = class DatabaseHandler {
   }
 
   addVote(typeOfVote) {
-    //+1 vote to grades when someone press on of the buttons
+    //+1 vote to grades when someone press on of the buttons (antingen göra om här eller starta trigger på db)
   }
 
   insertFood() {
-    //Insert a new row in the food Database each day to get the meal
-    //Get data from skolmaten api?
+    //Insert a new week of rows in the food Database each week to get the meal
+    //Get data from skolmatens rss
+    var sfs = new SchoolFoodScraper("https://skolmaten.se/birger-sjoberggymnasiet/");
+    sfs.getWeekFood((meals) => {
+      console.log(meals);
+    });
+
   }
 
   insertQuestions() {

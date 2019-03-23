@@ -13,7 +13,7 @@ import QuestionView from './components/QuestionView.js'
 import Sidebar from './components/Sidebar.js'
 import socketIOClient from 'socket.io-client'
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 class App extends Component {
 
   constructor() {

@@ -1,9 +1,85 @@
-.TableItem {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1.6em;
+th {
+    text-align: left;
+    font-weight: 400;
+    padding-left: 1em;
 }
 
-.TableItem p {
-    width: 30%;
+td {
+    padding: 1.5em 1em;
+    background: white;
+}
+
+td:nth-child(2), td:nth-child(3) {
+    width: 36%;
+}
+
+td:nth-child(4) {
+    width: 100px;
+}
+
+td>input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1em 0;
+    border: 0 solid #ccc;
+    outline: none;
+    transition: all 0.4s;
+}
+
+td>input:read-write {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1em;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.EditButton {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    background: none;
+    margin-right: 10px;
+}
+
+.UpdateButton {
+    box-sizing: border-box;
+    padding: 1em;
+    background: blue;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+td:first-child {
+    width: 56px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.example-enter {
+    opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+    opacity: 1;
+}
+
+.example-leave.example-leave-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
 }

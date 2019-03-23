@@ -12,7 +12,7 @@ import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
 import socketIOClient from 'socket.io-client'
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 class App extends Component {
 
   constructor() {

@@ -10,21 +10,24 @@ import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
+import Sidebar from './components/Sidebar.js'
 import socketIOClient from 'socket.io-client'
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 class App extends Component {
 
   constructor() {
     super();
     this.chartElement = React.createRef();
+    this.toggleSidebar = this.toggleSidebar.bind(this);
     this.state = {
       vGood: 2,
       good: 2,
       bad: 2,
       vBad: 2,
       socket: null,
-      yeet: "yeet"
+      yeet: "yeet",
+      sideBarState: false,
     };
 
   }
@@ -56,12 +59,24 @@ class App extends Component {
     this.setState({ socket });
   }
 
+  toggleSidebar() {
+    var toggle = !this.state.sideBarState;
+    this.setState({
+      sideBarState: toggle,
+    });
+  }
+
   render() {
-    //const socket = socketIOClient();
     return (
       <Router>
-        <div>
-          <Header />
+        <div className="Container">
+          <Header 
+            click={this.toggleSidebar}
+          />
+          <Sidebar 
+            isVisible={this.state.sideBarState}
+            click={this.toggleSidebar}
+          />
           <Route exact path="/" render={() => <TodayGrid
             vGood={this.state.vGood}
             good={this.state.good}
@@ -90,19 +105,4 @@ class App extends Component {
   }
 
 }
-
-
 export default App;
-
-
-
-/*
-<Route path="/today" component={TodayGrid}
-            chartData={this.state.chartData}
-            vGood={this.state.vGood}
-            good={this.state.good}
-            bad={this.state.bad}
-            vBad={this.state.vBad}
-            yeet="yeet"
-          />
-*/

@@ -4,18 +4,33 @@ import HeaderItem from './HeaderItem.js'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 export default class Header extends Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
     adminHeader() {
         return (
             <div className="HeaderContainer">
                 <ul className="AdminHeader">
                     <li>
-                        <i class="material-icons">menu</i>
+                        <button
+                            type="button"
+                            className="Menu_Close"
+                            onClick={this.handleClick}
+                        >
+                            <i class="material-icons">menu</i>
+                        </button>
                     </li>
                     <li><h1>MealRate Admin</h1></li>
                 </ul>
             </div>
         );
     }
+
+    handleClick() {
+        this.props.click();
+    }
+
     render() {
         var urlCheck = window.location.toString();
         if (urlCheck.includes("question")) {

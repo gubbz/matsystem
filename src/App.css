@@ -7,6 +7,14 @@ body {
   margin-right: auto;
 }
 
+.Menu_Close {
+  background: none;
+  box-shadow: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -28,4 +36,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* Support for IE. */
   font-feature-settings: 'liga';
+}
+
+.Container {
+  position: relative;
 }

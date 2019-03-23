@@ -90,6 +90,7 @@ class App extends Component {
           <Route path="/planning" component={Planning} />
           <Route path="/statistics" component={Statistics} />
           <Route path="/meals" component={Meals} />
+          <Route path="/admin/" exact component={Planning} />
           <Route path="/admin/question" exact component={QuestionView} />
         </div>
       </Router>

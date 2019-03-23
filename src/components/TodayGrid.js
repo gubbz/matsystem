@@ -15,26 +15,26 @@ export default class TodayGrid extends Component {
             data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
         }
     }
-    updateChart(data) {
+    updateChart(data, amount) {
         switch (data) {
-            case 1:
+            case "very_bad":
                 this.setState({
-                    vBad: this.state.vBad + 1,
+                    vBad: this.state.vBad + amount,
                 });
                 break;
-            case 2:
+            case "bad":
                 this.setState({
-                    bad: this.state.bad + 1,
+                    bad: this.state.bad + amount,
                 });
                 break;
-            case 3:
+            case "good":
                 this.setState({
-                    good: this.state.good + 1,
+                    good: this.state.good + amount,
                 });
                 break;
-            case 4:
+            case "very_good":
                 this.setState({
-                    vGood: this.state.vGood + 1,
+                    vGood: this.state.vGood + amount,
                 });
                 break;
         }

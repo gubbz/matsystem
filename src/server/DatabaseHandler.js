@@ -6,15 +6,21 @@ const SchoolFoodScraper = require('./SchoolFoodScraper.js');
   Database communication and functionality
 **/
 module.exports = class DatabaseHandler {
+
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
+
   constructor() {
     console.log("DatabaseHandler constructor")
     this.con;
     this.date = new Date();
-    this.establishConnection();
+    if(this.establishConnection()) {
+      console.log("true");
+      this.insertFood();
+    }
   }
 
   establishConnection() {
+
     this.con = new pg.Client({
       host: 'ec2-79-125-4-72.eu-west-1.compute.amazonaws.com',
       user: 'eehwvfixxiwamp',
@@ -23,12 +29,13 @@ module.exports = class DatabaseHandler {
       port: 5432,
       ssl: true
     });
-
+    var self = this;
     this.con.connect(function(err) {
-      if (err) return console.log(err);
-      else {
-        console.log("CONNECTED TO DB");
-        this.insertFood();
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("CONNECTED TO DB ");
+        self.insertFood();
       }
     });
 
@@ -36,6 +43,7 @@ module.exports = class DatabaseHandler {
 
   getGrades(socket) {
     //Get Grades from DB when client first opens the webapplication
+    console.log("GET GRADES for " + socket);
     var grades = [];
     var today = this.date.toISOString().substring(0, 10);
 
@@ -68,10 +76,12 @@ module.exports = class DatabaseHandler {
   insertFood() {
     //Insert a new week of rows in the food Database each week to get the meal
     //Get data from skolmatens rss
-    var sfs = new SchoolFoodScraper("https://skolmaten.se/birger-sjoberggymnasiet/");
-    sfs.getWeekFood((meals) => {
-      console.log(meals);
-    });
+    console.log("insertFOOD");
+    var sfs = SchoolFoodScraper.create("https://skolmaten.se/birger-sjoberggymnasiet/");
+    console.log(sfs);
+    var weekFood = sfs.getWeekFood();
+    console.log(weekFood);
+
 
   }
 

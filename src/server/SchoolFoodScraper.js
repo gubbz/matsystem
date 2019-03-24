@@ -1,13 +1,19 @@
-'use strict'
+"use strict"
 const curl = require("curl");
 const jsdom = require("jsdom");
 
 module.exports = class SchoolFoodScraper{
-  constructor(url, ) {
+  constructor(url) {
+    console.log("SchoolFoodScraper constructor")
     this.url = url;
     this.meals = [];
-    this.getCurlPage();
   }
+
+  static create(url) {
+       var obj = new SchoolFoodScraper(url);
+       obj.getCurlPage();
+       return obj;
+   }
 
   getCurlPage() {
     curl.get(this.url, null, (err,resp,body)=>{
@@ -40,9 +46,8 @@ module.exports = class SchoolFoodScraper{
     }
   }
 
-  getWeekFood(callback) {
-    console.log(this.meals);
-    return callback(this.meals);
+  getWeekFood() {
+    return this.meals;
   }
 
 }

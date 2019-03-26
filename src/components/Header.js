@@ -10,17 +10,8 @@ export default class Header extends Component {
     }
     adminHeader() {
         return (
-            <div className="HeaderContainer">
+            <div className="AdminHeaderContainer">
                 <div className="AdminHeader">
-                    <div>
-                        <button
-                            type="button"
-                            className="Menu_Close"
-                            onClick={this.handleClick}
-                        >
-                            <i class="material-icons">menu</i>
-                        </button>
-                    </div>
                     <div><h1>MealRate Admin</h1></div>
                 </div>
             </div>

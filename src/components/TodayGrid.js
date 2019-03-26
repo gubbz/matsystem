@@ -16,31 +16,40 @@ export default class TodayGrid extends Component {
         }
     }
     updateChart(data) {
-
-
+        data = parseInt(data);
+        
         switch (data) {
+            
             case 1:
                 this.setState({
                     vBad: this.state.vBad + 1,
                     data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("vBad", parseInt(this.state.vBad));
                 });
                 break;
             case 2:
                 this.setState({
                     bad: this.state.bad + 1,
                     data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("bad", parseInt(this.state.bad));
                 });
                 break;
             case 3:
                 this.setState({
                     good: this.state.good + 1,
                     data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("good", parseInt(this.state.good));
                 });
                 break;
             case 4:
                 this.setState({
                     vGood: this.state.vGood + 1,
                     data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("vGood", parseInt(this.state.vGood));
                 });
         }
     }

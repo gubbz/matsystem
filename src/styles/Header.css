@@ -18,11 +18,24 @@
     margin: 0 auto;
 }
 
+.Header div:first-child {
+    margin-right: auto;
+}
+
+.HeaderLinks {
+    display: flex;
+    align-items: center;
+}
+
+.AdminHeaderContainer {
+    background: white;
+    position: fixed;
+}
+
 .AdminHeader {
     display: flex;
     list-style-type: none;
     padding: 1em 0;
-    max-width: 90%;
     margin: auto;
 }
 
@@ -35,20 +48,11 @@
     line-height: 1;
 }
 
-.Header div:first-child {
-    margin-right: auto;
-}
-
-.HeaderLinks {
-    display: flex;
-    align-items: center;
-}
-
 @media screen and (max-width: 992px) {
     .Header {
         flex-wrap: wrap;
     }
-    .Header > div:first-child {
+    .Header>div:first-child {
         flex: 0 0 100%;
         text-align: center;
     }

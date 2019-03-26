@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import '../styles/TodayGrid.css';
 import TodayInfo from './TodayInfo.js';
@@ -51,7 +52,7 @@ export default class TodayGrid extends Component {
             data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
         });
     }
-    
+
     getChartData() {
         return {
             labels: ['Mycket bra', 'Bra', 'Dåligt', 'Mycket dåligt'],

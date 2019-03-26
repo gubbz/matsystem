@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import '../styles/TodayGrid.css';
 import TodayInfo from './TodayInfo.js';
@@ -15,44 +16,43 @@ export default class TodayGrid extends Component {
             data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
         }
     }
-    updateChart(data) {
-        data = parseInt(data);
-        
+
+    updateChart(data, amount) {
         switch (data) {
-            
-            case 1:
+            case "very_bad":
                 this.setState({
-                    vBad: this.state.vBad + 1,
-                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                    vBad: this.state.vBad + amount,
                 }, () => {
                     localStorage.setItem("vBad", parseInt(this.state.vBad));
                 });
                 break;
-            case 2:
+            case "bad":
                 this.setState({
-                    bad: this.state.bad + 1,
-                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                    bad: this.state.bad + amount,
                 }, () => {
                     localStorage.setItem("bad", parseInt(this.state.bad));
                 });
                 break;
-            case 3:
+            case "good":
                 this.setState({
-                    good: this.state.good + 1,
-                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                    good: this.state.good + amount,
                 }, () => {
                     localStorage.setItem("good", parseInt(this.state.good));
                 });
                 break;
-            case 4:
+            case "very_good":
                 this.setState({
-                    vGood: this.state.vGood + 1,
-                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                    vGood: this.state.vGood + amount,
                 }, () => {
                     localStorage.setItem("vGood", parseInt(this.state.vGood));
                 });
+                break;
         }
+        this.setState({
+            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+        });
     }
+
     getChartData() {
         return {
             labels: ['Mycket bra', 'Bra', 'Dåligt', 'Mycket dåligt'],

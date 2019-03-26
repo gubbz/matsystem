@@ -9,13 +9,7 @@ module.exports = class SchoolFoodScraper{
     this.meals = [];
     this.getCurlPage(dbh);
   }
-  /*
-  static create(url) {
-       var obj = new SchoolFoodScraper(url);
-       obj.getCurlPage();
-       return obj;
-   }
-*/
+
   getCurlPage(dbh) {
     curl.get(this.url, null, (err,resp,body)=>{
       if(resp.statusCode == 200){
@@ -45,6 +39,7 @@ module.exports = class SchoolFoodScraper{
       dateMeal[1] = meal;
       this.meals.push(dateMeal);
     }
+    //Lägg in veckans maåltider med datum i databas
     dbh.insertFood(this.meals);
   }
 

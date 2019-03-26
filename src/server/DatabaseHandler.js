@@ -8,11 +8,12 @@ const SchoolFoodScraper = require('./SchoolFoodScraper.js');
 module.exports = class DatabaseHandler {
 
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
-  constructor() {
+  constructor(url) {
     console.log("DatabaseHandler constructor")
     this.con;
     this.date = new Date();
-    this.skolmatURL = "https://skolmaten.se/birger-sjoberggymnasiet/";
+    this.skolmatURL = url;
+    this.weekFoodMenu = [];
     this.establishConnection();
   }
 
@@ -34,6 +35,7 @@ module.exports = class DatabaseHandler {
       } else {
         console.log("CONNECTED TO DB ");
         var sfs = new SchoolFoodScraper(self.skolmatURL, self);
+        self.getMenuFromDB();
       }
     });
 
@@ -98,10 +100,8 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-  getMeals(socket) {
-    //Get Grades from DB when client first opens the webapplication
-    console.log("GET menu for " + socket);
-    var meals = [];
+  getMenuFromDB() {
+    //Get weekly menu from db when databse starts
     var startDate = this.startOfWeek(this.date);
     console.log("startDate " + startDate);
     var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
@@ -125,17 +125,18 @@ module.exports = class DatabaseHandler {
           var date = res.rows[0][dateName];
           var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
           var meal = res.rows[0][mealName];
-          var menu = {localDate, meal};
-          console.log(menu);
-          socket.emit('menu', menu);
+          this.weekFoodMenu.push({localDate, meal});
         }
       });
     }
   }
 
+  getMenu() {
+    return this.weekFoodMenu;
+  }
+
   startOfWeek(date) {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
-
     return new Date(date.setDate(diff));
   }
 

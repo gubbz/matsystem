@@ -41,7 +41,7 @@ class App extends Component {
     socket.on('connect', () => {
       console.log("Connected");
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES");
+        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
       }
     })
 

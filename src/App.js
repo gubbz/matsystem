@@ -10,22 +10,36 @@ import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
+import Sidebar from './components/Sidebar.js'
+import AdminContainer from './components/AdminContainer.js'
 import socketIOClient from 'socket.io-client'
+import { NONAME } from 'dns';
 
 const socketURL = "localhost:8080";
 class App extends Component {
 
   constructor() {
+    if(!localStorage.getItem("vBad")) {
+      localStorage.setItem("vBad",0);
+      localStorage.setItem("bad", 0);
+      localStorage.setItem("good", 0);
+      localStorage.setItem("vGood", 0);  
+    }
+    
+    
     super();
     this.url = window.location.toString();
     this.chartElement = React.createRef();
+    this.isAdminPage = this.isAdminPage.bind(this);
     this.state = {
-      vGood: 2,
-      good: 2,
-      bad: 2,
-      vBad: 2,
+      vGood: parseInt(localStorage.getItem("vGood")),
+      good: parseInt(localStorage.getItem("good")),
+      bad: parseInt(localStorage.getItem("bad")),
+      vBad: parseInt(localStorage.getItem("vBad")),
       socket: null,
-      yeet: "yeet"
+      yeet: "yeet",
+      sideBarState: false,
+      coverDisplay: "none",
     };
 
   }
@@ -68,11 +82,27 @@ class App extends Component {
     })
   }
 
+  isAdminPage() {
+    if (window.location.toString().includes("question")) {
+      return false;
+    } else if (window.location.toString().includes("admin")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render() {
     return (
       <Router>
-        <div>
-          <Header />
+        <div className="Container">
+          <div
+            className="CoverDiv"
+            style={{ display: this.state.coverDisplay }}
+          ></div>
+          <Header
+            click={this.toggleSidebar}
+          />
           <Route exact path="/" render={() => <TodayGrid
             vGood={this.state.vGood}
             good={this.state.good}
@@ -102,18 +132,5 @@ class App extends Component {
 
 }
 
-
 export default App;
 
-
-
-/*
-<Route path="/today" component={TodayGrid}
-            chartData={this.state.chartData}
-            vGood={this.state.vGood}
-            good={this.state.good}
-            bad={this.state.bad}
-            vBad={this.state.vBad}
-            yeet="yeet"
-          />
-*/

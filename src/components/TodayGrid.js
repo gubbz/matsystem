@@ -15,32 +15,43 @@ export default class TodayGrid extends Component {
             data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
         }
     }
-    updateChart(data, amount) {
+    updateChart(data) {
+        data = parseInt(data);
+        
         switch (data) {
-            case "very_bad":
+            
+            case 1:
                 this.setState({
-                    vBad: this.state.vBad + amount,
+                    vBad: this.state.vBad + 1,
+                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("vBad", parseInt(this.state.vBad));
                 });
                 break;
-            case "bad":
+            case 2:
                 this.setState({
-                    bad: this.state.bad + amount,
+                    bad: this.state.bad + 1,
+                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("bad", parseInt(this.state.bad));
                 });
                 break;
-            case "good":
+            case 3:
                 this.setState({
-                    good: this.state.good + amount,
+                    good: this.state.good + 1,
+                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("good", parseInt(this.state.good));
                 });
                 break;
-            case "very_good":
+            case 4:
                 this.setState({
-                    vGood: this.state.vGood + amount,
+                    vGood: this.state.vGood + 1,
+                    data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+                }, () => {
+                    localStorage.setItem("vGood", parseInt(this.state.vGood));
                 });
-                break;
         }
-        this.setState({
-          data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-        });
     }
     getChartData() {
         return {
@@ -77,13 +88,12 @@ export default class TodayGrid extends Component {
                     <div className="RightColumn">
                         <Bar
                             data={this.getChartData()}
-                            width={450}
-                            height={350}
                             options={{
                                 legend: {
                                     display: false,
                                 },
                                 //responsive: true,
+                                responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {
                                     yAxes: [{

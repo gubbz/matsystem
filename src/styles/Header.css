@@ -26,7 +26,7 @@
     margin: auto;
 }
 
-.AdminHeader li:first-child {
+.AdminHeader div:first-child {
     margin-right: 1em;
 }
 
@@ -35,26 +35,27 @@
     line-height: 1;
 }
 
-
-.Header li:first-child {
+.Header div:first-child {
     margin-right: auto;
 }
 
-/*
-.SignOut {
-    color: white;
-    text-decoration: none;
-    padding: 0.5em 1em;
-    box-sizing: border-box;
-    border-radius: 1000px;
-    background: #304FFE;
-    margin-left: 1em;
-    transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16);
+.HeaderLinks {
+    display: flex;
+    align-items: center;
 }
 
-.SignOut:hover {
-    background: #536DFE;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.16);
+@media screen and (max-width: 992px) {
+    .Header {
+        flex-wrap: wrap;
+    }
+    .Header > div:first-child {
+        flex: 0 0 100%;
+        text-align: center;
+    }
+    .HeaderLinks {
+        flex-wrap: wrap;
+        overflow: auto;
+        margin-top: 0.5em;
+        justify-content: center;
+    }
 }
-*/

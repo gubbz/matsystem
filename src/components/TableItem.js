@@ -97,7 +97,6 @@ export default class TableItem extends Component {
                     name="question"
                     onChange={this.handleChange}
                     readOnly={this.state.inputState}
-                    onBlur={this.disableInput}
                 /></td>
                 <td>
                     <input
@@ -106,7 +105,6 @@ export default class TableItem extends Component {
                         name="waste"
                         onChange={this.handleChange}
                         readOnly={this.state.inputState}
-                        onBlur={this.disableInput}
                     />
                 </td>
                 <td>

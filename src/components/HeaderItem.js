@@ -8,9 +8,9 @@ export default class HeaderItem extends Component {
         
         
         return (
-            <li className="HeaderItem">
+            <div className="HeaderItem">
                 <Link to={this.props.route}>{this.props.text}</Link>
-            </li>
+            </div>
         )
     }
 }

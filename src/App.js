@@ -13,7 +13,7 @@ import QuestionView from './components/QuestionView.js'
 import Sidebar from './components/Sidebar.js'
 import socketIOClient from 'socket.io-client'
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 class App extends Component {
 
   constructor() {
@@ -28,6 +28,7 @@ class App extends Component {
       socket: null,
       yeet: "yeet",
       sideBarState: false,
+      coverDisplay: "none",
     };
 
   }
@@ -44,9 +45,9 @@ class App extends Component {
     })
     socket.on('vote', (typeOfVote) => {
       var url = window.location.toString();
-      
+
       if (url.substring(url.lastIndexOf("/")) === "/" || url.substring(url.lastIndexOf("/")) === "/today") {
-        console.log("röst mottagen " + typeOfVote); 
+        console.log("röst mottagen " + typeOfVote);
         this.chartElement.current.updateChart(typeOfVote);
       }
 
@@ -61,19 +62,31 @@ class App extends Component {
 
   toggleSidebar() {
     var toggle = !this.state.sideBarState;
-    this.setState({
-      sideBarState: toggle,
-    });
+    if (toggle) {
+      this.setState({
+        coverDisplay: "block",
+        sideBarState: toggle,
+      });
+    } else {
+      this.setState({
+        coverDisplay: "none",
+        sideBarState: toggle,
+      });
+    }
   }
 
   render() {
     return (
       <Router>
         <div className="Container">
-          <Header 
+          <div
+            className="CoverDiv"
+            style={{display: this.state.coverDisplay}}
+          ></div>
+          <Header
             click={this.toggleSidebar}
           />
-          <Sidebar 
+          <Sidebar
             isVisible={this.state.sideBarState}
             click={this.toggleSidebar}
           />

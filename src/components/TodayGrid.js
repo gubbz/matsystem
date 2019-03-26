@@ -16,8 +16,8 @@ export default class TodayGrid extends Component {
         }
     }
     updateChart(data) {
-        
-        
+
+
         switch (data) {
             case 1:
                 this.setState({
@@ -79,13 +79,12 @@ export default class TodayGrid extends Component {
                     <div className="RightColumn">
                         <Bar
                             data={this.getChartData()}
-                            width={450}
-                            height={350}
                             options={{
                                 legend: {
                                     display: false,
                                 },
                                 //responsive: true,
+                                responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {
                                     yAxes: [{

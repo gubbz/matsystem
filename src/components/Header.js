@@ -11,8 +11,8 @@ export default class Header extends Component {
     adminHeader() {
         return (
             <div className="HeaderContainer">
-                <ul className="AdminHeader">
-                    <li>
+                <div className="AdminHeader">
+                    <div>
                         <button
                             type="button"
                             className="Menu_Close"
@@ -20,9 +20,9 @@ export default class Header extends Component {
                         >
                             <i class="material-icons">menu</i>
                         </button>
-                    </li>
-                    <li><h1>MealRate Admin</h1></li>
-                </ul>
+                    </div>
+                    <div><h1>MealRate Admin</h1></div>
+                </div>
             </div>
         );
     }
@@ -42,29 +42,31 @@ export default class Header extends Component {
             return (
 
                 <div className="HeaderContainer">
-                    <ul className="Header">
-                        <li><h1>MealRate</h1></li>
-                        <HeaderItem
-                            text="IDAG"
-                            route="/today"
-                        />
-                        <HeaderItem
-                            text="PLANERING"
-                            route="/planning"
-                        />
-                        <HeaderItem
-                            text="STATISTIK"
-                            route="/statistics"
-                        />
-                        <HeaderItem
-                            text="MÅLTIDER"
-                            route="/meals"
-                        />
-                        <HeaderItem
-                            text="LOGGA UT"
-                            route="/"
-                        />
-                    </ul>
+                    <div className="Header">
+                        <div><h1>MealRate</h1></div>
+                        <div className="HeaderLinks">
+                            <HeaderItem
+                                text="IDAG"
+                                route="/today"
+                            />
+                            <HeaderItem
+                                text="PLANERING"
+                                route="/planning"
+                            />
+                            <HeaderItem
+                                text="STATISTIK"
+                                route="/statistics"
+                            />
+                            <HeaderItem
+                                text="MÅLTIDER"
+                                route="/meals"
+                            />
+                            <HeaderItem
+                                text="LOGGA UT"
+                                route="/"
+                            />
+                        </div>
+                    </div>
                 </div>
             )
         }

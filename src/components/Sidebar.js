@@ -34,7 +34,12 @@ export default class Sidebar extends Component {
                         type="button"
                         onClick={this.handleClick}
                     ><i class="material-icons">close</i></button>
-                    <p>yeet</p>
+                    <ul className="SidebarList">
+                        <li>Planering</li>
+                        <li>Statistik</li>
+                        <li>Inställningar</li>
+                        <li>Logga ut</li>
+                    </ul>
                 </div>
             )
         }

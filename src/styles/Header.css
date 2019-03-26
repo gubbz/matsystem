@@ -14,15 +14,31 @@
     align-items: center;
     list-style-type: none;
     padding: 1em 0;
-    max-width: 1000px;
+    max-width: 90%;
     margin: 0 auto;
 }
+
+.AdminHeader {
+    display: flex;
+    list-style-type: none;
+    padding: 1em 0;
+    max-width: 90%;
+    margin: auto;
+}
+
+.AdminHeader li:first-child {
+    margin-right: 1em;
+}
+
+.AdminHeader h1 {
+    font-size: 26px;
+    line-height: 1;
+}
+
 
 .Header li:first-child {
     margin-right: auto;
 }
-
-
 
 /*
 .SignOut {

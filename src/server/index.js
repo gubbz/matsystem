@@ -1,67 +1,47 @@
+'use strict'
+const express = require('express');
+const helmet = require('helmet');
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+const DatabaseHandler = require('./DatabaseHandler.js');
 
-const express = require('express')
-const app = express()
-const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const PORT = process.env.PORT || 8080;
 
-const PORT = process.env.PORT || 8080
-/*
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "matsystem"
-})
+const skolmatURL = "https://skolmaten.se/birger-sjoberggymnasiet/";
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected to db!");
-})
-*/
+if(app.use(helmet())){
+  console.log("helmet funkar, schmutters");
+}
+//should hide the X-Powered-By in the header req and res
+app.use(helmet.hidePoweredBy());
+//should set the X-Powered-By to php to trick the enemy
+app.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }));
+//none of the above works
 
-app.use(express.static(__dirname + '/../../build'))
+app.use(express.static(__dirname + '/../../build'));
+
+var dbcon = new DatabaseHandler(skolmatURL);
 
 io.on('connection', socket => {
-  console.log('User connected')
-  io.emit('msg', "HELLO")
+  console.log('User connected');
 
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    console.log('user disconnected');
   })
 
-  socket.on('msg', (txt) => {
-    console.log(txt)
+  socket.on('response', () => {
+    dbcon.getGrades(socket);
+    var menu = dbcon.getMenu();
+    socket.emit('menu', menu);
   })
 
   socket.on('vote', (typeOfVote) => {
-    //skicka vilken röst sorts röst och eventuellt hur många.
     console.log("röst mottagen");
+    dbcon.addGrade(typeOfVote);
     io.emit('vote', typeOfVote);
   })
 
 })
 
-/*
-function sendVoteToDB(typeOfVote) {
-
-}
-
-function checkLogin(username, password) {
-  var loginInfo = [];
-  var sql = "SELECT * FROM login";
-  con.query(sql, function (err, results, fields) {
-    if (err) throw err;
-    else {
-      for (var i = 0; i < results.length; i++) {
-        for (var j = 0; j < fields.length; j++) {
-          var fieldName = fields[j].name;
-          console.log(fieldName + " = " + results[i][fieldName]);
-          loginInfo.push(results[i][fieldName]);
-        }
-      }
-    }
-  });
-  return loginInfo;
-}
-*/
-server.listen(PORT, () => console.log(`Listening on port ${PORT}`))
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

@@ -15,7 +15,7 @@ import AdminContainer from './components/AdminContainer.js'
 import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 class App extends Component {
 
   constructor() {

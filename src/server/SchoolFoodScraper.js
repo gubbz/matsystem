@@ -3,22 +3,23 @@ const curl = require("curl");
 const jsdom = require("jsdom");
 
 module.exports = class SchoolFoodScraper{
-  constructor(url) {
+  constructor(url, dbh) {
     console.log("SchoolFoodScraper constructor")
     this.url = url;
     this.meals = [];
+    this.getCurlPage(dbh);
   }
-
+  /*
   static create(url) {
        var obj = new SchoolFoodScraper(url);
        obj.getCurlPage();
        return obj;
    }
-
-  getCurlPage() {
+*/
+  getCurlPage(dbh) {
     curl.get(this.url, null, (err,resp,body)=>{
       if(resp.statusCode == 200){
-       this.parseData(body);
+       this.parseData(body, dbh);
       }
       else{
        //some error handling
@@ -27,7 +28,7 @@ module.exports = class SchoolFoodScraper{
     });
   }
 
-  parseData(html){
+  parseData(html, dbh){
     const {JSDOM} = jsdom;
     const dom = new JSDOM(html);
     const $ = (require('jquery'))(dom.window);
@@ -39,15 +40,12 @@ module.exports = class SchoolFoodScraper{
       var date = $(datediv).find('.date').text();
       var meal = $($(innerInfo).find('span')[0]).text();
       //console.log(date + " " + meal);
-      var meal = new Array();
-      meal[0] = date;
-      meal[1] = meal;
-      this.meals.push(meal);
+      var dateMeal = new Array();
+      dateMeal[0] = date;
+      dateMeal[1] = meal;
+      this.meals.push(dateMeal);
     }
-  }
-
-  getWeekFood() {
-    return this.meals;
+    dbh.insertFood(this.meals);
   }
 
 }

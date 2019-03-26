@@ -52,7 +52,6 @@ class App extends Component {
         this.chartElement.current.updateChart(typeOfVote, 1);
         this.forceUpdate();
       }
-
     })
 
     socket.on('grades', (arr) => {
@@ -64,6 +63,9 @@ class App extends Component {
       }
     })
 
+    socket.on('menu', (arr) => {
+      console.log(arr);
+    })
   }
 
   render() {

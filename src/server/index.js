@@ -20,6 +20,7 @@ io.on('connection', socket => {
 
   socket.on('response', () => {
     dbcon.getGrades(socket);
+    dbcon.getMeals(socket);
   })
 
   socket.on('vote', (typeOfVote) => {

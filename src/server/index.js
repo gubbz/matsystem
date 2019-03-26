@@ -20,6 +20,7 @@ app.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }));
 app.use(express.static(__dirname + '/../../build'));
 
 var dbcon = new DatabaseHandler();
+dbcon.addVote("very_good");
 
 io.on('connection', socket => {
   console.log('User connected');
@@ -33,8 +34,8 @@ io.on('connection', socket => {
   })
 
   socket.on('vote', (typeOfVote) => {
-    console.log("röst mottagen");
-    dbcon.addGrade(typeOfVote);
+    console.log("röst mottagen typeofvote: " + typeOfVote + " toString: " + typeofVote.toString);
+    dbcon.addVote(typeofVote)
     io.emit('vote', typeOfVote);
   })
 

@@ -72,18 +72,18 @@ class App extends Component {
         <div>
           <Header />
           <Route exact path="/" render={() => <TodayGrid
-            vGood={this.state.vGood}
+            very_Good={this.state.vGood}
             good={this.state.good}
             bad={this.state.bad}
-            vBad={this.state.vBad}
+            very_Bad={this.state.vBad}
             ref={this.chartElement}
           />}
           />
           <Route path="/today" render={() => <TodayGrid
-            vGood={this.state.vGood}
+            very_Good={this.state.vGood}
             good={this.state.good}
             bad={this.state.bad}
-            vBad={this.state.vBad}
+            very_Bad={this.state.vBad}
             ref={this.chartElement}
           />}
           />

@@ -1,7 +1,6 @@
 'use strict'
 const pg = require('pg');
-const mysql = require('mysql');
-
+const mysql = require('mysql2');
 /**
   Database communication and functionality
 **/
@@ -12,6 +11,7 @@ module.exports = class DatabaseHandler {
     this.con;
     this.date = new Date();
     this.establishConnection();
+    this.currentVotes = new Array();
   }
 
   establishConnection() {
@@ -32,19 +32,20 @@ module.exports = class DatabaseHandler {
     });
   }
 
-  getGrades(socket) {
+ getGrades(socket) {
     //Get Grades from DB when client first opens the webapplication
     console.log("retrieveGradesFromDB");
     var grades = [];
     var today = this.date.toISOString().substring(0, 10);
 
     const query = {
+      name: 'get-user',
       text: 'SELECT * FROM grades WHERE date_pk = $1',
       values: ["2019-03-22"],
     }
     // callback
     this.con.query(query, (err, res) => {
-      console.log("query");
+      console.log("query, prepared statement");
       if (err) {
         return console.log(err.stack);
       } else {
@@ -54,15 +55,60 @@ module.exports = class DatabaseHandler {
             grade[0] = fieldName;
             grade[1] = res.rows[0][fieldName];
             grades.push(grade);
+            if(this.currentVotes.length < 4){
+            this.currentVotes.push(res.rows[0][fieldName]);
+          }
         }
       }
+      console.log(this.currentVotes);
       console.log(grades);
       socket.emit('grades', grades);
+      this.addVote(1);
     })
   }
 
-  addVote(typeOfVote) {
+ addVote(typeOfVote) {
+
+console.log("typeofvote: " + typeOfVote);
+
+    var currentVote;
+    var query;
+    var currentDate = this.date.toISOString().substring(0, 10);
+    console.log(currentDate);
+
+    switch(currentVote)  {
+      case 1:
+        currentVote = parseInt(this.currentVotes[0]) + 1;
+        query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
+        console.log("query i switchen: " + query);
+        break;
+      case 2:
+        currentVote = parseInt(this.currentVotes[1]) + 1;
+        query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
+        break;
+      case 3:
+        currentVote = parseInt(this.currentVotes[2]) + 1;
+        query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
+        break;
+      case 4:
+        currentVote = parseInt(this.currentVotes[3]) + 1;
+        query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
+        break;
+      case currentVote:
+          console.log("vadfan");
+        break;
+    }
+
+    console.log("query: " + query)
     //+1 vote to grades when someone press on of the buttons
+    this.con.query(query, [currentVote, currentDate], (err, res) => {
+      if(err){
+        return console.log(err.stack);
+      } else {
+        console.log("grades + 1 successful");
+        //updateVote();
+      }
+    });
   }
 
   insertFood() {
@@ -71,6 +117,7 @@ module.exports = class DatabaseHandler {
   }
 
   insertQuestions() {
-
+    //get question from form
+    //form pushes info to here, insert to DB
   }
 }

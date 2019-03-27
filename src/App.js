@@ -16,6 +16,13 @@ import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
 
 const socketURL = "localhost:8080";
+var state = {
+  vGood: 0,
+  good: 0,
+  bad: 0,
+  vBad: 0,
+  socket: null,
+}
 class App extends Component {
 
   constructor() {
@@ -24,32 +31,15 @@ class App extends Component {
     this.chartElement = React.createRef();
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
-
-    if (localStorage.getItem("good")) {
-      this.state = {
-        vGood: parseInt(localStorage.getItem("vGood")),
-        good: parseInt(localStorage.getItem("good")),
-        bad: parseInt(localStorage.getItem("bad")),
-        vBad: parseInt(localStorage.getItem("vBad")),
-        data: [parseInt(localStorage.getItem("vGood")), parseInt(localStorage.getItem("good")), parseInt(localStorage.getItem("bad")), parseInt(localStorage.getItem("vBad"))],
-        socket: null,
-        sideBarState: false,
-        coverDisplay: "none",
-      };
-    } else {
-      this.state = {
-        vGood: 0,
-        good: 0,
-        bad: 0,
-        vBad: 0,
-        data: null,
-      }
-    }
-
+    this.state = state;
   }
 
   componentWillMount() {
     this.initSocket()
+  }
+
+  componentWillUnmount() {
+    state = this.state;
   }
 
   initSocket = () => {
@@ -142,17 +132,9 @@ class App extends Component {
   }
 
   render() {
-    localStorage.setItem("vBad", this.state.vBad);
-    localStorage.setItem("bad", this.state.bad);
-    localStorage.setItem("good", this.state.good);
-    localStorage.setItem("vGood", this.state.vGood);
     return (
       <Router>
         <div className="Container">
-          <div
-            className="CoverDiv"
-            style={{ display: this.state.coverDisplay }}
-          ></div>
           <Header
             click={this.toggleSidebar}
           />

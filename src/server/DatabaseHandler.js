@@ -1,7 +1,9 @@
 'use strict'
 const pg = require('pg');
-const mysql = require('mysql');
+
+const mysql = require('mysql2');
 const SchoolFoodScraper = require('./SchoolFoodScraper.js');
+
 /**
   Database communication and functionality
 **/
@@ -15,6 +17,7 @@ module.exports = class DatabaseHandler {
     this.skolmatURL = url;
     this.weekFoodMenu = [];
     this.establishConnection();
+    this.currentVotes = new Array();
   }
 
   establishConnection() {
@@ -41,18 +44,20 @@ module.exports = class DatabaseHandler {
 
   }
 
-  getGrades(socket) {
+ getGrades(socket) {
     //Get Grades from DB when client first opens the webapplication
     console.log("GET GRADES for " + socket);
     var grades = [];
     var today = this.date.toISOString().substring(0, 10);
 
     const query = {
+      name: 'get-user',
       text: 'SELECT * FROM grades WHERE date_pk = $1',
-      values: ["2019-03-22"],
+      values: [today],
     }
     // callback
     this.con.query(query, (err, res) => {
+
       if (err) {
         return console.log(err.stack);
       } else {
@@ -62,6 +67,9 @@ module.exports = class DatabaseHandler {
             grade[0] = fieldName;
             grade[1] = res.rows[0][fieldName];
             grades.push(grade);
+            if(this.currentVotes.length < 4){
+            this.currentVotes.push(res.rows[0][fieldName]);
+          }
         }
       }
       console.log(grades);
@@ -69,9 +77,50 @@ module.exports = class DatabaseHandler {
     });
   }
 
-  addVote(typeOfVote) {
-    //+1 vote to grades when someone press on of the buttons (antingen göra om här eller starta trigger på db)
-  }
+ addVote(typeOfVote) {
+
+   console.log("typeofvote in addVote: " + typeOfVote);
+
+    console.log("currentvotes (addVote) " + this.currentVotes);
+
+    var currentVote;
+    var query;
+    var currentDate = this.date.toISOString().substring(0, 10);
+
+    switch(typeOfVote)  {
+      case "very_bad":
+        currentVote = (parseInt(this.currentVotes[3], 10) + 1);
+        query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
+        console.log("currentvote: " + currentVote);
+        console.log("query i switchen: " + query);
+        break;
+      case "bad":
+        currentVote = parseInt(this.currentVotes[2], 10) + 1;
+        query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
+        console.log("currentvote: " + currentVote);
+        break;
+      case "good":
+        currentVote = parseInt(this.currentVotes[1], 10) + 1;
+        query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
+        console.log("currentvote: " + currentVote);
+        break;
+      case "very_good":
+        currentVote = parseInt(this.currentVotes[0], 10) + 1;
+        query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
+        console.log("currentvote: " + currentVote);
+        break;
+    }
+
+    console.log("query: " + query)
+    //+1 vote to grades when someone press on of the buttons
+    this.con.query(query, [currentVote, currentDate], (err, res) => {
+      if(err){
+        return console.log(err.stack);
+      } else {
+        console.log("grades + 1 successful");
+      }
+    });
+ }
 
   insertFood(weekFood) {
     //Insert a new week of rows in the food Database each week to get the meal
@@ -95,6 +144,7 @@ module.exports = class DatabaseHandler {
     }
 
   }
+   
   startOfWeek(date) {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
     return new Date(date.setDate(diff));
@@ -133,6 +183,7 @@ module.exports = class DatabaseHandler {
 
   getMenu() {
     return this.weekFoodMenu;
+
   }
 
   startOfWeek(date) {
@@ -141,6 +192,7 @@ module.exports = class DatabaseHandler {
   }
 
   insertQuestions() {
-
+    //get question from form
+    //form pushes info to here, insert to DB
   }
 }

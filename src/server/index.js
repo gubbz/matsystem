@@ -8,6 +8,8 @@ const DatabaseHandler = require('./DatabaseHandler.js');
 
 const PORT = process.env.PORT || 8080;
 
+const skolmatURL = "https://skolmaten.se/birger-sjoberggymnasiet/";
+
 if(app.use(helmet())){
   console.log("helmet funkar egentligen inte, inte så schmutters");
 }
@@ -19,7 +21,7 @@ app.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }));
 
 app.use(express.static(__dirname + '/../../build'));
 
-var dbcon = new DatabaseHandler();
+var dbcon = new DatabaseHandler(skolmatURL);
 
 io.on('connection', socket => {
   console.log('User connected');
@@ -30,6 +32,8 @@ io.on('connection', socket => {
 
   socket.on('response', () => {
     dbcon.getGrades(socket);
+    var menu = dbcon.getMenu();
+    socket.emit('menu', menu);
   })
 
   socket.on('vote', (typeOfVote) => {

@@ -10,22 +10,36 @@ import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
+import Sidebar from './components/Sidebar.js'
+import AdminContainer from './components/AdminContainer.js'
 import socketIOClient from 'socket.io-client'
+import { NONAME } from 'dns';
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 class App extends Component {
 
   constructor() {
+    if(!localStorage.getItem("vBad")) {
+      localStorage.setItem("vBad",0);
+      localStorage.setItem("bad", 0);
+      localStorage.setItem("good", 0);
+      localStorage.setItem("vGood", 0);  
+    }
+    
+    
     super();
     this.url = window.location.toString();
     this.chartElement = React.createRef();
+    this.isAdminPage = this.isAdminPage.bind(this);
     this.state = {
-      very_good: 2,
-      good: 2,
-      bad: 2,
-      very_bad: 2,
+      vGood: parseInt(localStorage.getItem("vGood")),
+      good: parseInt(localStorage.getItem("good")),
+      bad: parseInt(localStorage.getItem("bad")),
+      vBad: parseInt(localStorage.getItem("vBad")),
       socket: null,
-      yeet: "yeet"
+      yeet: "yeet",
+      sideBarState: false,
+      coverDisplay: "none",
     };
 
   }
@@ -41,7 +55,7 @@ class App extends Component {
     socket.on('connect', () => {
       console.log("Connected");
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES");
+        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
       }
     })
 
@@ -52,7 +66,6 @@ class App extends Component {
         this.chartElement.current.updateChart(typeOfVote, 1);
         this.forceUpdate();
       }
-
     })
 
     socket.on('grades', (arr) => {
@@ -64,32 +77,52 @@ class App extends Component {
       }
     })
 
+    socket.on('menu', (arr) => {
+      console.log(arr);
+    })
+  }
+
+  isAdminPage() {
+    if (window.location.toString().includes("question")) {
+      return false;
+    } else if (window.location.toString().includes("admin")) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   render() {
     return (
       <Router>
-        <div>
-          <Header />
+        <div className="Container">
+          <div
+            className="CoverDiv"
+            style={{ display: this.state.coverDisplay }}
+          ></div>
+          <Header
+            click={this.toggleSidebar}
+          />
           <Route exact path="/" render={() => <TodayGrid
-            very_Good={this.state.vGood}
+            vGood={this.state.vGood}
             good={this.state.good}
             bad={this.state.bad}
-            very_Bad={this.state.vBad}
+            vBad={this.state.vBad}
             ref={this.chartElement}
           />}
           />
           <Route path="/today" render={() => <TodayGrid
-            very_Good={this.state.vGood}
+            vGood={this.state.vGood}
             good={this.state.good}
             bad={this.state.bad}
-            very_Bad={this.state.vBad}
+            vBad={this.state.vBad}
             ref={this.chartElement}
           />}
           />
           <Route path="/planning" component={Planning} />
           <Route path="/statistics" component={Statistics} />
           <Route path="/meals" component={Meals} />
+          <Route path="/admin/" exact component={Planning} />
           <Route path="/admin/question" exact component={QuestionView} />
         </div>
       </Router>
@@ -99,18 +132,4 @@ class App extends Component {
 
 }
 
-
 export default App;
-
-
-
-/*
-<Route path="/today" component={TodayGrid}
-            chartData={this.state.chartData}
-            vGood={this.state.vGood}
-            good={this.state.good}
-            bad={this.state.bad}
-            vBad={this.state.vBad}
-            yeet="yeet"
-          />
-*/

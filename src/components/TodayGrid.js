@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import '../styles/TodayGrid.css';
 import TodayInfo from './TodayInfo.js';
@@ -15,33 +16,43 @@ export default class TodayGrid extends Component {
             data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
         }
     }
+
     updateChart(data, amount) {
         switch (data) {
             case "very_bad":
                 this.setState({
                     vBad: this.state.vBad + amount,
+                }, () => {
+                    localStorage.setItem("vBad", parseInt(this.state.vBad));
                 });
                 break;
             case "bad":
                 this.setState({
                     bad: this.state.bad + amount,
+                }, () => {
+                    localStorage.setItem("bad", parseInt(this.state.bad));
                 });
                 break;
             case "good":
                 this.setState({
                     good: this.state.good + amount,
+                }, () => {
+                    localStorage.setItem("good", parseInt(this.state.good));
                 });
                 break;
             case "very_good":
                 this.setState({
                     vGood: this.state.vGood + amount,
+                }, () => {
+                    localStorage.setItem("vGood", parseInt(this.state.vGood));
                 });
                 break;
         }
         this.setState({
-          data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
         });
     }
+
     getChartData() {
         return {
             labels: ['Mycket bra', 'Bra', 'Dåligt', 'Mycket dåligt'],
@@ -77,13 +88,12 @@ export default class TodayGrid extends Component {
                     <div className="RightColumn">
                         <Bar
                             data={this.getChartData()}
-                            width={450}
-                            height={350}
                             options={{
                                 legend: {
                                     display: false,
                                 },
                                 //responsive: true,
+                                responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {
                                     yAxes: [{

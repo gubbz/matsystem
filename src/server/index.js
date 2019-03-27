@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 8080;
 const skolmatURL = "https://skolmaten.se/birger-sjoberggymnasiet/";
 
 if(app.use(helmet())){
-  console.log("helmet funkar, schmutters");
+  console.log("helmet funkar egentligen inte, inte så schmutters");
 }
 //should hide the X-Powered-By in the header req and res
 app.use(helmet.hidePoweredBy());
@@ -41,11 +41,10 @@ io.on('connection', socket => {
   })  
 
   socket.on('vote', (typeOfVote) => {
-    console.log("röst mottagen");
-    dbcon.addGrade(typeOfVote);
+    console.log("röst mottagen typeofvote: " + typeOfVote);
+    dbcon.addVote(typeOfVote)
     io.emit('vote', typeOfVote);
   })
-
 })
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

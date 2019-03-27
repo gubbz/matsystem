@@ -25,16 +25,20 @@ var dbcon = new DatabaseHandler(skolmatURL);
 
 io.on('connection', socket => {
   console.log('User connected');
-
   socket.on('disconnect', () => {
     console.log('user disconnected');
   })
+
+  setInterval(function() {
+    io.emit('vote', "good");
+  }, 3000)
+  
 
   socket.on('response', () => {
     dbcon.getGrades(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
-  })
+  })  
 
   socket.on('vote', (typeOfVote) => {
     console.log("röst mottagen typeofvote: " + typeOfVote);

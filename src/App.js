@@ -20,10 +20,10 @@ class App extends Component {
     this.url = window.location.toString();
     this.chartElement = React.createRef();
     this.state = {
-      vGood: 2,
+      very_good: 2,
       good: 2,
       bad: 2,
-      vBad: 2,
+      very_bad: 2,
       socket: null,
       yeet: "yeet"
     };

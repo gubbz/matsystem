@@ -41,7 +41,7 @@ module.exports = class DatabaseHandler {
     const query = {
       name: 'get-user',
       text: 'SELECT * FROM grades WHERE date_pk = $1',
-      values: ["2019-03-22"],
+      values: [today],
     }
     // callback
     this.con.query(query, (err, res) => {
@@ -60,42 +60,42 @@ module.exports = class DatabaseHandler {
           }
         }
       }
-      console.log(this.currentVotes);
       console.log(grades);
       socket.emit('grades', grades);
-      this.addVote(1);
     })
   }
 
  addVote(typeOfVote) {
 
-console.log("typeofvote: " + typeOfVote);
+   console.log("typeofvote in addVote: " + typeOfVote);
+
+    console.log("currentvotes (addVote) " + this.currentVotes);
 
     var currentVote;
     var query;
     var currentDate = this.date.toISOString().substring(0, 10);
-    console.log(currentDate);
 
-    switch(currentVote)  {
-      case 1:
-        currentVote = parseInt(this.currentVotes[0]) + 1;
+    switch(typeOfVote)  {
+      case "very_bad":
+        currentVote = (parseInt(this.currentVotes[3], 10) + 1);
         query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
+        console.log("currentvote: " + currentVote);
         console.log("query i switchen: " + query);
         break;
-      case 2:
-        currentVote = parseInt(this.currentVotes[1]) + 1;
+      case "bad":
+        currentVote = parseInt(this.currentVotes[2], 10) + 1;
         query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
+        console.log("currentvote: " + currentVote);
         break;
-      case 3:
-        currentVote = parseInt(this.currentVotes[2]) + 1;
+      case "good":
+        currentVote = parseInt(this.currentVotes[1], 10) + 1;
         query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
+        console.log("currentvote: " + currentVote);
         break;
-      case 4:
-        currentVote = parseInt(this.currentVotes[3]) + 1;
+      case "very_good":
+        currentVote = parseInt(this.currentVotes[0], 10) + 1;
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
-        break;
-      case currentVote:
-          console.log("vadfan");
+        console.log("currentvote: " + currentVote);
         break;
     }
 
@@ -106,7 +106,6 @@ console.log("typeofvote: " + typeOfVote);
         return console.log(err.stack);
       } else {
         console.log("grades + 1 successful");
-        //updateVote();
       }
     });
   }

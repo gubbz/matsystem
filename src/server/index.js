@@ -9,7 +9,7 @@ const DatabaseHandler = require('./DatabaseHandler.js');
 const PORT = process.env.PORT || 8080;
 
 if(app.use(helmet())){
-  console.log("helmet funkar, schmutters");
+  console.log("helmet funkar egentligen inte, inte så schmutters");
 }
 //should hide the X-Powered-By in the header req and res
 app.use(helmet.hidePoweredBy());
@@ -20,7 +20,6 @@ app.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }));
 app.use(express.static(__dirname + '/../../build'));
 
 var dbcon = new DatabaseHandler();
-dbcon.addVote("very_good");
 
 io.on('connection', socket => {
   console.log('User connected');
@@ -34,11 +33,10 @@ io.on('connection', socket => {
   })
 
   socket.on('vote', (typeOfVote) => {
-    console.log("röst mottagen typeofvote: " + typeOfVote + " toString: " + typeofVote.toString);
-    dbcon.addVote(typeofVote)
+    console.log("röst mottagen typeofvote: " + typeOfVote);
+    dbcon.addVote(typeOfVote)
     io.emit('vote', typeOfVote);
   })
-
 })
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

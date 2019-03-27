@@ -4,7 +4,7 @@ const jsdom = require("jsdom");
 
 module.exports = class SchoolFoodScraper{
   constructor(url, dbh) {
-    console.log("SchoolFoodScraper constructor")
+    //console.log("SchoolFoodScraper constructor")
     this.url = url;
     this.meals = [];
     this.getCurlPage(dbh);

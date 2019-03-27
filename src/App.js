@@ -19,28 +19,32 @@ const socketURL = "localhost:8080";
 class App extends Component {
 
   constructor() {
-    if(!localStorage.getItem("vBad")) {
-      localStorage.setItem("vBad",0);
-      localStorage.setItem("bad", 0);
-      localStorage.setItem("good", 0);
-      localStorage.setItem("vGood", 0);  
-    }
-    
-    
     super();
     this.url = window.location.toString();
     this.chartElement = React.createRef();
     this.isAdminPage = this.isAdminPage.bind(this);
-    this.state = {
-      vGood: parseInt(localStorage.getItem("vGood")),
-      good: parseInt(localStorage.getItem("good")),
-      bad: parseInt(localStorage.getItem("bad")),
-      vBad: parseInt(localStorage.getItem("vBad")),
-      socket: null,
-      yeet: "yeet",
-      sideBarState: false,
-      coverDisplay: "none",
-    };
+    this.updateChart = this.updateChart.bind(this);
+
+    if (localStorage.getItem("good")) {
+      this.state = {
+        vGood: parseInt(localStorage.getItem("vGood")),
+        good: parseInt(localStorage.getItem("good")),
+        bad: parseInt(localStorage.getItem("bad")),
+        vBad: parseInt(localStorage.getItem("vBad")),
+        data: [parseInt(localStorage.getItem("vGood")), parseInt(localStorage.getItem("good")), parseInt(localStorage.getItem("bad")), parseInt(localStorage.getItem("vBad"))],
+        socket: null,
+        sideBarState: false,
+        coverDisplay: "none",
+      };
+    } else {
+      this.state = {
+        vGood: 0,
+        good: 0,
+        bad: 0,
+        vBad: 0,
+        data: null,
+      }
+    }
 
   }
 
@@ -61,10 +65,9 @@ class App extends Component {
 
     socket.on('vote', (typeOfVote) => {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        console.log("röst mottagen " + typeOfVote);
-        console.log(this.state.data);
-        this.chartElement.current.updateChart(typeOfVote, 1);
-        this.forceUpdate();
+        // console.log("röst mottagen " + typeOfVote);
+        // console.log(this.state.data);
+        this.updateChart(typeOfVote, 1);
       }
     })
 
@@ -72,7 +75,7 @@ class App extends Component {
       console.log(arr)
       for (var i = 0; i < arr.length; i++) {
         for (var j = 0; j < arr[i].length; j += 2) {
-            this.chartElement.current.updateChart(arr[i][j], parseInt(arr[i][j + 1]));
+          this.updateChart(arr[i][j], parseInt(arr[i][j + 1]));
         }
       }
     })
@@ -81,6 +84,52 @@ class App extends Component {
       console.log(arr);
     })
   }
+
+
+  updateChart(data, amount) {
+    switch (data) {
+      case "very_bad":
+        this.setState({
+          vBad: this.state.vBad + amount,
+        }, () => {
+          this.setState({
+            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+          });
+        });
+        break;
+      case "bad":
+        this.setState({
+          bad: this.state.bad + amount,
+        }, () => {
+          this.setState({
+            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+          });
+        });
+        break;
+      case "good":
+        this.setState({
+          good: this.state.good + amount,
+        }, () => {
+          this.setState({
+            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+          });
+        });
+        break;
+      case "very_good":
+        this.setState({
+          vGood: this.state.vGood + amount,
+        }, () => {
+          this.setState({
+            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
+          });
+        });
+        break;
+    }
+  }
+
+
+
+
 
   isAdminPage() {
     if (window.location.toString().includes("question")) {
@@ -93,6 +142,10 @@ class App extends Component {
   }
 
   render() {
+    localStorage.setItem("vBad", this.state.vBad);
+    localStorage.setItem("bad", this.state.bad);
+    localStorage.setItem("good", this.state.good);
+    localStorage.setItem("vGood", this.state.vGood);
     return (
       <Router>
         <div className="Container">
@@ -108,6 +161,7 @@ class App extends Component {
             good={this.state.good}
             bad={this.state.bad}
             vBad={this.state.vBad}
+            data={this.state.data}
             ref={this.chartElement}
           />}
           />
@@ -116,6 +170,7 @@ class App extends Component {
             good={this.state.good}
             bad={this.state.bad}
             vBad={this.state.vBad}
+            data={this.state.data}
             ref={this.chartElement}
           />}
           />

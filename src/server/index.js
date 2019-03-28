@@ -31,6 +31,11 @@ io.on('connection', socket => {
     dbcon.addVote(typeOfVote)
     io.emit('vote', typeOfVote);
   })
+
+  socket.on('newQuestion', (question) => {
+    dbcon.addQuestion(question);
+  //  io.emit('newQuestion', (""))
+  })
 })
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

@@ -27,12 +27,7 @@ io.on('connection', socket => {
   console.log('User connected');
   socket.on('disconnect', () => {
     console.log('user disconnected');
-  })
-
-  setInterval(function() {
-    io.emit('vote', "good");
-  }, 3000)
-  
+  })  
 
   socket.on('response', () => {
     dbcon.getGrades(socket);

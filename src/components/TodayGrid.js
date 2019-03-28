@@ -92,9 +92,3 @@ export default class TodayGrid extends Component {
         );
     }
 }
-
-/*
-componentWillMount() {
-this.getChartData();
-}
-*/

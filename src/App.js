@@ -57,7 +57,7 @@ class App extends Component {
     socket.on('vote', (typeOfVote) => {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         // console.log("röst mottagen " + typeOfVote);
-        // console.log(this.state.data);
+        // console.log(this.state.data);np
         this.updateChart(typeOfVote, 1);
       }
     })

@@ -1,6 +1,5 @@
 'use strict'
 const pg = require('pg');
-
 const mysql = require('mysql2');
 const SchoolFoodScraper = require('./SchoolFoodScraper.js');
 
@@ -13,11 +12,10 @@ module.exports = class DatabaseHandler {
   constructor(url) {
     console.log("DatabaseHandler constructor")
     this.con;
-    this.date = new Date();
     this.skolmatURL = url;
-    this.weekFoodMenu = [];
-    this.establishConnection();
+    this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
+    this.establishConnection();
   }
 
   establishConnection() {
@@ -46,12 +44,11 @@ module.exports = class DatabaseHandler {
 
  getGrades(socket) {
     //Get Grades from DB when client first opens the webapplication
-    console.log("GET GRADES for " + socket);
+    console.log("GET GRADES for " + socket.id);
     var grades = [];
-    var today = this.date.toISOString().substring(0, 10);
+    var today = new Date().toISOString().substring(0, 10);
 
     const query = {
-      name: 'get-user',
       text: 'SELECT * FROM grades WHERE date_pk = $1',
       values: [today],
     }
@@ -85,7 +82,7 @@ module.exports = class DatabaseHandler {
 
     var currentVote;
     var query;
-    var currentDate = this.date.toISOString().substring(0, 10);
+    var currentDate = new Date().toISOString().substring(0, 10);
 
     switch(typeOfVote)  {
       case "very_bad":
@@ -144,7 +141,7 @@ module.exports = class DatabaseHandler {
     }
 
   }
-   
+
   startOfWeek(date) {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
     return new Date(date.setDate(diff));
@@ -152,15 +149,15 @@ module.exports = class DatabaseHandler {
 
   getMenuFromDB() {
     //Get weekly menu from db when databse starts
-    var startDate = this.startOfWeek(this.date);
-    console.log("startDate " + startDate);
+    var startDate = this.startOfWeek(new Date());
+    //console.log("startDate " + startDate);
     var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
 
     for(var i = 0; i < 5; i++) {
       var day = new Date();
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
-      console.log(day);
+      //console.log(day);
       const query = {
         text: 'SELECT * FROM menu WHERE date_pk = $1',
         values: [day]

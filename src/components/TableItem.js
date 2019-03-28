@@ -62,7 +62,7 @@ export default class TableItem extends Component {
                     className="EditButton"
                     onClick={this.enableInput}
                 >
-                    <i class="material-icons">edit</i>
+                    <i className="material-icons">edit</i>
                 </button>
 
             );

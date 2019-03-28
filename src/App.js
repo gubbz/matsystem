@@ -75,9 +75,6 @@ class App extends Component {
       console.log(arr);
     })
 
-    setInterval(function() {
-      socket.emit('vote', "good");
-    }, 5000);
   }
 
 

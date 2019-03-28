@@ -1,11 +1,14 @@
+
 import React, { Component } from 'react';
 import '../styles/TodayGrid.css';
 import TodayInfo from './TodayInfo.js';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import Chart from './Chart';
 var data;
+var i;
 export default class TodayGrid extends Component {
     constructor(props) {
+        i = 0;
         super(props);
         this.state = {
             vGood: this.props.vGood,
@@ -13,34 +16,19 @@ export default class TodayGrid extends Component {
             bad: this.props.bad,
             vBad: this.props.vBad,
             data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
+            yeeter: "yeet",
         }
     }
-    updateChart(data) {
-        switch (data) {
-            case 1:
-                this.setState({
-                    vBad: this.state.vBad + 1,
-                });
-                break;
-            case 2:
-                this.setState({
-                    bad: this.state.bad + 1,
-                });
-                break;
-            case 3:
-                this.setState({
-                    good: this.state.good + 1,
-                });
-                break;
-            case 4:
-                this.setState({
-                    vGood: this.state.vGood + 1,
-                });
-                break;
+    componentDidUpdate(previousProps) {
+        if (previousProps.data !== this.props.data) {
+            this.setState({
+                vGood: this.props.vGood,
+                good: this.props.good,
+                bad: this.props.bad,
+                vBad: this.props.vBad,
+                data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
+            })
         }
-        this.setState({
-          data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-        });
     }
     getChartData() {
         return {
@@ -77,18 +65,22 @@ export default class TodayGrid extends Component {
                     <div className="RightColumn">
                         <Bar
                             data={this.getChartData()}
-                            width={450}
-                            height={350}
                             options={{
                                 legend: {
                                     display: false,
                                 },
                                 //responsive: true,
+                                responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {
                                     yAxes: [{
                                         ticks: {
-                                            beginAtZero: true
+                                            beginAtZero: true,
+                                            userCallback: function (label, index, labels) {
+                                                if (Math.floor(label) === label) {
+                                                    return label;
+                                                }
+                                            }
                                         }
                                     }]
                                 }

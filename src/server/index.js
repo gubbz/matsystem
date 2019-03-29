@@ -17,7 +17,8 @@ if(process.env.NODE_ENV === 'production'){
 }
 app.get('/*',(req, res) => {
   console.log("routing test dirname = " + __dirname);
-  console.log("path " + path);
+  console.log("path ");
+  console.log(path);
   res.sendFile(path.resolve(__dirname + '/../public/', 'index.html'));
 });
 

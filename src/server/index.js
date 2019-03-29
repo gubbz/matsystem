@@ -12,13 +12,9 @@ const PORT = process.env.PORT || 8080;
 const skolmatURL = "https://skolmaten.se/birger-sjoberggymnasiet/";
 
 if(process.env.NODE_ENV === 'production'){
-    //set static folder
     app.use(express.static(__dirname + '/../../build'));
 }
 app.get('/*',(req, res) => {
-  console.log("routing test dirname = " + __dirname);
-  console.log("path ");
-  console.log(path);
   res.sendFile(path.resolve('build/', 'index.html'));
 });
 

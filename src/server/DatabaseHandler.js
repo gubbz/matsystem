@@ -56,7 +56,7 @@ module.exports = class DatabaseHandler {
     this.con.query(query, (err, res) => {
 
       if (err) {
-        return console.log(err.stack);
+        console.log(err.stack);
       } else {
         for (var i = 1; i < res.fields.length; i++) {
             var fieldName = res.fields[i].name;
@@ -72,11 +72,10 @@ module.exports = class DatabaseHandler {
       console.log(grades);
       socket.emit('grades', grades);
     });
+
   }
 
  addVote(typeOfVote) {
-
-   console.log("typeofvote in addVote: " + typeOfVote);
 
     var currentVote;
     var query;
@@ -114,11 +113,12 @@ module.exports = class DatabaseHandler {
     //+1 vote to grades when someone press on of the buttons
     this.con.query(query, [currentVote, currentDate], (err, res) => {
       if(err){
-        return console.log(err.stack);
+        console.log(err.stack);
       } else {
         console.log("grades + 1 successful");
       }
     });
+
  }
 
   insertFood(weekFood) {
@@ -174,15 +174,14 @@ module.exports = class DatabaseHandler {
           var date = res.rows[0][dateName];
           var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
           var meal = res.rows[0][mealName];
-          this.weekFoodMenu.push({localDate, meal});
         }
+        this.weekFoodMenu.push({localDate, meal});
       });
     }
   }
 
   getMenu() {
     return this.weekFoodMenu;
-
   }
 
   startOfWeek(date) {

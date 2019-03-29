@@ -15,8 +15,11 @@ import AdminContainer from './components/AdminContainer.js'
 import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
 
+var todaysDate;
+var mm;
+var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 var state = {
   vGood: 0,
   good: 0,
@@ -73,6 +76,12 @@ class App extends Component {
 
     socket.on('menu', (arr) => {
       console.log(arr);
+      todaysDate = new Date();
+      mm = String(todaysDate.getMonth()+1).padStart(2, '0');
+      dd = String(todaysDate.getDate()).padStart(2, '0');
+      console.log(mm + "-" + dd);
+
+
     })
 
   }

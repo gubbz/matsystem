@@ -15,7 +15,7 @@ var client = new pg.Client({
 client.connect(function(err){
   if(err) return console.log(err);
   else {
-    console.log("connection succesful, scheduled job")
+    console.log("connection succesful scheduled job");
   }
 });
 
@@ -27,10 +27,12 @@ const query = {
   values: [date, 0 , 0, 0, 0,],
 }
 
+console.log(query);
 client.query(query, (err, res) => {
   if(err) {
-    return console.log(err.stack);
+    console.log(err.stack);
   } else {
     console.log("scheduled job succesfull");
   }
+  client.end();
 });

@@ -10,15 +10,6 @@ const PORT = process.env.PORT || 8080;
 
 const skolmatURL = "https://skolmaten.se/birger-sjoberggymnasiet/";
 
-app.get('/*', function(req, res) {
-  console.log("/* get request skicka index.html");
-  res.sendFile(path.join(__dirname, 'public/index.html'), function(err) {
-    if (err) {
-      res.status(500).send(err)
-    }
-  })
-})
-
 app.use(express.static(__dirname + '/../../build'));
 
 var dbcon = new DatabaseHandler(skolmatURL);

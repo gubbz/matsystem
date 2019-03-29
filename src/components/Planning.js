@@ -8,8 +8,10 @@ import Sidebar from './Sidebar'
 export default class Planning extends Component {
 
 
+
     constructor(props) {
         super(props);
+        this.onSend = this.onSend.bind(this);
         this.state = {
             meals: [
                 {
@@ -45,35 +47,36 @@ export default class Planning extends Component {
             ]
         }
     }
+    onSend(date, question, waste) {
+        this.props.onSend(date, question, waste);
+    }
     render() {
 
 
         //alert(this.state.mealObj.dates);
         return (
-            <div className="AdminContainer">
-            <Sidebar/>
-                <div className="MainContainer">
-                    <table className="Table">
-                        <TableItem
-                            isHeader={true}
-                            datum="DATUM"
-                            måltid="MÅLTID"
-                            fråga="FRÅGA"
-                            slängt="SLÄNGT"
-                        />
-                        {
-                            this.state.meals.map((items, i) =>
-                                <TableItem
-                                    datum={items.date}
-                                    måltid={items.meal}
-                                    fråga={items.question}
-                                    slängt={items.waste}
-                                    index={i}
-                                />
-                            )
-                        }
-                    </table>
-                </div>
+            <div>
+                <table className="Table">
+                    <TableItem
+                        isHeader={true}
+                        datum="DATUM"
+                        måltid="MÅLTID"
+                        fråga="FRÅGA"
+                        slängt="SLÄNGT"
+                    />
+                    {
+                        this.state.meals.map((items, i) =>
+                            <TableItem
+                                datum={items.date}
+                                måltid={items.meal}
+                                fråga={items.question}
+                                slängt={items.waste}
+                                index={i}
+                                onSend={this.onSend}
+                            />
+                        )
+                    }
+                </table>
             </div>
         )
     }

@@ -161,6 +161,7 @@ module.exports = class DatabaseHandler {
       day = day.toISOString().substring(0, 10);
       //console.log(day);
       const query = {
+        name: 'getMenu',
         text: 'SELECT * FROM menu WHERE date_pk = $1',
         values: [day]
       }
@@ -190,8 +191,23 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-  insertQuestions() {
+  insertQuestions(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
+
+    console.log("insertquestion");
+
+    const query = {
+    name: 'insertQuestion',
+    text: 'INSERT INTO menu(date_pk, menu) VALUES($1, $2)',
+    values: [date, question],
+    }
+    this.con.query(query, (err, res) => {
+      if(err){
+        return console.log(err.stack);
+      } else {
+        console.log("question inserted successfully");
+      }
+    });
   }
 }

@@ -77,13 +77,6 @@ module.exports = class DatabaseHandler {
 
  addVote(typeOfVote) {
 
-   console.log("typeofvote in addVote: " + typeOfVote);
-
-<<<<<<< HEAD
-   console.log("currentvotes (addVote) " + this.currentVotes);
-
-=======
->>>>>>> 440000d17f09fb1faf3e824a865b103514dff6fc
     var currentVote;
     var query;
     var currentDate = new Date().toISOString().substring(0, 10);

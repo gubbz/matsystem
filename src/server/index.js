@@ -16,7 +16,7 @@ if(process.env.NODE_ENV === 'production'){
 }
 app.get('/*',(req, res) => {
   console.log("routing test dirname = " + __dirname)
-  res.sendFile(path.resolve(__dirname, 'build', 'public', 'index.html'));
+  res.sendFile(path.resolve(__dirname + '/../public/', 'index.html'));
 });
 
 var dbcon = new DatabaseHandler(skolmatURL);

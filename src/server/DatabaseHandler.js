@@ -79,8 +79,11 @@ module.exports = class DatabaseHandler {
 
    console.log("typeofvote in addVote: " + typeOfVote);
 
+<<<<<<< HEAD
    console.log("currentvotes (addVote) " + this.currentVotes);
 
+=======
+>>>>>>> 440000d17f09fb1faf3e824a865b103514dff6fc
     var currentVote;
     var query;
     var currentDate = new Date().toISOString().substring(0, 10);
@@ -88,22 +91,26 @@ module.exports = class DatabaseHandler {
     switch(typeOfVote)  {
       case "very_bad":
         currentVote = (parseInt(this.currentVotes[3], 10) + 1);
+        this.currentVotes[3] = currentVote;
         query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         console.log("query i switchen: " + query);
         break;
       case "bad":
         currentVote = parseInt(this.currentVotes[2], 10) + 1;
+        this.currentVotes[2] = currentVote;
         query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
       case "good":
         currentVote = parseInt(this.currentVotes[1], 10) + 1;
+        this.currentVotes[1] = currentVote;
         query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
       case "very_good":
         currentVote = parseInt(this.currentVotes[0], 10) + 1;
+        this.currentVotes[0] = currentVote;
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;

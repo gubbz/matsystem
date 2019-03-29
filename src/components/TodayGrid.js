@@ -50,7 +50,7 @@ export default class TodayGrid extends Component {
 
     render() {
         return (
-            <div className="MainContainer">
+            <div>
                 <div className="TodayGrid">
                     <div className="LeftColumn">
                         <TodayInfo

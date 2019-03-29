@@ -65,7 +65,7 @@ export default class Statistics extends Component {
     }
     render() {
         return (
-            <div className="MainContainer">
+            <div>
                 <div className="Statistics">
                     <div className="TimePicker">
                         <p>Tidsperiod: </p>

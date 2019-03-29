@@ -22,6 +22,7 @@ var dbcon = new DatabaseHandler(skolmatURL);
 
 io.on('connection', socket => {
   console.log('User connected');
+  io.emit('newQuestion', ('2019-03-29' ,"vad tyckte du om maten"));
   socket.on('disconnect', () => {
     console.log('user disconnected');
   })
@@ -38,9 +39,9 @@ io.on('connection', socket => {
     io.emit('vote', typeOfVote);
   })
 
-  socket.on('questionInfo', (question) => {
-    dbcon.addQuestion(question);
-  //  io.emit('newQuestion', (""))
+  socket.on('newQuestion', (date, question) => {
+    dbcon.addQuestion(date, question);
+
   })
 })
 

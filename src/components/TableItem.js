@@ -14,6 +14,7 @@ export default class TableItem extends Component {
         this.enableInput = this.enableInput.bind(this);
         this.disableInput = this.disableInput.bind(this);
         this.renderButton = this.renderButton.bind(this);
+        this.onSend = this.onSend.bind(this);
     }
 
     enableInput() {
@@ -26,6 +27,15 @@ export default class TableItem extends Component {
         this.setState({
             inputState: true,
         });
+    }
+
+    onSend() {
+        this.setState({
+            inputState: true
+        }, () => {
+            this.props.onSend(this.props.datum, this.state.question, this.state.waste);
+        })
+
     }
 
     handleChange(evt) {
@@ -42,7 +52,7 @@ export default class TableItem extends Component {
                     <button
                         className="EditButton"
                         type="button"
-                        onClick={this.disableInput}
+                        onClick={this.onSend}
                     >
                         <i class="material-icons">check</i>
                     </button>
@@ -98,14 +108,13 @@ export default class TableItem extends Component {
                     onChange={this.handleChange}
                     readOnly={this.state.inputState}
                 /></td>
-                <td>
-                    <input
-                        type="text"
-                        value={this.state.waste}
-                        name="waste"
-                        onChange={this.handleChange}
-                        readOnly={this.state.inputState}
-                    />
+                <td><input
+                    type="text"
+                    value={this.state.waste}
+                    name="waste"
+                    onChange={this.handleChange}
+                    readOnly={this.state.inputState}
+                />
                 </td>
                 <td>
                     {this.renderButton(this.state.inputState)}

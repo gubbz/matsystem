@@ -10,16 +10,23 @@ import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
+import './styles/MainContainer.css'
 import Sidebar from './components/Sidebar.js'
 import AdminContainer from './components/AdminContainer.js'
 import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
+import Admin from './components/Admin';
+import Client from './components/Client';
 
 var todaysDate;
 var mm;
 var dd;
 
-const socketURL = "/";
+var today;
+var mm;
+var dd;
+
+const socketURL = "localhost:8080";
 var state = {
   vGood: 0,
   good: 0,
@@ -36,6 +43,17 @@ class App extends Component {
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
     this.state = state;
+  }
+
+
+  //FIXA HÄR TB
+  sendMealInfo(date, question, waste) {
+    var getYear = new Date();
+    date = getYear.getFullYear() + "-" + date;
+    alert(question);
+    /*socket.emit('questioninfo', () => {
+
+    })*/
   }
 
   componentWillMount() {
@@ -59,6 +77,7 @@ class App extends Component {
 
     socket.on('vote', (typeOfVote) => {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
+
         this.updateChart(typeOfVote, 1);
       }
     })
@@ -74,11 +93,10 @@ class App extends Component {
 
     socket.on('menu', (arr) => {
       console.log(arr);
-      todaysDate = new Date();
-      mm = String(todaysDate.getMonth()+1).padStart(2, '0');
-      dd = String(todaysDate.getDate()).padStart(2, '0');
+      today = new Date();
+      mm = String(today.getMonth() + 1).padStart(2, '0');
+      dd = String(today.getDate()).padStart(2, '0');
       console.log(mm + "-" + dd);
-
 
     })
 
@@ -144,32 +162,21 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Header
-            click={this.toggleSidebar}
-          />
-          <Route exact path="/" render={() => <TodayGrid
-            vGood={this.state.vGood}
-            good={this.state.good}
-            bad={this.state.bad}
-            vBad={this.state.vBad}
-            data={this.state.data}
-            ref={this.chartElement}
-          />}
-          />
-          <Route path="/today" render={() => <TodayGrid
-            vGood={this.state.vGood}
-            good={this.state.good}
-            bad={this.state.bad}
-            vBad={this.state.vBad}
-            data={this.state.data}
-            ref={this.chartElement}
-          />}
-          />
-          <Route path="/planning" component={Planning} />
-          <Route path="/statistics" component={Statistics} />
-          <Route path="/meals" component={Meals} />
-          <Route path="/admin/" exact component={Planning} />
-          <Route path="/admin/question" exact component={QuestionView} />
+          <Route exact path="/" render={() =>
+            <Client 
+              vGood={this.state.vGood}
+              good={this.state.good}
+              bad={this.state.bad}
+              vBad={this.state.vBad}
+              data={this.state.data}
+              ref={this.chartElement}
+            />
+          } />
+          <Route exact path="/admin" render={()=>
+            <Admin
+              onSend={this.sendMealInfo}
+            />
+          }/>
         </div>
       </Router>
     );

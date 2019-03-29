@@ -1,3 +1,4 @@
+#! /app/bin/node
 'use strict'
 const pg = require('pg');
 const mysql = require('mysql2');

@@ -8,7 +8,7 @@ export default class Header extends Component {
         super(props);
         this.handleClick = this.handleClick.bind(this);
     }
-    adminHeader() {
+    /*adminHeader() {
         return (
             <div className="AdminHeaderContainer">
                 <div className="AdminHeader">
@@ -16,7 +16,7 @@ export default class Header extends Component {
                 </div>
             </div>
         );
-    }
+    }*/
 
     handleClick() {
         this.props.click();
@@ -27,7 +27,7 @@ export default class Header extends Component {
         if (urlCheck.includes("question")) {
             return null;
         } else if (urlCheck.includes("admin")) {
-            return this.adminHeader();
+            return null
         }
         else {
             return (
@@ -41,10 +41,6 @@ export default class Header extends Component {
                                 route="/today"
                             />
                             <HeaderItem
-                                text="PLANERING"
-                                route="/planning"
-                            />
-                            <HeaderItem
                                 text="STATISTIK"
                                 route="/statistics"
                             />
@@ -53,7 +49,7 @@ export default class Header extends Component {
                                 route="/meals"
                             />
                             <HeaderItem
-                                text="LOGGA UT"
+                                text="LOGGA IN"
                                 route="/"
                             />
                         </div>

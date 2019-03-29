@@ -1,18 +1,33 @@
 .Sidebar {
-    position: fixed;
-    width: 5vw;
-    background: white;   
-    padding: 2em;
+    padding: 4em 4em 0 2em;
     box-sizing: border-box;
+    height: 100vh;
+    background: #304FFE;
+    color: white;
 }
 
-.SidebarList {
-    list-style: none;
-    margin-top: 8em;
+.SidebarItem {
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
 }
-.SidebarList li {
-    margin-bottom: 0.5em;
+
+.SidebarLink {
+    color: white;
+    text-decoration: none;
+    line-height: 1;
 }
-.SidebarList li:nth-child(3) {
-    margin-bottom: 3em  ;
+
+.SidebarItem>i {
+    font-size: 16px;
+    margin-right: 0.5em;
+}
+
+.SidebarLogo {
+    margin-bottom: 2em;
+}
+
+.SidebarLogo h1 {
+    line-height: 1;
 }

@@ -27,26 +27,6 @@
     align-items: center;
 }
 
-.AdminHeaderContainer {
-    background: white;
-    position: fixed;
-}
-
-.AdminHeader {
-    display: flex;
-    list-style-type: none;
-    padding: 1em 0;
-    margin: auto;
-}
-
-.AdminHeader div:first-child {
-    margin-right: 1em;
-}
-
-.AdminHeader h1 {
-    font-size: 26px;
-    line-height: 1;
-}
 
 @media screen and (max-width: 992px) {
     .Header {

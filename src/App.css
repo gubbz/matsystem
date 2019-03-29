@@ -1,8 +1,13 @@
+html, #root, .Container {
+  height: 100%;
+}
 body {
   background-color: #eeeeee;
+  height: 100%;
 }
 
 .App {
+  height: 100%;
   margin-left: auto;
   margin-right: auto;
 }

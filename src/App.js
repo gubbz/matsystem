@@ -16,7 +16,11 @@ import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
 
 
-const socketURL = "/";
+var today;
+var mm;
+var dd;
+
+const socketURL = "localhost:8080";
 var state = {
   vGood: 0,
   good: 0,
@@ -33,6 +37,14 @@ class App extends Component {
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
     this.state = state;
+  }
+
+
+  //FIXA HÄR TB
+  sendMealInfo() {
+    /*socket.emit('questioninfo', () => {
+
+    })*/
   }
 
   componentWillMount() {
@@ -57,7 +69,7 @@ class App extends Component {
     socket.on('vote', (typeOfVote) => {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         // console.log("röst mottagen " + typeOfVote);
-        // console.log(this.state.data);
+        // console.log(this.state.data);np
         this.updateChart(typeOfVote, 1);
       }
     })
@@ -73,6 +85,11 @@ class App extends Component {
 
     socket.on('menu', (arr) => {
       console.log(arr);
+      today = new Date();
+      mm = String(today.getMonth()+1).padStart(2,'0');
+      dd = String(today.getDate()).padStart(2, '0');
+      console.log(mm+"-"+dd);
+      
     })
 
   }
@@ -137,9 +154,7 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Header
-            click={this.toggleSidebar}
-          />
+          <Header/>
           <Route exact path="/" render={() => <TodayGrid
             vGood={this.state.vGood}
             good={this.state.good}
@@ -158,10 +173,11 @@ class App extends Component {
             ref={this.chartElement}
           />}
           />
-          <Route path="/planning" component={Planning} />
           <Route path="/statistics" component={Statistics} />
           <Route path="/meals" component={Meals} />
-          <Route path="/admin/" exact component={Planning} />
+          <Route path="/admin/" render={()=><Planning
+            onSend={this.sendMealInfo}
+          />}/>
           <Route path="/admin/question" exact component={QuestionView} />
         </div>
       </Router>

@@ -7,7 +7,7 @@ import Sidebar from './Sidebar'
 
 export default class Planning extends Component {
 
-    
+
 
     constructor(props) {
         super(props);
@@ -47,8 +47,8 @@ export default class Planning extends Component {
             ]
         }
     }
-    onSend() {
-        this.props.onSend();
+    onSend(date, question, waste) {
+        this.props.onSend(date, question, waste);
     }
     render() {
 

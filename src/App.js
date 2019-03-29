@@ -19,7 +19,7 @@ var todaysDate;
 var mm;
 var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 var state = {
   vGood: 0,
   good: 0,

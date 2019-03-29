@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const path = require('path');
 const DatabaseHandler = require('./DatabaseHandler.js');
 
 const PORT = process.env.PORT || 8080;
@@ -15,7 +16,8 @@ if(process.env.NODE_ENV === 'production'){
     app.use(express.static(__dirname + '/../../build'));
 }
 app.get('/*',(req, res) => {
-  console.log("routing test dirname = " + __dirname)
+  console.log("routing test dirname = " + __dirname);
+  console.log("path " + path);
   res.sendFile(path.resolve(__dirname + '/../public/', 'index.html'));
 });
 

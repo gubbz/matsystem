@@ -78,7 +78,7 @@ class App extends Component {
       mm = String(todaysDate.getMonth()+1).padStart(2, '0');
       dd = String(todaysDate.getDate()).padStart(2, '0');
       console.log(mm + "-" + dd);
-      
+
 
     })
 

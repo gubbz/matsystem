@@ -24,7 +24,7 @@ var date = new Date().toISOString().substring(0, 10);
 const query = {
   name: 'addRow',
   text: 'INSERT INTO grades(date_pk, very_good, good, bad, very_bad) VALUES ($1, $2, $3, $4, $5)',
-  values: [date, 0 , 0, 0, 0,],
+  values: [date, 0 , 0, 0, 0,]
 }
 
 console.log(query);

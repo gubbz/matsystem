@@ -18,6 +18,9 @@ import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
 
+var todaysDate;
+var mm;
+var dd;
 
 var today;
 var mm;
@@ -74,8 +77,7 @@ class App extends Component {
 
     socket.on('vote', (typeOfVote) => {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        // console.log("röst mottagen " + typeOfVote);
-        // console.log(this.state.data);np
+
         this.updateChart(typeOfVote, 1);
       }
     })

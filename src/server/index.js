@@ -19,7 +19,7 @@ app.get('/*',(req, res) => {
   console.log("routing test dirname = " + __dirname);
   console.log("path ");
   console.log(path);
-  res.sendFile(path.resolve('public/', 'index.html'));
+  res.sendFile(path.resolve('build/', 'index.html'));
 });
 
 var dbcon = new DatabaseHandler(skolmatURL);

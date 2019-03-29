@@ -162,7 +162,12 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Route exact path="/" render={() =>
+          <Route path="/admin" render={()=>
+            <Admin
+              onSend={this.sendMealInfo}
+            />
+          }/>
+          <Route path="/" render={() =>
             <Client 
               vGood={this.state.vGood}
               good={this.state.good}
@@ -172,11 +177,7 @@ class App extends Component {
               ref={this.chartElement}
             />
           } />
-          <Route exact path="/admin" render={()=>
-            <Admin
-              onSend={this.sendMealInfo}
-            />
-          }/>
+          
         </div>
       </Router>
     );

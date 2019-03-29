@@ -72,11 +72,10 @@ module.exports = class DatabaseHandler {
       console.log(grades);
       socket.emit('grades', grades);
     });
+
   }
 
  addVote(typeOfVote) {
-
-   console.log("typeofvote in addVote: " + typeOfVote);
 
     var currentVote;
     var query;
@@ -119,6 +118,7 @@ module.exports = class DatabaseHandler {
         console.log("grades + 1 successful");
       }
     });
+
  }
 
   insertFood(weekFood) {
@@ -183,7 +183,6 @@ module.exports = class DatabaseHandler {
 
   getMenu() {
     return this.weekFoodMenu;
-
   }
 
   startOfWeek(date) {

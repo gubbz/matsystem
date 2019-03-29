@@ -15,7 +15,7 @@ var client = new pg.Client({
 client.connect(function(err){
   if(err) return console.log(err);
   else {
-    console.log("connection succesful, scheduled job")
+    console.log("connection succesful scheduled job");
   }
 });
 
@@ -24,13 +24,19 @@ var date = new Date().toISOString().substring(0, 10);
 const query = {
   name: 'addRow',
   text: 'INSERT INTO grades(date_pk, very_good, good, bad, very_bad) VALUES ($1, $2, $3, $4, $5)',
+<<<<<<< HEAD
   values: [date, 0 , 0, 0, 0,],
+=======
+  values: [date, 0 , 0, 0, 0,]
+>>>>>>> b67b52b514ddeda95841cb75885f66a3d38fee82
 }
 
+console.log(query);
 client.query(query, (err, res) => {
   if(err) {
-    return console.log(err.stack);
+    console.log(err.stack);
   } else {
     console.log("scheduled job succesfull");
   }
+  client.end();
 });

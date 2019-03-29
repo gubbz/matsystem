@@ -18,12 +18,15 @@ import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
 
+var todaysDate;
+var mm;
+var dd;
 
 var today;
 var mm;
 var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 var state = {
   vGood: 0,
   good: 0,
@@ -74,8 +77,7 @@ class App extends Component {
 
     socket.on('vote', (typeOfVote) => {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        // console.log("röst mottagen " + typeOfVote);
-        // console.log(this.state.data);np
+
         this.updateChart(typeOfVote, 1);
       }
     })
@@ -160,11 +162,19 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
+<<<<<<< HEAD
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
             />
           } />
+=======
+          <Route path="/admin" render={()=>
+            <Admin
+              onSend={this.sendMealInfo}
+            />
+          }/>
+>>>>>>> 87eaad116b88a184b446c4a60e09a69b0ecbffc1
           <Route path="/" render={() =>
             <Client 
               vGood={this.state.vGood}

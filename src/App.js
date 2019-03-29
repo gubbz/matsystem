@@ -16,7 +16,7 @@ import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
 
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 var state = {
   vGood: 0,
   good: 0,
@@ -74,6 +74,7 @@ class App extends Component {
     socket.on('menu', (arr) => {
       console.log(arr);
     })
+
   }
 
 

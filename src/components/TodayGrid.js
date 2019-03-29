@@ -55,7 +55,7 @@ export default class TodayGrid extends Component {
                     <div className="LeftColumn">
                         <TodayInfo
                             headline="Dagens måltid"
-                            info="Pannbiffar"
+                            info=""
                         />
                         <TodayInfo
                             headline="Dagens fråga"
@@ -69,7 +69,6 @@ export default class TodayGrid extends Component {
                                 legend: {
                                     display: false,
                                 },
-                                //responsive: true,
                                 responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {

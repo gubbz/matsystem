@@ -41,13 +41,12 @@ class App extends Component {
 
 
   //FIXA HÄR TB
+
   sendMealInfo(date, question, waste) {
     var getYear = new Date();
     date = getYear.getFullYear() + "-" + date;
-    alert(question);
-    /*socket.emit('questioninfo', () => {
-
-    })*/
+    this.state.socket.emit('newQuestion', () => {
+    });
   }
 
   componentWillMount() {
@@ -65,7 +64,7 @@ class App extends Component {
     socket.on('connect', () => {
       console.log("Connected");
       if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
+        socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
       }
     })
 
@@ -92,7 +91,7 @@ class App extends Component {
       mm = String(today.getMonth()+1).padStart(2,'0');
       dd = String(today.getDate()).padStart(2, '0');
       console.log(mm+"-"+dd);
-      
+
     })
 
   }

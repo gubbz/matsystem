@@ -18,10 +18,6 @@ import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
 
-var todaysDate;
-var mm;
-var dd;
-
 var today;
 var mm;
 var dd;
@@ -35,7 +31,6 @@ var state = {
   socket: null,
 }
 class App extends Component {
-
   constructor() {
     super();
     this.url = window.location.toString();
@@ -45,13 +40,16 @@ class App extends Component {
     this.state = state;
   }
 
-
   //FIXA HÄR TB
 
-  sendMealInfo(date, question, waste) {
+  sendMealInfo(date, question) {
     var getYear = new Date();
     date = getYear.getFullYear() + "-" + date;
-    this.state.socket.emit('newQuestion', () => {
+    this.state.socket.emit('newQuestion', (date, question) => {
+    });
+  }
+  sendWaste(waste, date, menu){
+    this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
   }
 
@@ -98,9 +96,7 @@ class App extends Component {
       console.log(mm + "-" + dd);
 
     })
-
   }
-
 
   updateChart(data, amount) {
     switch (data) {
@@ -143,10 +139,6 @@ class App extends Component {
     }
   }
 
-
-
-
-
   isAdminPage() {
     if (window.location.toString().includes("question")) {
       return false;
@@ -180,9 +172,7 @@ class App extends Component {
         </div>
       </Router>
     );
-
   }
-
 }
 
 export default App;

@@ -42,6 +42,7 @@ class App extends Component {
     this.chartElement = React.createRef();
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
     this.state = state;
   }
 
@@ -101,6 +102,11 @@ class App extends Component {
 
   }
 
+  
+  // Login -> Client -> hit
+  handleLogin(username, password) {
+    alert("yeet")
+  }
 
   updateChart(data, amount) {
     switch (data) {
@@ -174,6 +180,7 @@ class App extends Component {
               vBad={this.state.vBad}
               data={this.state.data}
               ref={this.chartElement}
+              handleLogin={this.handleLogin}
             />
           } />
 

@@ -37,6 +37,7 @@ class App extends Component {
     this.chartElement = React.createRef();
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
     this.state = state;
   }
 
@@ -98,6 +99,12 @@ class App extends Component {
     })
   }
 
+  
+  // Login -> Client -> hit
+  handleLogin(username, password) {
+    alert("yeet")
+  }
+
   updateChart(data, amount) {
     switch (data) {
       case "very_bad":
@@ -153,11 +160,11 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Route path="/admin" render={()=>
+          <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
             />
-          }/>
+          } />
           <Route path="/" render={() =>
             <Client
               vGood={this.state.vGood}
@@ -166,6 +173,7 @@ class App extends Component {
               vBad={this.state.vBad}
               data={this.state.data}
               ref={this.chartElement}
+              handleLogin={this.handleLogin}
             />
           } />
 

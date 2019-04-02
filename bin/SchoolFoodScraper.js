@@ -76,13 +76,14 @@ function insertFood(weekFood, callback) {
 
     client.query(query, (err) => {
       if (err) {
+        j++;
         console.log(err);
       } else {
         j++;
         console.log(date + " " + meal + " inserted");
-        if (j == 5) {
-          client.end();
-        }
+      }
+      if (j == 5) {
+        client.end();
       }
     })
   }

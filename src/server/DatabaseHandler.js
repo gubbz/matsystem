@@ -13,6 +13,7 @@ module.exports = class DatabaseHandler {
     this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
     this.establishConnection();
+    this.getMenuFromDB();
   }
 
   establishConnection() {

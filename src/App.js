@@ -10,16 +10,26 @@ import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
+import './styles/MainContainer.css'
 import Sidebar from './components/Sidebar.js'
 import AdminContainer from './components/AdminContainer.js'
 import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
+import Admin from './components/Admin';
+import Client from './components/Client';
 
+<<<<<<< HEAD
+=======
+var todaysDate;
+var mm;
+var dd;
+
+>>>>>>> b0f44a896be33076c3beb2f0f7a298f336e936ef
 var today;
 var mm;
 var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 var state = {
   vGood: 0,
   good: 0,
@@ -64,17 +74,16 @@ class App extends Component {
 
     socket.on('connect', () => {
       console.log("Connected");
-      if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
-      }
+      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
+        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
+      //}
     })
 
     socket.on('vote', (typeOfVote) => {
-      if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        // console.log("röst mottagen " + typeOfVote);
-        // console.log(this.state.data);np
+
+      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         this.updateChart(typeOfVote, 1);
-      }
+      //}
     })
 
     socket.on('grades', (arr) => {
@@ -89,9 +98,9 @@ class App extends Component {
     socket.on('menu', (arr) => {
       console.log(arr);
       today = new Date();
-      mm = String(today.getMonth()+1).padStart(2,'0');
+      mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
-      console.log(mm+"-"+dd);
+      console.log(mm + "-" + dd);
 
     })
   }
@@ -151,31 +160,22 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Header/>
-          <Route exact path="/" render={() => <TodayGrid
-            vGood={this.state.vGood}
-            good={this.state.good}
-            bad={this.state.bad}
-            vBad={this.state.vBad}
-            data={this.state.data}
-            ref={this.chartElement}
-          />}
-          />
-          <Route path="/today" render={() => <TodayGrid
-            vGood={this.state.vGood}
-            good={this.state.good}
-            bad={this.state.bad}
-            vBad={this.state.vBad}
-            data={this.state.data}
-            ref={this.chartElement}
-          />}
-          />
-          <Route path="/statistics" component={Statistics} />
-          <Route path="/meals" component={Meals} />
-          <Route path="/admin/" render={()=><Planning
-            onSend={this.sendMealInfo}
-          />}/>
-          <Route path="/admin/question" exact component={QuestionView} />
+          <Route path="/admin" render={()=>
+            <Admin
+              onSend={this.sendMealInfo}
+            />
+          }/>
+          <Route path="/" render={() =>
+            <Client
+              vGood={this.state.vGood}
+              good={this.state.good}
+              bad={this.state.bad}
+              vBad={this.state.vBad}
+              data={this.state.data}
+              ref={this.chartElement}
+            />
+          } />
+
         </div>
       </Router>
     );

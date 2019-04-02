@@ -11,9 +11,7 @@ export default class MainContainer extends Component {
   render() {
     return (
       <div className="MainContainer">
-        dkeodeko
-
-
+      
       </div>
       
     )

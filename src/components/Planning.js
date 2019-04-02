@@ -55,34 +55,28 @@ export default class Planning extends Component {
 
         //alert(this.state.mealObj.dates);
         return (
-            <div className="AdminContainer">
-                <Sidebar />
-                <div className="RightAdmin">
-                    <div className="AdminMainContainer">
-                        <h1>Planering</h1>
-                        <table className="Table">
+            <div>
+                <table className="Table">
+                    <TableItem
+                        isHeader={true}
+                        datum="DATUM"
+                        måltid="MÅLTID"
+                        fråga="FRÅGA"
+                        slängt="SLÄNGT"
+                    />
+                    {
+                        this.state.meals.map((items, i) =>
                             <TableItem
-                                isHeader={true}
-                                datum="DATUM"
-                                måltid="MÅLTID"
-                                fråga="FRÅGA"
-                                slängt="SLÄNGT"
+                                datum={items.date}
+                                måltid={items.meal}
+                                fråga={items.question}
+                                slängt={items.waste}
+                                index={i}
+                                onSend={this.onSend}
                             />
-                            {
-                                this.state.meals.map((items, i) =>
-                                    <TableItem
-                                        datum={items.date}
-                                        måltid={items.meal}
-                                        fråga={items.question}
-                                        slängt={items.waste}
-                                        index={i}
-                                        onSend={this.onSend}
-                                    />
-                                )
-                            }
-                        </table>
-                    </div>
-                </div>
+                        )
+                    }
+                </table>
             </div>
         )
     }

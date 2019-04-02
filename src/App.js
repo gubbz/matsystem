@@ -47,13 +47,12 @@ class App extends Component {
 
 
   //FIXA HÄR TB
+
   sendMealInfo(date, question, waste) {
     var getYear = new Date();
     date = getYear.getFullYear() + "-" + date;
-    alert(question);
-    /*socket.emit('questioninfo', () => {
-
-    })*/
+    this.state.socket.emit('newQuestion', () => {
+    });
   }
 
   componentWillMount() {

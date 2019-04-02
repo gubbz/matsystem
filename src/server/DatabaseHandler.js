@@ -166,7 +166,7 @@ module.exports = class DatabaseHandler {
     //get question from form
     //form pushes info to here, insert to DB
 
-    console.log("insertquestion");
+    console.log("insertquestion, date: " + date + " question: " + question);
 
     const query = {
     name: 'insertQuestion',

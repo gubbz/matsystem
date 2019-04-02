@@ -30,12 +30,20 @@ export default class TableItem extends Component {
     }
 
     onSend() {
+<<<<<<< HEAD
+      this.setState({
+          inputState: true,
+      },() => {
+          this.props.onSend();
+      });
+=======
         this.setState({
             inputState: true
         }, () => {
             this.props.onSend(this.props.datum, this.state.question, this.state.waste);
         })
 
+>>>>>>> 0d884d96e5593f3ddb7746c88e2b2349c9cfa104
     }
 
     handleChange(evt) {

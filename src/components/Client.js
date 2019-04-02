@@ -16,7 +16,7 @@ export default class Client extends Component {
             <Router>
                 <div className="Client">
                     <Header />
-                    <div class="MainContainer">
+                    <div className="MainContainer">
                         <Route exact path="/" render={() => <TodayGrid
                             vGood={this.props.vGood}
                             good={this.props.good}

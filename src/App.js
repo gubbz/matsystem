@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 var state = {
   vGood: 0,
   good: 0,
@@ -47,13 +47,12 @@ class App extends Component {
 
 
   //FIXA HÄR TB
+
   sendMealInfo(date, question, waste) {
     var getYear = new Date();
     date = getYear.getFullYear() + "-" + date;
-    alert(question);
-    /*socket.emit('questioninfo', () => {
-
-    })*/
+    this.state.socket.emit('newQuestion', () => {
+    });
   }
 
   componentWillMount() {

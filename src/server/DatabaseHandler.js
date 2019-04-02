@@ -7,7 +7,6 @@ const SchoolFoodScraper = require('./SchoolFoodScraper.js');
   Database communication and functionality
 **/
 module.exports = class DatabaseHandler {
-
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
   constructor(url) {
     console.log("DatabaseHandler constructor")
@@ -71,6 +70,7 @@ module.exports = class DatabaseHandler {
       }
       console.log(grades);
       socket.emit('grades', grades);
+      this.insertQuestions('2019-03-26', "gillade du maten idag");
     });
 
   }
@@ -111,7 +111,9 @@ module.exports = class DatabaseHandler {
 
     console.log("query: " + query)
     //+1 vote to grades when someone press on of the buttons
-    this.con.query(query, [currentVote, currentDate], (err, res) => {
+    var values = [currentVote, currentDate];
+
+    this.con.query(query, values, (err, res) => {
       if(err){
         console.log(err.stack);
       } else {
@@ -206,6 +208,21 @@ module.exports = class DatabaseHandler {
         return console.log(err.stack);
       } else {
         console.log("question inserted successfully");
+      }
+    });
+  }
+
+  updateWaste(waste, date, menu)  {
+    console.log("update waste +: " + waste);
+
+    var query = "UPDATE menu SET waste = $1 WHERE date_pk = $2 AND menu = $3";
+    var values = [waste, date, menu];
+
+    this.con.query(query, values, (err, res) => {
+      if(err){
+        return console.log(err.stack);
+      } else {
+        console.log("grades + 1 successful");
       }
     });
   }

@@ -33,7 +33,7 @@ module.exports = class SchoolFoodScraper{
       var datediv = $(items[i]).children('.date');
       var date = $(datediv).find('.date').text();
       var meal = $($(innerInfo).find('span')[0]).text();
-      //console.log(date + " " + meal);
+      console.log(date + " " + meal);
       var dateMeal = new Array();
       dateMeal[0] = date;
       dateMeal[1] = meal;

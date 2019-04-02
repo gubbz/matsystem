@@ -15,7 +15,7 @@ var client = new pg.Client({
 client.connect(function(err){
   if(err) return console.log(err);
   else {
-    console.log("connection succesful scheduled job");
+    console.log("connection succesful scheduled job add newrow");
   }
 });
 

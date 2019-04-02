@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 var state = {
   vGood: 0,
   good: 0,
@@ -162,19 +162,11 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-<<<<<<< HEAD
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
             />
           } />
-=======
-          <Route path="/admin" render={()=>
-            <Admin
-              onSend={this.sendMealInfo}
-            />
-          }/>
->>>>>>> 87eaad116b88a184b446c4a60e09a69b0ecbffc1
           <Route path="/" render={() =>
             <Client 
               vGood={this.state.vGood}

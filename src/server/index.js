@@ -16,7 +16,7 @@ app.get('/*',(req, res) => {
   res.sendFile(path.resolve('build/', 'index.html'));
 });
 
-var dbcon = new DatabaseHandler(skolmatURL);
+var dbcon = new DatabaseHandler();
 
 io.on('connection', socket => {
   console.log('User connected');

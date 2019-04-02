@@ -70,16 +70,16 @@ class App extends Component {
 
     socket.on('connect', () => {
       console.log("Connected");
-      if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
+      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
-      }
+      //}
     })
 
     socket.on('vote', (typeOfVote) => {
-      if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
 
+      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         this.updateChart(typeOfVote, 1);
-      }
+      //}
     })
 
     socket.on('grades', (arr) => {
@@ -162,8 +162,13 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Route exact path="/" render={() =>
-            <Client 
+          <Route path="/admin" render={()=>
+            <Admin
+              onSend={this.sendMealInfo}
+            />
+          }/>
+          <Route path="/" render={() =>
+            <Client
               vGood={this.state.vGood}
               good={this.state.good}
               bad={this.state.bad}
@@ -172,11 +177,7 @@ class App extends Component {
               ref={this.chartElement}
             />
           } />
-          <Route exact path="/admin" render={()=>
-            <Admin
-              onSend={this.sendMealInfo}
-            />
-          }/>
+
         </div>
       </Router>
     );

@@ -51,8 +51,6 @@ export default class Planning extends Component {
         this.props.onSend(date, question, waste);
     }
     render() {
-
-
         //alert(this.state.mealObj.dates);
         return (
             <div>

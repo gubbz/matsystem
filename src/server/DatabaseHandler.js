@@ -1,20 +1,21 @@
 'use strict'
 const pg = require('pg');
 const mysql = require('mysql2');
-const SchoolFoodScraper = require('./SchoolFoodScraper.js');
+var CryptoJS = require("crypto-js");
+
 
 /**
   Database communication and functionality
 **/
 module.exports = class DatabaseHandler {
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
-  constructor(url) {
+  constructor() {
     console.log("DatabaseHandler constructor")
     this.con;
-    this.skolmatURL = url;
     this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
     this.establishConnection();
+    this.getMenuFromDB();
   }
 
   establishConnection() {
@@ -28,14 +29,11 @@ module.exports = class DatabaseHandler {
       ssl: true
     });
 
-    var self = this;
     this.con.connect(function(err) {
       if (err) {
         console.log(err);
       } else {
         console.log("CONNECTED TO DB ");
-        var sfs = new SchoolFoodScraper(self.skolmatURL, self);
-        self.getMenuFromDB();
       }
     });
 
@@ -122,29 +120,6 @@ module.exports = class DatabaseHandler {
 
  }
 
-  insertFood(weekFood) {
-    //Insert a new week of rows in the food Database each week to get the meal
-    //Get data from skolmatens hemsida
-    for (var i = 0; i < weekFood.length; i++) {
-      var date = weekFood[i][0];
-      var meal = weekFood[i][1];
-      var query = {
-        text: 'INSERT into menu (date_pk, menu) VALUES ($1, $2)',
-        values: [date, meal]
-      }
-
-      this.con.query(query, (err) => {
-        if (err) {
-          //console.log(err);
-        } else {
-          console.log(date + " " + meal + " inserted");
-        }
-      })
-
-    }
-
-  }
-
   startOfWeek(date) {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
     return new Date(date.setDate(diff));
@@ -211,6 +186,40 @@ module.exports = class DatabaseHandler {
     });
   }
 
+  login(username, password) {
+
+    var myUsername =  "myUsername";
+    var myPassword =  "myPassword";
+
+    // Encrypt
+    var encryptoUsername = CryptoJS.AES.encrypt(username, myUsername).toString();
+    var encryptoPassword = CryptoJS.AES.encrypt(password, myPassword).toString();
+    // Decrypt
+
+    var originalUsername = decryptoUsername.toString(CryptoJS.enc.Utf8);
+    var originalPassword = decryptoPassword.toString(CryptoJS.enc.Utf8);
+
+    console.log(originalUsername); // 'username as it was in the beginning'
+    console.log(originalPassword); // 'password as it was in the beginning'
+
+    const query = {
+      name: 'getUsers',
+      text: 'SELECT * FROM users WHERE encryptoUsername = $1 AND encryptoPassword = $2',
+      values: [username, password]
+    }
+
+    var decryptoUsername  = CryptoJS.AES.decrypt(username, myUsername);
+    var decryptoPassword  = CryptoJS.AES.decrypt(password, myPassword);
+
+    this.con.query(query, (err, res) => {
+      if(err){
+        return console.log(err.stack);
+      } else {
+        console.log("Login successful");
+      } 
+    });
+  }        
+         
   updateWaste(waste, date, menu)  {
     console.log("update waste +: " + waste);
 

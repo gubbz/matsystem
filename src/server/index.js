@@ -39,7 +39,10 @@ io.on('connection', socket => {
   socket.on('newQuestion', (date, question) => {
     console.log("newquestion körs");
     dbcon.addQuestion(date, question);
+  })
 
+  socket.on('login', (username, password) =>  {
+    dbcon.login(username, password);
   })
 
   socket.on('updateWaste', (waste, date, menu) => {

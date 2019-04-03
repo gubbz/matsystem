@@ -1,6 +1,8 @@
 'use strict'
 const pg = require('pg');
 const mysql = require('mysql2');
+var CryptoJS = require("crypto-js");
+
 
 /**
   Database communication and functionality
@@ -185,6 +187,40 @@ module.exports = class DatabaseHandler {
     });
   }
 
+  login(username, password) {
+
+    var myUsername =  "myUsername";
+    var myPassword =  "myPassword";
+
+    // Encrypt
+    var encryptoUsername = CryptoJS.AES.encrypt(username, myUsername).toString();
+    var encryptoPassword = CryptoJS.AES.encrypt(password, myPassword).toString();
+    // Decrypt
+
+    var originalUsername = decryptoUsername.toString(CryptoJS.enc.Utf8);
+    var originalPassword = decryptoPassword.toString(CryptoJS.enc.Utf8);
+
+    console.log(originalUsername); // 'username as it was in the beginning'
+    console.log(originalPassword); // 'password as it was in the beginning'
+
+    const query = {
+      name: 'getUsers',
+      text: 'SELECT * FROM users WHERE encryptoUsername = $1 AND encryptoPassword = $2',
+      values: [username, password]
+    }
+
+    var decryptoUsername  = CryptoJS.AES.decrypt(username, myUsername);
+    var decryptoPassword  = CryptoJS.AES.decrypt(password, myPassword);
+
+    this.con.query(query, (err, res) => {
+      if(err){
+        return console.log(err.stack);
+      } else {
+        console.log("Login successful");
+      } 
+    });
+  }        
+         
   updateWaste(waste, date, menu)  {
     console.log("update waste +: " + waste);
 

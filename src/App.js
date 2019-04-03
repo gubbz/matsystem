@@ -18,15 +18,11 @@ import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
 
-var todaysDate;
-var mm;
-var dd;
-
 var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 var state = {
   vGood: 0,
   good: 0,
@@ -35,23 +31,26 @@ var state = {
   socket: null,
 }
 class App extends Component {
-
   constructor() {
     super();
     this.url = window.location.toString();
     this.chartElement = React.createRef();
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
     this.state = state;
   }
 
-
   //FIXA HÄR TB
 
-  sendMealInfo(date, question, waste) {
+  sendMealInfo(date, question) {
     var getYear = new Date();
     date = getYear.getFullYear() + "-" + date;
-    this.state.socket.emit('newQuestion', () => {
+    this.state.socket.emit('newQuestion', (date, question) => {
+    });
+  }
+  sendWaste(waste, date, menu){
+    this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
   }
 
@@ -98,9 +97,13 @@ class App extends Component {
       console.log(mm + "-" + dd);
 
     })
-
   }
 
+  
+  // Login -> Client -> hit
+  handleLogin(username, password) {
+    alert("yeet")
+  }
 
   updateChart(data, amount) {
     switch (data) {
@@ -143,10 +146,6 @@ class App extends Component {
     }
   }
 
-
-
-
-
   isAdminPage() {
     if (window.location.toString().includes("question")) {
       return false;
@@ -161,11 +160,11 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Route path="/admin" render={()=>
+          <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
             />
-          }/>
+          } />
           <Route path="/" render={() =>
             <Client
               vGood={this.state.vGood}
@@ -174,15 +173,14 @@ class App extends Component {
               vBad={this.state.vBad}
               data={this.state.data}
               ref={this.chartElement}
+              handleLogin={this.handleLogin}
             />
           } />
 
         </div>
       </Router>
     );
-
   }
-
 }
 
 export default App;

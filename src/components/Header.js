@@ -50,7 +50,7 @@ export default class Header extends Component {
                             />
                             <HeaderItem
                                 text="LOGGA IN"
-                                route="/"
+                                route="/login"
                             />
                         </div>
                     </div>

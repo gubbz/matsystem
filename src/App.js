@@ -18,13 +18,6 @@ import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
 
-<<<<<<< HEAD
-=======
-var todaysDate;
-var mm;
-var dd;
-
->>>>>>> b0f44a896be33076c3beb2f0f7a298f336e936ef
 var today;
 var mm;
 var dd;

@@ -68,7 +68,6 @@ module.exports = class DatabaseHandler {
       }
       console.log(grades);
       socket.emit('grades', grades);
-      this.insertQuestions('2019-03-26', "gillade du maten idag");
     });
 
   }
@@ -167,7 +166,7 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-  insertQuestions(date, question) {
+  addQuestion(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
 
@@ -231,8 +230,24 @@ module.exports = class DatabaseHandler {
       if(err){
         return console.log(err.stack);
       } else {
-        console.log("grades + 1 successful");
+        console.log("waste updated");
       }
     });
+  }
+
+  getQuestion() {
+
+   const query = {
+     name: 'getQuestion',
+     text: "SELECT * FROM question",
+   }
+
+   this.con.query(query, (err, res) => {
+     if(err)  {
+       console.log(err.stack);
+     } else {
+       console.log(res);
+     }
+   })
   }
 }

@@ -41,7 +41,10 @@ io.on('connection', socket => {
 
   socket.on('newQuestion', (date, question) => {
     dbcon.addQuestion(date, question);
+  })
 
+  socket.on('login', (username, password) =>  {
+    dbcon.login(username, password);
   })
 })
 

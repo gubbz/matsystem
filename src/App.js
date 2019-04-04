@@ -94,11 +94,6 @@ class App extends Component {
       }
     })
 
-
-    setInterval(function () {
-      socket.emit("vote", "good");
-    }, 3000);
-
     socket.on('menu', (arr) => {
       console.log(arr);
       today = new Date();

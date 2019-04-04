@@ -66,7 +66,10 @@ export default class Statistics extends Component {
     render() {
         return (
             <div>
-                <div className="Statistics">
+                <h1>{this.props.pageName}</h1>
+                <div className="Statistics"
+                style={{boxShadow: this.props.shadow}}
+                >
                     <div className="TimePicker">
                         <p>Tidsperiod: </p>
                         <p>1v</p>

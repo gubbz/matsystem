@@ -32,6 +32,7 @@ io.on('connection', socket => {
   })
 
   socket.on('vote', (typeOfVote) => {
+
     console.log("röst mottagen typeofvote: " + typeOfVote);
     dbcon.addVote(typeOfVote)
     io.emit('vote', typeOfVote);
@@ -40,6 +41,7 @@ io.on('connection', socket => {
   socket.on('newQuestion', (date, question) => {
     console.log("newquestion körs");
     dbcon.addQuestion(date, question);
+    
   })
 
   socket.on('login', (username, password) =>  {

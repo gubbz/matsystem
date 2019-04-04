@@ -13,33 +13,15 @@ export default class Admin extends Component {
         super(props);
         this.onSend = this.onSend.bind(this);
         this.displayVote = this.displayVote.bind(this);
+        this.child = React.createRef();
     }
 
     onSend(date, question, waste) {
         this.props.onSend(date, question, waste);
     }
 
-    displayVote(type) {
-        switch (type) {
-            case "very_bad":
-                this.color = "red";
-                break;
-            case "bad":
-                this.color = "orange";
-                break;
-            case "good":
-                this.color = "yellow";
-                break;
-            case "very_good":
-                this.color = "green";
-                break;
-        }
-        this.forceUpdate();
-        var that = this;
-        setTimeout(function () {
-            that.color = "white"
-            that.forceUpdate();
-        }, 1337);
+    displayVote(type) {        
+        this.child.current.displayVote(type);
     }
     render() {
         return (
@@ -47,9 +29,7 @@ export default class Admin extends Component {
                 <div className="AdminContainer">
                     <Sidebar />
 
-                    <div className="RightAdmin" style={{
-                        backgroundColor: this.color
-                    }}>
+                    <div className="RightAdmin">
                         <div className="AdminMainContainer">
                             <Route exact path="/admin/" render={() => <Planning
                                 onSend={this.onSend}
@@ -67,7 +47,7 @@ export default class Admin extends Component {
                             />}
                             />
                             <Route path="/admin/question" render={() => <QuestionView
-                                ref={this.props.ref}
+                                ref={this.child}
                             />}
                             />
                         </div>

@@ -85,6 +85,7 @@ class App extends Component {
       //}
     })
 
+
     socket.on('grades', (arr) => {
       console.log(arr)
       for (var i = 0; i < arr.length; i++) {
@@ -94,18 +95,12 @@ class App extends Component {
       }
     })
 
-
-    setInterval(function () {
-      socket.emit("vote", "good");
-    }, 3000);
-
     socket.on('menu', (arr) => {
       console.log(arr);
       today = new Date();
       mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
       console.log(mm + "-" + dd);
-
     })
   }
 

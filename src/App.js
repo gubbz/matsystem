@@ -29,6 +29,7 @@ var state = {
   bad: 0,
   vBad: 0,
   socket: null,
+  displayVote: null,
 }
 class App extends Component {
   constructor() {
@@ -38,8 +39,11 @@ class App extends Component {
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.child = React.createRef();
     this.state = state;
   }
+
+
 
   //FIXA HÄR TB
 
@@ -77,6 +81,7 @@ class App extends Component {
 
       //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         this.updateChart(typeOfVote, 1);
+        this.child.current.displayVote(typeOfVote);
       //}
     })
 
@@ -89,6 +94,11 @@ class App extends Component {
       }
     })
 
+
+    setInterval(function () {
+      socket.emit("vote", "good");
+    }, 3000);
+
     socket.on('menu', (arr) => {
       console.log(arr);
       today = new Date();
@@ -99,7 +109,7 @@ class App extends Component {
     })
   }
 
-  
+
   // Login -> Client -> hit
   handleLogin(username, password) {
     
@@ -163,6 +173,7 @@ class App extends Component {
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
+              ref={this.child}
             />
           } />
           <Route path="/" render={() =>

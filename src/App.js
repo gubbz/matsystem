@@ -105,7 +105,7 @@ class App extends Component {
   
   // Login -> Client -> hit
   handleLogin(username, password) {
-    alert("yeet")
+    
   }
 
   updateChart(data, amount) {

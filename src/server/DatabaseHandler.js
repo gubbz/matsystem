@@ -38,9 +38,9 @@ module.exports = class DatabaseHandler {
 
   }
 
- getGrades(socket) {
+ getGrades(socket, typeOfCall) {
     //Get Grades from DB when client first opens the webapplication
-    console.log("GET GRADES for " + socket.id);
+    console.log("GET GRADES " + typeOfCall + " for " + socket.id);
     var grades = [];
     var today = new Date().toISOString().substring(0, 10);
 
@@ -66,8 +66,8 @@ module.exports = class DatabaseHandler {
         }
       }
       console.log(grades);
-      socket.emit('grades', grades);
-      //this.insertQuestions('2019-03-26', "gillade du maten idag");
+
+      socket.emit(typeOfCall, grades);
     });
 
   }

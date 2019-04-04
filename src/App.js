@@ -22,7 +22,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 var state = {
   vGood: 0,
   good: 0,
@@ -74,24 +74,21 @@ class App extends Component {
 
     socket.on('connect', () => {
       console.log("Connected");
-      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
-      //}
+      this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
     })
 
     socket.on('vote', (typeOfVote) => {
-
-      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         this.updateChart(typeOfVote, 1);
-        this.child.current.displayVote(typeOfVote);
-      //}
+        if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
+          this.child.current.displayVote(typeOfVote);
+        }
     })
 
     socket.on('grades', (arr) => {
       console.log(arr)
       for (var i = 0; i < arr.length; i++) {
         for (var j = 0; j < arr[i].length; j += 2) {
-          this.updateChart(arr[i][j], parseInt(arr[i][j + 1]));
+          this.resetChart(arr[i][j], parseInt(arr[i][j + 1]));
         }
       }
     })
@@ -116,7 +113,7 @@ class App extends Component {
 
   // Login -> Client -> hit
   handleLogin(username, password) {
-    
+
   }
 
   updateChart(data, amount) {
@@ -124,40 +121,55 @@ class App extends Component {
       case "very_bad":
         this.setState({
           vBad: this.state.vBad + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-          });
         });
         break;
       case "bad":
         this.setState({
           bad: this.state.bad + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
           });
-        });
         break;
       case "good":
         this.setState({
           good: this.state.good + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-          });
         });
         break;
       case "very_good":
         this.setState({
           vGood: this.state.vGood + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-          });
         });
         break;
     }
+    this.setState({
+      data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad]
+    });
+  }
+
+  resetChart(data, amount) {
+    switch (data) {
+      case "very_bad":
+        this.setState({
+          vBad: amount
+        });
+        break;
+      case "bad":
+        this.setState({
+          bad: amount
+          });
+        break;
+      case "good":
+        this.setState({
+          good: amount
+        });
+        break;
+      case "very_good":
+        this.setState({
+          vGood: amount
+        });
+        break;
+    }
+    this.setState({
+      data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad]
+    });
   }
 
   isAdminPage() {
@@ -177,6 +189,7 @@ class App extends Component {
           <Route path="/admin/question" render={() =>
             <Admin
               vote={this.state.currentVote}
+              ref={this.child}
             />
           } />
           <Route path="/admin" render={() =>

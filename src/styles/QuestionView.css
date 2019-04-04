@@ -1,17 +1,26 @@
 .QuestionView {
-    display: flex;
-    margin-top: 30vh;
-    justify-content: center;
-    align-items: center;
-    font-size: 5vh;
-}
-
-.FillColor {
+    background: white;
     position: absolute;
     top: 0;
     left: 0;
     height: 100vh;
+    padding: 30vh 0 10vh 0;
+    box-sizing: border-box;
     width: 100vw;
-    background: green;
-    z-index: 1000;
+    font-size: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.emojis {
+    display: flex;
+    height: 14vh;
+    width: 80%;
+    justify-content: space-between;
+}
+
+.emojis img {
+    height: 100%;
 }

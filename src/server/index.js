@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 
   socket.on('vote', (typeOfVote) => {
     console.log("röst mottagen typeofvote: " + typeOfVote);
-    //dbcon.addVote(typeOfVote)
+    dbcon.addVote(typeOfVote)
     io.emit('vote', typeOfVote);
   })
 

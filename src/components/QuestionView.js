@@ -36,6 +36,7 @@ export default class QuestionView extends Component {
         }
 
     }
+
     render() {
         return (
             <div className="QuestionView"

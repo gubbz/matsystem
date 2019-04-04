@@ -68,7 +68,6 @@ export default class Admin extends Component {
                             />
                             <Route path="/admin/question" render={() => <QuestionView
                                 ref={this.props.ref}
-
                             />}
                             />
                         </div>

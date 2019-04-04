@@ -3,7 +3,6 @@ const pg = require('pg');
 const mysql = require('mysql2');
 var CryptoJS = require("crypto-js");
 
-
 /**
   Database communication and functionality
 **/
@@ -68,6 +67,7 @@ module.exports = class DatabaseHandler {
       }
       console.log(grades);
       socket.emit('grades', grades);
+      //this.insertQuestions('2019-03-26', "gillade du maten idag");
     });
 
   }
@@ -169,7 +169,6 @@ module.exports = class DatabaseHandler {
   addQuestion(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
-
     console.log("insertquestion, date: " + date + " question: " + question);
 
     const query = {
@@ -216,10 +215,10 @@ module.exports = class DatabaseHandler {
         return console.log(err.stack);
       } else {
         console.log("Login successful");
-      } 
+      }
     });
-  }        
-         
+  }
+
   updateWaste(waste, date, menu)  {
     console.log("update waste +: " + waste);
 

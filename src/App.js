@@ -29,7 +29,9 @@ var state = {
   bad: 0,
   vBad: 0,
   socket: null,
+  todaysMeal: null,
   displayVote: null,
+
 }
 class App extends Component {
   constructor() {
@@ -46,13 +48,13 @@ class App extends Component {
 
 
   //FIXA HÄR TB
-
   sendMealInfo(date, question) {
     var getYear = new Date();
     date = getYear.getFullYear() + "-" + date;
     this.state.socket.emit('newQuestion', (date, question) => {
     });
   }
+
   sendWaste(waste, date, menu){
     this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
@@ -100,10 +102,17 @@ class App extends Component {
       mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
       console.log(mm + "-" + dd);
-
+      if (arr.length == 5) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i]['localDate'] == (mm + "-" + dd)) {
+            var todaysMeal = arr[i]['meal'];
+            console.log(todaysMeal);
+            this.setState({todaysMeal: todaysMeal});
+          }
+        }
+      }
     })
   }
-
 
   // Login -> Client -> hit
   handleLogin(username, password) {
@@ -165,6 +174,11 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
+          <Route path="/admin/question" render={() =>
+            <Admin
+              vote={this.state.currentVote}
+            />
+          } />
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
@@ -178,6 +192,7 @@ class App extends Component {
               bad={this.state.bad}
               vBad={this.state.vBad}
               data={this.state.data}
+              meal={this.state.todaysMeal}
               ref={this.chartElement}
               handleLogin={this.handleLogin}
             />

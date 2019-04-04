@@ -166,7 +166,7 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-  insertQuestions(date, question) {
+  addQuestion(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
     console.log("insertquestion, date: " + date + " question: " + question);
@@ -229,8 +229,24 @@ module.exports = class DatabaseHandler {
       if(err){
         return console.log(err.stack);
       } else {
-        console.log("grades + 1 successful");
+        console.log("waste updated");
       }
     });
+  }
+
+  getQuestion() {
+
+   const query = {
+     name: 'getQuestion',
+     text: "SELECT * FROM question",
+   }
+
+   this.con.query(query, (err, res) => {
+     if(err)  {
+       console.log(err.stack);
+     } else {
+       console.log(res);
+     }
+   })
   }
 }

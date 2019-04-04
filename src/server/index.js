@@ -19,6 +19,7 @@ app.get('/*',(req, res) => {
 var dbcon = new DatabaseHandler();
 
 io.on('connection', socket => {
+  dbcon.addQuestion('2019-04-03', "vad är din favoritfärg");
   console.log('User connected');
   socket.on('disconnect', () => {
     console.log('user disconnected');
@@ -47,6 +48,10 @@ io.on('connection', socket => {
 
   socket.on('updateWaste', (waste, date, menu) => {
     dbcon.updateWaste(waste, date, menu);
+  })
+
+  socket.on('login', (username, password) =>  {
+    dbcon.login(username, password);
   })
 })
 

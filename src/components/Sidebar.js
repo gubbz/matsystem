@@ -12,16 +12,16 @@ export default class Sidebar extends Component {
                 <div className="Sidebar">
                     <div className="SidebarLogo"><h1>MealRate</h1></div>
                     <div className="SidebarItem"><i className="material-icons">calendar_today</i>
-                        <Link to="#" className="SidebarLink">Planering</Link>
+                        <Link to="/admin/planning" className="SidebarLink">Planering</Link>
                     </div>
                     <div className="SidebarItem"><i className="material-icons">bar_chart</i>
-                        <Link to="#" className="SidebarLink">Statistik</Link>
+                        <Link to="/admin/statistics" className="SidebarLink">Statistik</Link>
                     </div>
                     <div className="SidebarItem"><i className="material-icons">settings</i>
-                        <Link to="#" className="SidebarLink">Inställningar</Link>
+                        <Link to="/admin/settings" className="SidebarLink">Inställningar</Link>
                     </div>
                     <div className="SidebarItem"><i className="material-icons">exit_to_app</i>
-                        <Link to="#" className="SidebarLink">Logga ut</Link>
+                        <Link to="logout" className="SidebarLink">Logga ut</Link>
                     </div>
                 </div>
             )

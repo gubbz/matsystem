@@ -19,6 +19,7 @@ app.get('/*',(req, res) => {
 var dbcon = new DatabaseHandler();
 
 io.on('connection', socket => {
+  dbcon.addQuestion('2019-04-03', "vad är din favoritfärg");
   console.log('User connected');
   socket.on('disconnect', () => {
     console.log('user disconnected');
@@ -31,8 +32,9 @@ io.on('connection', socket => {
   })
 
   socket.on('vote', (typeOfVote) => {
+    
     console.log("röst mottagen typeofvote: " + typeOfVote);
-    dbcon.addVote(typeOfVote)
+    //dbcon.addVote(typeOfVote)
     io.emit('vote', typeOfVote);
   })
 
@@ -42,8 +44,16 @@ io.on('connection', socket => {
 
   })
 
+  socket.on('login', (username, password) =>  {
+    dbcon.login(username, password);
+  })
+
   socket.on('updateWaste', (waste, date, menu) => {
     dbcon.updateWaste(waste, date, menu);
+  })
+
+  socket.on('login', (username, password) =>  {
+    dbcon.login(username, password);
   })
 })
 

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import TodayGrid from './TodayGrid';
 import Statistics from './Statistics';
+import Login from './Login';
 import Meals from './Meals';
 import Header from './Header';
 
@@ -10,7 +11,13 @@ import Header from './Header';
 export default class Client extends Component {
     constructor(props) {
         super(props);
+        this.handleLogin = this.handleLogin.bind(this);
     }
+
+    handleLogin(username, password) {
+        this.props.handleLogin(username, password);
+    }
+
     render() {
         return (
             <Router>
@@ -37,8 +44,16 @@ export default class Client extends Component {
                             />
                         }
                         />
-                        <Route path="/statistics" component={Statistics} />
+                        <Route path="/statistics" render={() =>
+                            <Statistics
+                                shadow="0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16"
+                            />
+                        } />
                         <Route path="/meals" component={Meals} />
+                        <Route path="/login" render={() =>
+                            <Login
+                                handleLogin={this.handleLogin}
+                            />} />
                     </div>
                 </div>
             </Router>

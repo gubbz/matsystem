@@ -31,7 +31,6 @@ export default class Header extends Component {
         }
         else {
             return (
-
                 <div className="HeaderContainer">
                     <div className="Header">
                         <div><h1>MealRate</h1></div>
@@ -50,7 +49,7 @@ export default class Header extends Component {
                             />
                             <HeaderItem
                                 text="LOGGA IN"
-                                route="/"
+                                route="/login"
                             />
                         </div>
                     </div>

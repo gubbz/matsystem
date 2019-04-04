@@ -11,6 +11,8 @@ import Header from './Header';
 export default class Client extends Component {
     constructor(props) {
         super(props);
+        console.log("client cosntructor");
+        console.log(props);
         this.handleLogin = this.handleLogin.bind(this);
     }
 
@@ -31,6 +33,7 @@ export default class Client extends Component {
                             vBad={this.props.vBad}
                             data={this.props.data}
                             ref={this.chartElement}
+                            meal={this.props.meal}
                         />}
                         />
                         <Route path="/today" render={() =>
@@ -41,6 +44,7 @@ export default class Client extends Component {
                                 vBad={this.props.vBad}
                                 data={this.props.data}
                                 ref={this.chartElement}
+                                meal={this.props.meal}
                             />
                         }
                         />

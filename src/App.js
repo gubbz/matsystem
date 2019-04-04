@@ -29,7 +29,9 @@ var state = {
   bad: 0,
   vBad: 0,
   socket: null,
+  todaysMeal: null,
   displayVote: null,
+
 }
 class App extends Component {
   constructor() {
@@ -46,13 +48,13 @@ class App extends Component {
 
 
   //FIXA HÄR TB
-
   sendMealInfo(date, question) {
     var getYear = new Date();
     date = getYear.getFullYear() + "-" + date;
     this.state.socket.emit('newQuestion', (date, question) => {
     });
   }
+
   sendWaste(waste, date, menu){
     this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
@@ -72,17 +74,14 @@ class App extends Component {
 
     socket.on('connect', () => {
       console.log("Connected");
-      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
-        this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
-      //}
+      this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
     })
 
     socket.on('vote', (typeOfVote) => {
-
-      //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         this.updateChart(typeOfVote, 1);
-        this.child.current.displayVote(typeOfVote);
-      //}
+        if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
+          this.child.current.displayVote(typeOfVote);
+        }
     })
 
 
@@ -90,7 +89,7 @@ class App extends Component {
       console.log(arr)
       for (var i = 0; i < arr.length; i++) {
         for (var j = 0; j < arr[i].length; j += 2) {
-          this.updateChart(arr[i][j], parseInt(arr[i][j + 1]));
+          this.resetChart(arr[i][j], parseInt(arr[i][j + 1]));
         }
       }
     })
@@ -101,13 +100,21 @@ class App extends Component {
       mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
       console.log(mm + "-" + dd);
+      if (arr.length == 5) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i]['localDate'] == (mm + "-" + dd)) {
+            var todaysMeal = arr[i]['meal'];
+            console.log(todaysMeal);
+            this.setState({todaysMeal: todaysMeal});
+          }
+        }
+      }
     })
   }
 
-
   // Login -> Client -> hit
   handleLogin(username, password) {
-    
+
   }
 
   updateChart(data, amount) {
@@ -115,40 +122,55 @@ class App extends Component {
       case "very_bad":
         this.setState({
           vBad: this.state.vBad + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-          });
         });
         break;
       case "bad":
         this.setState({
           bad: this.state.bad + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
           });
-        });
         break;
       case "good":
         this.setState({
           good: this.state.good + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-          });
         });
         break;
       case "very_good":
         this.setState({
           vGood: this.state.vGood + amount,
-        }, () => {
-          this.setState({
-            data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad],
-          });
         });
         break;
     }
+    this.setState({
+      data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad]
+    });
+  }
+
+  resetChart(data, amount) {
+    switch (data) {
+      case "very_bad":
+        this.setState({
+          vBad: amount
+        });
+        break;
+      case "bad":
+        this.setState({
+          bad: amount
+          });
+        break;
+      case "good":
+        this.setState({
+          good: amount
+        });
+        break;
+      case "very_good":
+        this.setState({
+          vGood: amount
+        });
+        break;
+    }
+    this.setState({
+      data: [this.state.vGood, this.state.good, this.state.bad, this.state.vBad]
+    });
   }
 
   isAdminPage() {
@@ -165,6 +187,12 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
+          <Route path="/admin/question" render={() =>
+            <Admin
+              vote={this.state.currentVote}
+              ref={this.child}
+            />
+          } />
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
@@ -178,6 +206,7 @@ class App extends Component {
               bad={this.state.bad}
               vBad={this.state.vBad}
               data={this.state.data}
+              meal={this.state.todaysMeal}
               ref={this.chartElement}
               handleLogin={this.handleLogin}
             />

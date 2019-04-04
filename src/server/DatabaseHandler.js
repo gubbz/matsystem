@@ -3,7 +3,6 @@ const pg = require('pg');
 const mysql = require('mysql2');
 var CryptoJS = require("crypto-js");
 
-
 /**
   Database communication and functionality
 **/
@@ -39,9 +38,9 @@ module.exports = class DatabaseHandler {
 
   }
 
- getGrades(socket) {
+ getGrades(socket, typeOfCall) {
     //Get Grades from DB when client first opens the webapplication
-    console.log("GET GRADES for " + socket.id);
+    console.log("GET GRADES " + typeOfCall + " for " + socket.id);
     var grades = [];
     var today = new Date().toISOString().substring(0, 10);
 
@@ -67,7 +66,8 @@ module.exports = class DatabaseHandler {
         }
       }
       console.log(grades);
-      socket.emit('grades', grades);
+
+      socket.emit(typeOfCall, grades);
     });
 
   }
@@ -169,7 +169,6 @@ module.exports = class DatabaseHandler {
   addQuestion(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
-
     console.log("insertquestion, date: " + date + " question: " + question);
 
     const query = {
@@ -216,10 +215,10 @@ module.exports = class DatabaseHandler {
         return console.log(err.stack);
       } else {
         console.log("Login successful");
-      } 
+      }
     });
-  }        
-         
+  }
+
   updateWaste(waste, date, menu)  {
     console.log("update waste +: " + waste);
 

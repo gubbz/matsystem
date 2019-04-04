@@ -22,7 +22,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 var state = {
   vGood: 0,
   good: 0,
@@ -30,7 +30,8 @@ var state = {
   vBad: 0,
   socket: null,
   todaysMeal: null,
-  currentVote: null
+  displayVote: null,
+
 }
 class App extends Component {
   constructor() {
@@ -40,8 +41,11 @@ class App extends Component {
     this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.child = React.createRef();
     this.state = state;
   }
+
+
 
   //FIXA HÄR TB
   sendMealInfo(date, question) {
@@ -79,7 +83,7 @@ class App extends Component {
 
       //if (this.url.substring(this.url.lastIndexOf("/")) === "/" || this.url.substring(this.url.lastIndexOf("/")) === "/today") {
         this.updateChart(typeOfVote, 1);
-        this.updateAdminQuestionVote(typeOfVote);
+        this.child.current.displayVote(typeOfVote);
       //}
     })
 
@@ -112,7 +116,7 @@ class App extends Component {
 
   // Login -> Client -> hit
   handleLogin(username, password) {
-    alert("yeet")
+    
   }
 
   updateChart(data, amount) {
@@ -178,6 +182,7 @@ class App extends Component {
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
+              ref={this.child}
             />
           } />
           <Route path="/" render={() =>

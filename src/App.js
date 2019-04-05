@@ -53,6 +53,10 @@ class App extends Component {
     this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
   }
+  // Login -> Client -> hit
+  handleLogin(username, password) {
+    this.state.socket.emit('login',{username: username, password: password});
+  }
 
   componentWillMount() {
     this.initSocket()
@@ -97,12 +101,6 @@ class App extends Component {
       console.log(mm + "-" + dd);
 
     })
-  }
-
-  
-  // Login -> Client -> hit
-  handleLogin(username, password) {
-    alert("yeet")
   }
 
   updateChart(data, amount) {

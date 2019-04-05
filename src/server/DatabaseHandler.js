@@ -1,7 +1,8 @@
 'use strict'
 const pg = require('pg');
 const mysql = require('mysql2');
-var CryptoJS = require("crypto-js");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 /**
@@ -68,7 +69,7 @@ module.exports = class DatabaseHandler {
       }
       console.log(grades);
       socket.emit('grades', grades);
-      this.insertQuestions('2019-03-26', "gillade du maten idag");
+      //this.insertQuestions('2019-03-26', "gillade du maten idag");
     });
 
   }
@@ -188,39 +189,30 @@ module.exports = class DatabaseHandler {
   }
 
   login(username, password) {
+    console.log("username "+username+ " password " +password);
 
-    var myUsername =  "myUsername";
-    var myPassword =  "myPassword";
-
-    // Encrypt
-    var encryptoUsername = CryptoJS.AES.encrypt(username, myUsername).toString();
-    var encryptoPassword = CryptoJS.AES.encrypt(password, myPassword).toString();
-    // Decrypt
-
-    var originalUsername = decryptoUsername.toString(CryptoJS.enc.Utf8);
-    var originalPassword = decryptoPassword.toString(CryptoJS.enc.Utf8);
-
-    console.log(originalUsername); // 'username as it was in the beginning'
-    console.log(originalPassword); // 'password as it was in the beginning'
 
     const query = {
       name: 'getUsers',
-      text: 'SELECT * FROM users WHERE encryptoUsername = $1 AND encryptoPassword = $2',
-      values: [username, password]
+      text: 'SELECT password FROM users where username = $1',
+      values: [username]
     }
 
-    var decryptoUsername  = CryptoJS.AES.decrypt(username, myUsername);
-    var decryptoPassword  = CryptoJS.AES.decrypt(password, myPassword);
-
     this.con.query(query, (err, res) => {
-      if(err){
-        return console.log(err.stack);
-      } else {
+      var cryptoPass = bcrypt.hashSync(password, saltRounds);
+      console.log("cryptoPass");
+      console.log(res.rows[0]["password"]);
+      console.log(password);
+      console.log(bcrypt.compareSync(password, res.rows[0]["password"]));
+
+      if(bcrypt.compareSync(password, res.rows[0]["password"])){
         console.log("Login successful");
-      } 
+      } else {
+        return console.log(err);
+      }
     });
-  }        
-         
+  }
+
   updateWaste(waste, date, menu)  {
     console.log("update waste +: " + waste);
 

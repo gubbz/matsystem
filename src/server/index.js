@@ -45,8 +45,10 @@ io.on('connection', (socket) => {
 
   })
 
-  socket.on('login', (username, password) =>  {
-    dbcon.login(username, password);
+  socket.on('login',function (data) {
+    console.log("data");
+    console.log(data.username);
+    dbcon.login(data.username, data.password);
   })
 
   socket.on('updateWaste', (waste, date, menu) => {

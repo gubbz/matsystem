@@ -18,8 +18,10 @@ app.get('/*',(req, res) => {
 
 var dbcon = new DatabaseHandler();
 
+var socketsConnected = new Array();
 io.on('connection', (socket) => {
   console.log('User connected');
+  socketsConnected.push(socket);
   socket.on('disconnect', () => {
     console.log('user disconnected');
   })
@@ -30,6 +32,7 @@ io.on('connection', (socket) => {
     socket.emit('menu', menu);
     setInterval(() => {
       dbcon.getGrades(socket, "grades");
+      console.log("Antal sockets anslutna " + socketsConnected.length);
     }, 60000);
   })
 

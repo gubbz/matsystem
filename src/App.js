@@ -114,6 +114,10 @@ class App extends Component {
         }
       }
     })
+
+    socket.on('getQuestion', (question) => {
+      //do something with the question ALBZZ, yeet
+    })
   }
 
   updateChart(data, amount) {

@@ -47,7 +47,11 @@ io.on('connection', (socket) => {
   socket.on('newQuestion', (date, question) => {
     console.log("newquestion körs");
     dbcon.addQuestion(date, question);
+  })
 
+  socket.on('getQuestion', () => {
+    var question = dbcon.getQuestion();
+    io.emit(getQuestion, question);
   })
 
   socket.on('login',function (data) {

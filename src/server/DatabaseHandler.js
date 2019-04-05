@@ -14,6 +14,7 @@ module.exports = class DatabaseHandler {
     this.con;
     this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
+    this.weekQuestions = new Array();
     this.establishConnection();
     this.getMenuFromDB();
   }
@@ -173,9 +174,10 @@ module.exports = class DatabaseHandler {
 
     const query = {
     name: 'insertQuestion',
-    text: 'INSERT INTO menu(date_pk, menu) VALUES($1, $2)',
-    values: [date, question],
+    text: 'UPDATE question SET question = $1 WHERE date_pk = $2',
+    values: [question, date],
     }
+
     this.con.query(query, (err, res) => {
       if(err){
         return console.log(err.stack);
@@ -206,6 +208,7 @@ module.exports = class DatabaseHandler {
         console.log("Login successful");
       } else {
         return console.log(err);
+
       }
     });
   }
@@ -227,17 +230,38 @@ module.exports = class DatabaseHandler {
 
   getQuestion() {
 
+    var startDate = this.startOfWeek(new Date());
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+
+    var questions = [];
+
+    for(var i = 0; i < 5; i++){
+      var day = new Date();
+      day.setDate(startDate.getDate() + i);
+      day = day.toISOString().substring(0, 10);
+
    const query = {
      name: 'getQuestion',
-     text: "SELECT * FROM question",
+     text: "SELECT * FROM question WHERE date_pk = $1",
+     values: [day],
    }
 
    this.con.query(query, (err, res) => {
      if(err)  {
        console.log(err.stack);
      } else {
-       console.log(res);
-     }
-   })
-  }
+       console.log("getQuestion successfull")
+       console.log(res.rows);
+
+         var dateName = res.fields[0].name;
+         var questionName = res.fields[1].name;
+         var date = res.rows[0][dateName];
+         var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
+         var question = res.rows[0][questionName];
+       }
+       this.weekQuestions.push([localDate, question]);
+     });
+   }
+   console.log(this.weekQuestions);
+ }
 }

@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
     setInterval(() => {
-      dbcon.getGrades(socket, "grades");
+      //dbcon.getGrades(socket, "grades");
       console.log("Antal sockets anslutna " + socketsConnected.size);
     }, 60000);
   })

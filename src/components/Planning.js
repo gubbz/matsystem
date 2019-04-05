@@ -54,6 +54,7 @@ export default class Planning extends Component {
         //alert(this.state.mealObj.dates);
         return (
             <div>
+                <h1>{this.props.pageName}</h1>
                 <table className="Table">
                     <TableItem
                         isHeader={true}

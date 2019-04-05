@@ -1,7 +1,26 @@
 .QuestionView {
+    background: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding: 30vh 0 10vh 0;
+    box-sizing: border-box;
+    width: 100vw;
+    font-size: 5vh;
     display: flex;
-    margin-top: 40vh;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    font-size: 40px;
+}
+
+.emojis {
+    display: flex;
+    height: 14vh;
+    width: 80%;
+    justify-content: space-between;
+}
+
+.emojis img {
+    height: 100%;
 }

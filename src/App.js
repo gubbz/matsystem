@@ -186,12 +186,6 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
-          <Route path="/admin/question" render={() =>
-            <Admin
-              vote={this.state.currentVote}
-              ref={this.child}
-            />
-          } />
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}

@@ -18,19 +18,24 @@ app.get('/*',(req, res) => {
 
 var dbcon = new DatabaseHandler();
 
+var socketsConnected = new Set();
+
+setInterval(function() {
+  console.log("sockets connected " + socketsConnected.size);
+}, 60000);
+
 io.on('connection', (socket) => {
   console.log('User connected');
+  socketsConnected.add(socket);
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    socketsConnected.delete(socket);
   })
 
   socket.on('response', () => {
     dbcon.getGrades(socket, "grades");
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
-    setInterval(() => {
-      dbcon.getGrades(socket, "grades");
-    }, 60000);
   })
 
   socket.on('vote', (typeOfVote) => {

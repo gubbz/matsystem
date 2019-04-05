@@ -39,7 +39,7 @@ module.exports = class DatabaseHandler {
 
   }
 
- getGrades(socket, typeOfCall) {
+  getGrades(socket, typeOfCall) {
     //Get Grades from DB when client first opens the webapplication
     console.log("GET GRADES " + typeOfCall + " for " + socket.id);
     var grades = [];
@@ -72,7 +72,7 @@ module.exports = class DatabaseHandler {
 
   }
 
- addVote(typeOfVote) {
+  addVote(typeOfVote) {
 
     var currentVote;
     var query;

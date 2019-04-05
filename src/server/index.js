@@ -18,12 +18,13 @@ app.get('/*',(req, res) => {
 
 var dbcon = new DatabaseHandler();
 
-var socketsConnected = new Array();
+var socketsConnected = new Set();
 io.on('connection', (socket) => {
   console.log('User connected');
-  socketsConnected.push(socket);
+  socketsConnected.add(socket);
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    socketsConnected.delete(socket);
   })
 
   socket.on('response', () => {
@@ -32,7 +33,7 @@ io.on('connection', (socket) => {
     socket.emit('menu', menu);
     setInterval(() => {
       dbcon.getGrades(socket, "grades");
-      console.log("Antal sockets anslutna " + socketsConnected.length);
+      console.log("Antal sockets anslutna " + socketsConnected.size);
     }, 60000);
   })
 

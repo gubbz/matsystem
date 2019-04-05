@@ -9,13 +9,6 @@ const DatabaseHandler = require('./DatabaseHandler.js');
 
 const PORT = process.env.PORT || 8080;
 
-<<<<<<< HEAD
-app.use(helmet());
-
-const skolmatURL = "https://skolmaten.se/birger-sjoberggymnasiet/";
-
-=======
->>>>>>> 635bfd4da179afade9a4fe481be63c762288732e
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(__dirname + '/../../build'));
 }
@@ -26,7 +19,7 @@ app.get('/*',(req, res) => {
 var dbcon = new DatabaseHandler();
 
 io.on('connection', socket => {
-  dbcon.addQuestion('2019-04-03', "vad är din favoritfärg");
+  dbcon.getQuestion();
   console.log('User connected');
   socket.on('disconnect', () => {
     console.log('user disconnected');
@@ -47,13 +40,11 @@ io.on('connection', socket => {
   socket.on('newQuestion', (date, question) => {
     console.log("newquestion körs");
     dbcon.addQuestion(date, question);
-<<<<<<< HEAD
-=======
   })
 
-  socket.on('login', (username, password) =>  {
-    dbcon.login(username, password);
->>>>>>> 635bfd4da179afade9a4fe481be63c762288732e
+  socket.on('getQuestion', () => {
+    var question = dbcon.getQuestion();
+    io.emit(getQuestion, question);
   })
 
   socket.on('updateWaste', (waste, date, menu) => {

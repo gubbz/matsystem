@@ -95,11 +95,14 @@ class App extends Component {
       mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
       console.log(mm + "-" + dd);
+    })
 
+    socket.on('getQuestion', (question) => {
+      //do something with the question ALBZZ, yeet
     })
   }
 
-  
+
   // Login -> Client -> hit
   handleLogin(username, password) {
     alert("yeet")

@@ -88,3 +88,30 @@ function insertFood(weekFood, callback) {
     })
   }
 }
+
+function insertQuestions()  {
+
+
+  var j = 0;
+  for(var i = 0; i < weekQuestion.length; i++)  {
+    var date = weekQuestion[i][0];
+
+    var query = {
+      name: 'insertQuestions',
+      text: "INSERT INTO question(date_pk, question) VALUES($1, $2)",
+      values: [date, "Vad tyckte du om maten"],
+    }
+    client.query(query, (err) =>  {
+      if(err) {
+        j++;
+        console.log(err.stack);
+      } else {
+        j++;
+        console.log("questions of the week inserted");
+      }
+      if(j == 5)  {
+        client.end();
+      }
+    })
+  }
+}

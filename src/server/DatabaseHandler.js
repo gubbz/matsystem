@@ -4,7 +4,6 @@ const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
 /**
   Database communication and functionality
 **/
@@ -40,9 +39,9 @@ module.exports = class DatabaseHandler {
 
   }
 
- getGrades(socket) {
+ getGrades(socket, typeOfCall) {
     //Get Grades from DB when client first opens the webapplication
-    console.log("GET GRADES for " + socket.id);
+    console.log("GET GRADES " + typeOfCall + " for " + socket.id);
     var grades = [];
     var today = new Date().toISOString().substring(0, 10);
 
@@ -68,8 +67,7 @@ module.exports = class DatabaseHandler {
         }
       }
       console.log(grades);
-      socket.emit('grades', grades);
-      //this.insertQuestions('2019-03-26', "gillade du maten idag");
+      socket.emit(typeOfCall, grades);
     });
 
   }
@@ -168,10 +166,9 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-  insertQuestions(date, question) {
+  addQuestion(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
-
     console.log("insertquestion, date: " + date + " question: " + question);
 
     const query = {
@@ -223,8 +220,24 @@ module.exports = class DatabaseHandler {
       if(err){
         return console.log(err.stack);
       } else {
-        console.log("grades + 1 successful");
+        console.log("waste updated");
       }
     });
+  }
+
+  getQuestion() {
+
+   const query = {
+     name: 'getQuestion',
+     text: "SELECT * FROM question",
+   }
+
+   this.con.query(query, (err, res) => {
+     if(err)  {
+       console.log(err.stack);
+     } else {
+       console.log(res);
+     }
+   })
   }
 }

@@ -18,16 +18,19 @@ app.get('/*',(req, res) => {
 
 var dbcon = new DatabaseHandler();
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   console.log('User connected');
   socket.on('disconnect', () => {
     console.log('user disconnected');
   })
 
   socket.on('response', () => {
-    dbcon.getGrades(socket);
+    dbcon.getGrades(socket, "grades");
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
+    setInterval(() => {
+      dbcon.getGrades(socket, "grades");
+    }, 60000);
   })
 
   socket.on('vote', (typeOfVote) => {
@@ -39,6 +42,7 @@ io.on('connection', socket => {
   socket.on('newQuestion', (date, question) => {
     console.log("newquestion körs");
     dbcon.addQuestion(date, question);
+
   })
 
   socket.on('login',function (data) {
@@ -50,6 +54,11 @@ io.on('connection', socket => {
   socket.on('updateWaste', (waste, date, menu) => {
     dbcon.updateWaste(waste, date, menu);
   })
+
+  socket.on('login', (username, password) =>  {
+    dbcon.login(username, password);
+  })
+
 })
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

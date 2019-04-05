@@ -10,13 +10,15 @@ export default class TodayGrid extends Component {
     constructor(props) {
         i = 0;
         super(props);
+        console.log("props todaygrid");
+        console.log(this.props);
         this.state = {
             vGood: this.props.vGood,
             good: this.props.good,
             bad: this.props.bad,
             vBad: this.props.vBad,
             data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
-            yeeter: "yeet",
+            meal: this.props.meal
         }
     }
     componentDidUpdate(previousProps) {
@@ -27,6 +29,7 @@ export default class TodayGrid extends Component {
                 bad: this.props.bad,
                 vBad: this.props.vBad,
                 data: [this.props.vGood, this.props.good, this.props.bad, this.props.vBad],
+                meal: this.props.meal
             })
         }
     }
@@ -55,7 +58,7 @@ export default class TodayGrid extends Component {
                     <div className="LeftColumn">
                         <TodayInfo
                             headline="Dagens måltid"
-                            info=""
+                            info={this.state.meal}
                         />
                         <TodayInfo
                             headline="Dagens fråga"
@@ -91,4 +94,3 @@ export default class TodayGrid extends Component {
         );
     }
 }
-

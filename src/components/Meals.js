@@ -17,6 +17,7 @@ export default class Meals extends Component {
       for (var i = 0; i < this.state.ratedFoods.length; i++) {
         console.log("create meal tagg");
         meals.push(<Meal
+          key={"meal" + i}
           mealTitle = {this.state.ratedFoods[i][0]}
           mealRating = {this.state.ratedFoods[i][1]}
         />);

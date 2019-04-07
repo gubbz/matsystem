@@ -115,6 +115,9 @@ class App extends Component {
       }
     })
 
+    socket.on('ratedFood', (arr) => {
+      console.log(arr);
+    })
     socket.on('getQuestion', (question) => {
       //do something with the question ALBZZ, yeet
     })

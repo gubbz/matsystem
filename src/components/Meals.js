@@ -12,6 +12,7 @@ export default class Meals extends Component {
                         <p>Sortera</p>
                     </div>
                     <hr />
+                    /*
                     <Meal
                         mealTitle="Köttbullar & potatis"
                         mealRating="73%"
@@ -28,6 +29,7 @@ export default class Meals extends Component {
                         mealTitle="Fiskgratäng & ris"
                         mealRating="42%"
                     />
+                    */
                 </div>
             </div>
         )

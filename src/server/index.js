@@ -34,6 +34,7 @@ io.on('connection', (socket) => {
 
   socket.on('response', () => {
     dbcon.getGrades(socket, "grades");
+    dbcon.getTopRatedFood(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
   })

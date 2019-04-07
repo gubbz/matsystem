@@ -240,28 +240,56 @@ module.exports = class DatabaseHandler {
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
 
+      const query = {
+       name: 'getQuestion',
+       text: "SELECT * FROM question WHERE date_pk = $1",
+       values: [day],
+     }
+
+     this.con.query(query, (err, res) => {
+        if(err)  {
+         console.log(err.stack);
+        } else {
+          console.log("getQuestion successfull")
+          console.log(res.rows);
+
+          var dateName = res.fields[0].name;
+          var questionName = res.fields[1].name;
+          var date = res.rows[0][dateName];
+          var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
+          var question = res.rows[0][questionName];
+        }
+        this.weekQuestions.push([localDate, question]);
+      });
+    }
+    console.log(this.weekQuestions);
+  }
+
+  getTopRatedFood(socket) {
+   var meals = new Array();
+
+   //hämta måltider och deras grades ordnade efter mealrating
    const query = {
-     name: 'getQuestion',
-     text: "SELECT * FROM question WHERE date_pk = $1",
-     values: [day],
+     name: 'getRatedFood',
+     text: 'SELECT M.menu, Max(G.meal_rating) FROM menu M join grades G ON M.date_pk=G.date_pk group by M.menu ORDER BY Max(G.meal_rating) asc'
    }
 
    this.con.query(query, (err, res) => {
-     if(err)  {
-       console.log(err.stack);
-     } else {
-       console.log("getQuestion successfull")
-       console.log(res.rows);
-
-         var dateName = res.fields[0].name;
-         var questionName = res.fields[1].name;
-         var date = res.rows[0][dateName];
-         var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
-         var question = res.rows[0][questionName];
-       }
-       this.weekQuestions.push([localDate, question]);
-     });
-   }
-   console.log(this.weekQuestions);
+    if(err)  {
+      console.log(err.stack);
+    } else {
+      var mealName = res.fields[0].name;
+      var mealRatingName = res.fields[1].name;
+      for (var i = 0; i < res.rows.length; i++) {
+        var meal = new Array();
+        meal[0] = res.rows[i][mealName];
+        meal[1] = res.rows[i][mealRatingName];
+        meals.push(meal);
+      }
+      //console.log(meals);
+      socket.emit('ratedFood', meals);
+    }
+   });
  }
+
 }

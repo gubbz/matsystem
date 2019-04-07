@@ -53,7 +53,10 @@ export default class Client extends Component {
                                 shadow="0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16"
                             />
                         } />
-                        <Route path="/meals" component={Meals} />
+                        <Route path="/meals" render={() => <Meals
+                          ratedFoods={this.props.ratedFoods}
+                        />} />
+
                         <Route path="/login" render={() =>
                             <Login
                                 handleLogin={this.handleLogin}

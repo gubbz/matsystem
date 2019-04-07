@@ -31,7 +31,7 @@ var state = {
   socket: null,
   todaysMeal: null,
   displayVote: null,
-
+  ratedFoods: []
 }
 class App extends Component {
   constructor() {
@@ -117,6 +117,8 @@ class App extends Component {
 
     socket.on('ratedFood', (arr) => {
       console.log(arr);
+      this.setState({ratedFoods: arr});
+      console.log(this.state);
     })
     socket.on('getQuestion', (question) => {
       //do something with the question ALBZZ, yeet
@@ -209,6 +211,7 @@ class App extends Component {
               meal={this.state.todaysMeal}
               ref={this.chartElement}
               handleLogin={this.handleLogin}
+              ratedFoods={this.state.ratedFoods}
             />
           } />
 

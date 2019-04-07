@@ -3,6 +3,35 @@ import '../styles/Meals.css'
 import Meal from './Meal.js';
 import '../styles/MainContainer.css'
 export default class Meals extends Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        ratedFoods: this.props.ratedFoods,
+      }
+      console.log(this.state);
+    }
+
+    createMealComponent = () => {
+      var meals = [];
+      for (var i = 0; i < this.state.ratedFoods.length; i++) {
+        console.log("create meal tagg");
+        meals.push(<Meal
+          mealTitle = {this.state.ratedFoods[i][0]}
+          mealRating = {this.state.ratedFoods[i][1]}
+        />);
+      }
+      return meals;
+    }
+
+    componentDidUpdate(previousProps) {
+        if (previousProps.data !== this.props.data) {
+            this.setState({
+              ratedFoods: this.props.ratedFoods
+            })
+        }
+    }
+
     render() {
         return (
             <div className="MainContainer">
@@ -12,22 +41,7 @@ export default class Meals extends Component {
                         <p>Sortera</p>
                     </div>
                     <hr />
-                    <Meal
-                        mealTitle="Köttbullar & potatis"
-                        mealRating="73%"
-                    />
-                    <Meal
-                        mealTitle="Tomatsoppa"
-                        mealRating="64%"
-                    />
-                    <Meal
-                        mealTitle="Kycklinggryta & ris"
-                        mealRating="46%"
-                    />
-                    <Meal
-                        mealTitle="Fiskgratäng & ris"
-                        mealRating="42%"
-                    />
+                    {this.createMealComponent()}
                 </div>
             </div>
         )

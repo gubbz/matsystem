@@ -31,7 +31,8 @@ var state = {
   socket: null,
   todaysMeal: null,
   displayVote: null,
-
+  ratedFoods: [],
+  planningMeals: []
 }
 class App extends Component {
   constructor() {
@@ -58,6 +59,10 @@ class App extends Component {
   sendWaste(waste, date, menu){
     this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
+  }
+
+  handleLogin(username, password) {
+    this.state.socket.emit('login',{username: username, password: password});
   }
 
   componentWillMount() {
@@ -108,13 +113,17 @@ class App extends Component {
             this.setState({todaysMeal: todaysMeal});
           }
         }
+        this.setState({planningMeals: arr});
       }
     })
-  }
 
-  // Login -> Client -> hit
-  handleLogin(username, password) {
-
+    socket.on('ratedFood', (arr) => {
+      console.log(arr);
+      this.setState({ratedFoods: arr});
+    })
+    socket.on('getQuestion', (question) => {
+      //do something with the question ALBZZ, yeet
+    })
   }
 
   updateChart(data, amount) {
@@ -191,6 +200,7 @@ class App extends Component {
             <Admin
               onSend={this.sendMealInfo}
               ref={this.child}
+              planningMeals={this.state.planningMeals}
             />
           } />
           <Route path="/" render={() =>
@@ -203,6 +213,7 @@ class App extends Component {
               meal={this.state.todaysMeal}
               ref={this.chartElement}
               handleLogin={this.handleLogin}
+              ratedFoods={this.state.ratedFoods}
             />
           } />
 

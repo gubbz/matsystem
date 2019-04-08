@@ -20,7 +20,7 @@ export default class Admin extends Component {
         this.props.onSend(date, question, waste);
     }
 
-    displayVote(type) {        
+    displayVote(type) {
         this.child.current.displayVote(type);
     }
     render() {
@@ -34,11 +34,13 @@ export default class Admin extends Component {
                             <Route exact path="/admin/" render={() => <Planning
                                 onSend={this.onSend}
                                 pageName={"Planering"}
+                                planningMeals={this.props.planningMeals}
                             />}
                             />
                             <Route path="/admin/planning" render={() => <Planning
                                 onSend={this.onSend}
                                 pageName={"Planering"}
+                                planningMeals={this.props.planningMeals}
                             />}
                             />
                             <Route path="/admin/statistics" render={() => <Statistics

@@ -19,6 +19,11 @@ app.get('/*',(req, res) => {
 var dbcon = new DatabaseHandler();
 
 var socketsConnected = new Set();
+
+setInterval(function() {
+  console.log("sockets connected " + socketsConnected.size);
+}, 60000);
+
 io.on('connection', (socket) => {
   console.log('User connected');
   socketsConnected.add(socket);
@@ -29,10 +34,10 @@ io.on('connection', (socket) => {
 
   socket.on('response', () => {
     dbcon.getGrades(socket, "grades");
+    dbcon.getTopRatedFood(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
     setInterval(() => {
-      //dbcon.getGrades(socket, "grades");
       console.log("Antal sockets anslutna " + socketsConnected.size);
     }, 60000);
   })
@@ -46,11 +51,17 @@ io.on('connection', (socket) => {
   socket.on('newQuestion', (date, question) => {
     console.log("newquestion körs");
     dbcon.addQuestion(date, question);
-
   })
 
-  socket.on('login', (username, password) =>  {
-    dbcon.login(username, password);
+  socket.on('getQuestion', () => {
+    var question = dbcon.getQuestion();
+    io.emit(getQuestion, question);
+  })
+
+  socket.on('login',function (data) {
+    console.log("data");
+    console.log(data.username);
+    dbcon.login(data.username, data.password);
   })
 
   socket.on('updateWaste', (waste, date, menu) => {

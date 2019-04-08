@@ -1,7 +1,8 @@
 'use strict'
 const pg = require('pg');
 const mysql = require('mysql2');
-var CryptoJS = require("crypto-js");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 /**
   Database communication and functionality
@@ -13,6 +14,7 @@ module.exports = class DatabaseHandler {
     this.con;
     this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
+    this.weekQuestions = new Array();
     this.establishConnection();
     this.getMenuFromDB();
   }
@@ -38,7 +40,7 @@ module.exports = class DatabaseHandler {
 
   }
 
- getGrades(socket, typeOfCall) {
+  getGrades(socket, typeOfCall) {
     //Get Grades from DB when client first opens the webapplication
     console.log("GET GRADES " + typeOfCall + " for " + socket.id);
     var grades = [];
@@ -66,13 +68,12 @@ module.exports = class DatabaseHandler {
         }
       }
       console.log(grades);
-
       socket.emit(typeOfCall, grades);
     });
 
   }
 
- addVote(typeOfVote) {
+  addVote(typeOfVote) {
 
     var currentVote;
     var query;
@@ -173,9 +174,10 @@ module.exports = class DatabaseHandler {
 
     const query = {
     name: 'insertQuestion',
-    text: 'INSERT INTO menu(date_pk, menu) VALUES($1, $2)',
-    values: [date, question],
+    text: 'UPDATE question SET question = $1 WHERE date_pk = $2',
+    values: [question, date],
     }
+
     this.con.query(query, (err, res) => {
       if(err){
         return console.log(err.stack);
@@ -186,35 +188,27 @@ module.exports = class DatabaseHandler {
   }
 
   login(username, password) {
+    console.log("username "+username+ " password " +password);
 
-    var myUsername =  "myUsername";
-    var myPassword =  "myPassword";
-
-    // Encrypt
-    var encryptoUsername = CryptoJS.AES.encrypt(username, myUsername).toString();
-    var encryptoPassword = CryptoJS.AES.encrypt(password, myPassword).toString();
-    // Decrypt
-
-    var originalUsername = decryptoUsername.toString(CryptoJS.enc.Utf8);
-    var originalPassword = decryptoPassword.toString(CryptoJS.enc.Utf8);
-
-    console.log(originalUsername); // 'username as it was in the beginning'
-    console.log(originalPassword); // 'password as it was in the beginning'
 
     const query = {
       name: 'getUsers',
-      text: 'SELECT * FROM users WHERE encryptoUsername = $1 AND encryptoPassword = $2',
-      values: [username, password]
+      text: 'SELECT password FROM users where username = $1',
+      values: [username]
     }
 
-    var decryptoUsername  = CryptoJS.AES.decrypt(username, myUsername);
-    var decryptoPassword  = CryptoJS.AES.decrypt(password, myPassword);
-
     this.con.query(query, (err, res) => {
-      if(err){
-        return console.log(err.stack);
-      } else {
+      var cryptoPass = bcrypt.hashSync(password, saltRounds);
+      console.log("cryptoPass");
+      console.log(res.rows[0]["password"]);
+      console.log(password);
+      console.log(bcrypt.compareSync(password, res.rows[0]["password"]));
+
+      if(bcrypt.compareSync(password, res.rows[0]["password"])){
         console.log("Login successful");
+      } else {
+        return console.log(err);
+
       }
     });
   }
@@ -236,17 +230,66 @@ module.exports = class DatabaseHandler {
 
   getQuestion() {
 
+    var startDate = this.startOfWeek(new Date());
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+
+    var questions = [];
+
+    for(var i = 0; i < 5; i++){
+      var day = new Date();
+      day.setDate(startDate.getDate() + i);
+      day = day.toISOString().substring(0, 10);
+
+      const query = {
+       name: 'getQuestion',
+       text: "SELECT * FROM question WHERE date_pk = $1",
+       values: [day],
+     }
+
+     this.con.query(query, (err, res) => {
+        if(err)  {
+         console.log(err.stack);
+        } else {
+          console.log("getQuestion successfull")
+          console.log(res.rows);
+
+          var dateName = res.fields[0].name;
+          var questionName = res.fields[1].name;
+          var date = res.rows[0][dateName];
+          var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
+          var question = res.rows[0][questionName];
+        }
+        this.weekQuestions.push([localDate, question]);
+      });
+    }
+    console.log(this.weekQuestions);
+  }
+
+  getTopRatedFood(socket) {
+   var meals = new Array();
+
+   //hämta måltider och deras grades ordnade efter mealrating
    const query = {
-     name: 'getQuestion',
-     text: "SELECT * FROM question",
+     name: 'getRatedFood',
+     text: 'SELECT M.menu, Max(G.meal_rating) FROM menu M join grades G ON M.date_pk=G.date_pk group by M.menu ORDER BY Max(G.meal_rating) asc'
    }
 
    this.con.query(query, (err, res) => {
-     if(err)  {
-       console.log(err.stack);
-     } else {
-       console.log(res);
-     }
-   })
-  }
+    if(err)  {
+      console.log(err.stack);
+    } else {
+      var mealName = res.fields[0].name;
+      var mealRatingName = res.fields[1].name;
+      for (var i = 0; i < res.rows.length; i++) {
+        var meal = new Array();
+        meal[0] = res.rows[i][mealName];
+        meal[1] = res.rows[i][mealRatingName];
+        meals.push(meal);
+      }
+      //console.log(meals);
+      socket.emit('ratedFood', meals);
+    }
+   });
+ }
+
 }

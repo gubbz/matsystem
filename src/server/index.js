@@ -68,10 +68,6 @@ io.on('connection', (socket) => {
     dbcon.updateWaste(waste, date, menu);
   })
 
-  socket.on('login', (username, password) =>  {
-    dbcon.login(username, password);
-  })
-
 })
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

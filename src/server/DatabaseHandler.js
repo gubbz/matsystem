@@ -195,17 +195,21 @@ module.exports = class DatabaseHandler {
       text: 'SELECT password FROM users where username = $1',
       values: [username]
     }
+
+
     this.con.query(query, (err, res) => {
-      console.log("password");
-      console.log(res.rows[0]["password"]);
-      console.log(password);
-      if(bcrypt.compareSync(password, res.rows[0]["password"])){
-        console.log("Login successful");
-        socket.emit('returnlogin',true);
-      } else {
+      console.log(res.rows[0]);
+      if(res.rows[0]){
+        if(bcrypt.compareSync(password, res.rows[0]["password"])){
+          console.log("Login successful");
+          socket.emit('returnlogin',true);
+        } else {
+          socket.emit('returnlogin',false);
+          return console.log(err);
+        }
+      }else{
         socket.emit('returnlogin',false);
         return console.log(err);
-
       }
     });
   }

@@ -37,6 +37,9 @@ io.on('connection', (socket) => {
     dbcon.getTopRatedFood(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
+    setInterval(() => {
+      console.log("Antal sockets anslutna " + socketsConnected.size);
+    }, 60000);
   })
 
   socket.on('vote', (typeOfVote) => {

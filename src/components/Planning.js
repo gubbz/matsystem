@@ -43,6 +43,7 @@ export default class Planning extends Component {
                     {
                         this.state.meals.map((items, i) =>
                             <TableItem
+                                key={i}
                                 datum={items.localDate}
                                 måltid={items.meal}
                                 fråga={items.question}

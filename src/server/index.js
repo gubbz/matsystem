@@ -38,6 +38,9 @@ io.on('connection', (socket) => {
     dbcon.getQuestion(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
+    setInterval(() => {
+      console.log("Antal sockets anslutna " + socketsConnected.size);
+    }, 60000);
   })
 
   socket.on('vote', (typeOfVote) => {
@@ -57,17 +60,13 @@ io.on('connection', (socket) => {
   })
 
   socket.on('login',function (data) {
-    console.log("data");
-    console.log(data.username);
-    dbcon.login(data.username, data.password);
+    dbcon.login(data.username, data.password, socket);
   })
+
+
 
   socket.on('updateWaste', (waste, date, menu) => {
     dbcon.updateWaste(waste, date, menu);
-  })
-
-  socket.on('login', (username, password) =>  {
-    dbcon.login(username, password);
   })
 
 })

@@ -46,17 +46,13 @@ io.on('connection', (socket) => {
   })
 
   socket.on('login',function (data) {
-    console.log("data");
-    console.log(data.username);
-    dbcon.login(data.username, data.password);
+    dbcon.login(data.username, data.password, socket);
   })
+
+
 
   socket.on('updateWaste', (waste, date, menu) => {
     dbcon.updateWaste(waste, date, menu);
-  })
-
-  socket.on('login', (username, password) =>  {
-    dbcon.login(username, password);
   })
 
 })

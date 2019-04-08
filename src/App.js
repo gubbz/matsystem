@@ -87,7 +87,14 @@ class App extends Component {
           this.child.current.displayVote(typeOfVote);
         }
     })
-
+    socket.on('returnlogin',function (data) {
+      console.log("login");
+      if(data){
+        alert("success");
+      }else{
+        alert("u tink im stoopid??");
+      }
+    })
 
     socket.on('grades', (arr) => {
       console.log(arr)

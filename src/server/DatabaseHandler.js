@@ -2,7 +2,7 @@
 const pg = require('pg');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const saltRounds = 12;
 
 /**
   Database communication and functionality
@@ -185,26 +185,23 @@ module.exports = class DatabaseHandler {
     });
   }
 
-  login(username, password) {
+  login(username, password, socket) {
     console.log("username "+username+ " password " +password);
-
-
+    console.log(socket.id);
     const query = {
       name: 'getUsers',
       text: 'SELECT password FROM users where username = $1',
       values: [username]
     }
-
     this.con.query(query, (err, res) => {
-      var cryptoPass = bcrypt.hashSync(password, saltRounds);
-      console.log("cryptoPass");
+      console.log("password");
       console.log(res.rows[0]["password"]);
       console.log(password);
-      console.log(bcrypt.compareSync(password, res.rows[0]["password"]));
-
       if(bcrypt.compareSync(password, res.rows[0]["password"])){
         console.log("Login successful");
+        socket.emit('returnlogin',true);
       } else {
+        socket.emit('returnlogin',false);
         return console.log(err);
       }
     });

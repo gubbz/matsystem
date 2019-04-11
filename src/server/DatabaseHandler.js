@@ -10,8 +10,10 @@ const saltRounds = 12;
 module.exports = class DatabaseHandler {
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
   constructor() {
+
     console.log("DatabaseHandler constructor")
     this.con;
+    this.meal= new Array();
     this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
     this.weekQuestions = new Array();
@@ -66,6 +68,24 @@ module.exports = class DatabaseHandler {
             this.currentVotes.push(res.rows[0][fieldName]);
           }
         }
+      }
+      var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
+      var rating = Number(grades[4][1]);
+      var ord = this.meal[0]['meal'].toLowerCase().split(' ');
+      console.log(ord);
+      if(votes <= 100 && rating <= 25){
+
+        /*const query = {
+          name: 'getMealWords',
+          text: 'SELECT * FROM mealWords WHERE ord_i_ = $1',
+          values: [en del av hela maten idag]
+        }*/
+        //console.log(dagens);
+        var nextQuestion = this.meal[0]['meal'].toLowerCase();
+
+
+        //socket.emit('ChangeQuestion','vad tyckte du om ' +ord[0]);
+        //byt fråga
       }
       console.log(grades);
       socket.emit(typeOfCall, grades);
@@ -126,6 +146,8 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
+
+
   getMenuFromDB() {
     //Get weekly menu from db when databse starts
     var startDate = this.startOfWeek(new Date());
@@ -134,15 +156,32 @@ module.exports = class DatabaseHandler {
 
     for(var i = 0; i < 5; i++) {
       var day = new Date();
+      var idag = day.toISOString().substring(0, 10);
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
-      //console.log(day);
+      if( i == 0){
+        const query = {
+          name: 'getMenu',
+          text: 'SELECT * FROM menu WHERE date_pk = $1',
+          values: [idag]
+        }
+        this.con.query(query, (err, res) => {
+          if(err){
+          }else{
+            var dateName = res.fields[0].name;
+            var mealName = res.fields[1].name;
+            var date = res.rows[0][dateName];
+            var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
+            var meal = res.rows[0][mealName];
+            this.meal.push({meal});
+          }
+        });
+      }
       const query = {
         name: 'getMenu',
         text: 'SELECT * FROM menu WHERE date_pk = $1',
         values: [day]
       }
-
       this.con.query(query, (err, res) => {
         if (err) {
           return console.log(err.stack);
@@ -152,6 +191,7 @@ module.exports = class DatabaseHandler {
           var date = res.rows[0][dateName];
           var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
           var meal = res.rows[0][mealName];
+
         }
         this.weekFoodMenu.push({localDate, meal});
       });
@@ -188,28 +228,22 @@ module.exports = class DatabaseHandler {
   }
 
   login(username, password, socket) {
-    console.log("username "+username+ " password " +password);
-    console.log(socket.id);
+
     const query = {
       name: 'getUsers',
       text: 'SELECT password FROM users where username = $1',
       values: [username]
     }
 
-
     this.con.query(query, (err, res) => {
-      console.log(res.rows[0]);
-      if(res.rows[0]){
+        if(res.rows[0]){
         if(bcrypt.compareSync(password, res.rows[0]["password"])){
-          console.log("Login successful");
           socket.emit('returnlogin',true);
         } else {
           socket.emit('returnlogin',false);
-          return console.log(err);
-        }
+          }
       }else{
         socket.emit('returnlogin',false);
-        return console.log(err);
       }
     });
   }
@@ -256,6 +290,8 @@ module.exports = class DatabaseHandler {
 
           var dateName = res.fields[0].name;
           var questionName = res.fields[1].name;
+          console.log(res.rows);
+          console.log("res,rows");
           var date = res.rows[0][dateName];
           var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
           var question = res.rows[0][questionName];

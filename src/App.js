@@ -22,7 +22,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 var state = {
   vGood: 0,
   good: 0,
@@ -128,8 +128,12 @@ class App extends Component {
       console.log(arr);
       this.setState({ratedFoods: arr});
     })
-    socket.on('getQuestion', (question) => {
-      //do something with the question ALBZZ, yeet
+
+    socket.on('ChangeQuestion', (question) => {
+      if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
+        this.child.current.ChangeQuestion(question);
+      }
+      
     })
   }
 

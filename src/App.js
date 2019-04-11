@@ -128,8 +128,12 @@ class App extends Component {
       console.log(arr);
       this.setState({ratedFoods: arr});
     })
-    socket.on('getQuestion', (question) => {
-      //do something with the question ALBZZ, yeet
+
+    socket.on('ChangeQuestion', (question) => {
+      if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
+        this.child.current.ChangeQuestion(question);
+      }
+      
     })
   }
 

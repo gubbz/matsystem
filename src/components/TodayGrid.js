@@ -66,13 +66,13 @@ export default class TodayGrid extends Component {
                         />
                     </div>
                     <div className="RightColumn">
+
                         <Bar
                             data={this.getChartData()}
                             options={{
                                 legend: {
                                     display: false,
                                 },
-                                responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {
                                     yAxes: [{

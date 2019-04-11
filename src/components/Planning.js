@@ -51,18 +51,22 @@ export default class Planning extends Component {
         this.props.onSend(date, question, waste);
     }
     render() {
+        
         //alert(this.state.mealObj.dates);
         return (
             <div>
-                <h1>{this.props.pageName}</h1>
+                <h1 className="AdminPageName">{this.props.pageName}</h1>
                 <table className="Table">
-                    <TableItem
-                        isHeader={true}
-                        datum="DATUM"
-                        måltid="MÅLTID"
-                        fråga="FRÅGA"
-                        slängt="SLÄNGT"
-                    />
+                    <thead>
+                        <TableItem
+                            isHeader={true}
+                            datum="DATUM"
+                            måltid="MÅLTID"
+                            fråga="FRÅGA"
+                            slängt="SLÄNGT"
+                        />
+                    </thead>
+                    <tbody>
                     {
                         this.state.meals.map((items, i) =>
                             <TableItem
@@ -75,6 +79,7 @@ export default class Planning extends Component {
                             />
                         )
                     }
+                    </tbody>
                 </table>
             </div>
         )

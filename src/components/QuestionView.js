@@ -37,12 +37,12 @@ export default class QuestionView extends Component {
                 this.color = "#64DD17";
                 break;
         }
-        this.text = "Tack för din medverkan";
+        this.text = "Tack för din röst";
         this.forceUpdate();
         var that = this;
         setTimeout(function () {
             that.color = "white";
-            that.text = "Vad tyckte du om maten?";
+            that.text = "Vad tyckte du om maten? \n What did you think about the food?";
             that.forceUpdate();
         }, 1340);
     }

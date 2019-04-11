@@ -30,4 +30,6 @@
 
 .SidebarLogo h1 {
     line-height: 1;
+    font-family: 'Nunito', sans-serif;
+    text-transform: lowercase;
 }

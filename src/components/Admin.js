@@ -24,6 +24,11 @@ export default class Admin extends Component {
         this.child.current.displayVote(type);
     }
     render() {
+        if(this.props.mealsArray) {
+            console.log("props: " + this.props.mealsArray);
+        }
+        
+        
         return (
             <Router>
                 <div className="AdminContainer">
@@ -33,12 +38,13 @@ export default class Admin extends Component {
                         <div className="AdminMainContainer">
                             <Route exact path="/admin/" render={() => <Planning
                                 onSend={this.onSend}
-                                pageName={"Planering"}
+                                pageName={"Planering"} 
                             />}
                             />
                             <Route path="/admin/planning" render={() => <Planning
                                 onSend={this.onSend}
                                 pageName={"Planering"}
+                                
                             />}
                             />
                             <Route path="/admin/statistics" render={() => <Statistics

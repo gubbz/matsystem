@@ -31,7 +31,7 @@ var state = {
   socket: null,
   todaysMeal: null,
   displayVote: null,
-
+  mealsArray: null
 }
 class App extends Component {
   constructor() {
@@ -95,7 +95,9 @@ class App extends Component {
     })
 
     socket.on('menu', (arr) => {
-      console.log(arr);
+      this.setState({
+        mealsArray: arr,
+      });
       today = new Date();
       mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
@@ -184,19 +186,16 @@ class App extends Component {
   }
 
   render() {
+    
+    
     return (
       <Router>
         <div className="Container">
-          <Route path="/admin/question" render={() =>
-            <Admin
-              vote={this.state.currentVote}
-              ref={this.child}
-            />
-          } />
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}
               ref={this.child}
+              mealsArray={this.state.mealsArray}
             />
           } />
           <Route path="/" render={() =>
@@ -211,7 +210,6 @@ class App extends Component {
               handleLogin={this.handleLogin}
             />
           } />
-
         </div>
       </Router>
     );

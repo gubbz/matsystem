@@ -3,3 +3,7 @@
     height: 100vh;
     display: flex;
 }
+
+.RightAdmin h1 {
+    font-weight: 700;
+}

@@ -1,7 +1,6 @@
 .TodayGrid {
-    grid-template-columns: 1fr;
-    display: grid;
-    grid-gap: 1em;
+    display: flex;
+    flex-direction: column;
 }
 
 .LeftColumn {
@@ -12,23 +11,28 @@
 }
 
 .RightColumn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2em 2em 2em 3em;
+    margin-top: 1em;
     background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16);
-    height: 50vh;
-    margin-bottom: 1em;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    padding: 0.5em;
+    min-height: 45vh;
 }
 
 @media screen and (min-width: 992px) {
     .TodayGrid {
-        grid-template-columns: 1fr 1fr;
-        height: 70vh;
+        flex-direction: row;
+        min-height: 70vh;
+        justify-content: space-between;
+    }
+    .LeftColumn, .RightColumn {
+        flex: 1;
+        margin-top: 0;
     }
     .RightColumn {
+        margin-left: 1em;
         height: initial;
         margin-bottom: 0;
+        padding: 2em 2em 2em 3em;
     }
 }

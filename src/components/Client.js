@@ -50,7 +50,7 @@ export default class Client extends Component {
                         />
                         <Route path="/statistics" render={() =>
                             <Statistics
-                                shadow="0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16"
+                                shadow="0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.08)"
                             />
                         } />
                         <Route path="/meals" component={Meals} />

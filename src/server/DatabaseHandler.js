@@ -225,6 +225,7 @@ module.exports = class DatabaseHandler {
     });
   }
 
+/*
   getQuestion() {
 
     var startDate = this.startOfWeek(new Date());
@@ -261,14 +262,14 @@ module.exports = class DatabaseHandler {
     }
     console.log(this.weekQuestions);
   }
-
+*/
   getTopRatedFood(socket) {
    var meals = new Array();
 
    //hämta måltider och deras grades ordnade efter mealrating
    const query = {
      name: 'getRatedFood',
-     text: 'SELECT M.menu, Max(G.meal_rating) FROM menu M join grades G ON M.date_pk=G.date_pk group by M.menu ORDER BY Max(G.meal_rating) asc'
+     text: 'SELECT M.menu, Max(G.meal_rating) FROM menu M join grades G ON M.date_pk=G.date_pk group by G.meal_rating, M.menu ORDER BY G.meal_rating DESC'
    }
 
    this.con.query(query, (err, res) => {
@@ -283,7 +284,7 @@ module.exports = class DatabaseHandler {
         meal[1] = res.rows[i][mealRatingName];
         meals.push(meal);
       }
-      //console.log(meals);
+      console.log(meals);
       socket.emit('ratedFood', meals);
     }
    });

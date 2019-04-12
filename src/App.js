@@ -17,6 +17,7 @@ import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
+import Landing from './components/Landing';
 
 var today;
 var mm;
@@ -191,6 +192,10 @@ class App extends Component {
     return (
       <Router>
         <div className="Container">
+          <Route path="/landing" render={() =>
+            <Landing
+            />
+          } />
           <Route path="/admin" render={() =>
             <Admin
               onSend={this.sendMealInfo}

@@ -27,7 +27,9 @@ export default class Header extends Component {
         if (urlCheck.includes("question")) {
             return null;
         } else if (urlCheck.includes("admin")) {
-            return null
+            return null;
+        } else if (urlCheck.includes("landing")) {
+            return null;
         }
         else {
             return (

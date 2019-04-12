@@ -24,16 +24,12 @@ export default class Admin extends Component {
         this.child.current.displayVote(type);
     }
     render() {
-        if(this.props.mealsArray) {
-            console.log("props: " + this.props.mealsArray);
-        }
         
         
         return (
             <Router>
                 <div className="AdminContainer">
                     <Sidebar />
-
                     <div className="RightAdmin">
                         <div className="AdminMainContainer">
                             <Route exact path="/admin/" render={() => <Planning

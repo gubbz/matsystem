@@ -2,8 +2,31 @@
     padding: 4em 4em 0 2em;
     box-sizing: border-box;
     height: 100vh;
-    background: #304FFE;
+    background: #1b224c;
     color: white;
+}
+
+.MobileSidebar {
+    padding: 1em 2em;
+    display: flex;
+    height: auto;
+    background: #1b224c;
+    color: white;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.MobileSidebar>div:first-child {
+    flex: 0 0 100%;
+    text-align: center;
+}
+
+.MobileSidebar>.SidebarLogo {
+    margin-bottom: 1em;
+}
+
+.MobileSidebar>.SidebarItem {
+    margin-bottom: 0;
 }
 
 .SidebarItem {
@@ -19,9 +42,14 @@
     line-height: 1;
 }
 
-.SidebarItem>i {
+.Sidebar i {
     font-size: 16px;
     margin-right: 0.5em;
+}
+
+.MobileSidebar i {
+    font-size: 20px;
+    margin-right: 0;
 }
 
 .SidebarLogo {
@@ -32,4 +60,11 @@
     line-height: 1;
     font-family: 'Nunito', sans-serif;
     text-transform: lowercase;
+}
+
+@media screen and (max-width: 992px) {
+    .Sidebar {
+        padding: 0;
+        height: auto;
+    }
 }

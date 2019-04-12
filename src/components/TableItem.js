@@ -30,11 +30,16 @@ export default class TableItem extends Component {
     }
 
     onSend() {
-        this.setState({
-            inputState: true
-        }, () => {
-            this.props.onSend(this.props.datum, this.state.question, this.state.waste);
-        })
+        if (this.state.waste == parseInt(this.state.waste, 10) && this.state.question.length > 0 && this.state.waste.length > 0) {
+            this.setState({
+                inputState: true
+            }, () => {
+                this.props.onSend(this.props.datum, this.state.question, this.state.waste);
+            })
+        } else {
+            alert("Oj, något gick fel! Titta över fälten igen");
+        }
+        
     }
 
     handleChange(evt) {
@@ -118,7 +123,6 @@ export default class TableItem extends Component {
                 <td>
                     {this.renderButton(this.state.inputState)}
                 </td>
-
             </tr>
         )
     }

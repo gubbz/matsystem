@@ -66,13 +66,13 @@ export default class TodayGrid extends Component {
                         />
                     </div>
                     <div className="RightColumn">
+
                         <Bar
                             data={this.getChartData()}
                             options={{
                                 legend: {
                                     display: false,
                                 },
-                                responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {
                                     yAxes: [{
@@ -80,6 +80,15 @@ export default class TodayGrid extends Component {
                                             beginAtZero: true,
                                             userCallback: function (label, index, labels) {
                                                 if (Math.floor(label) === label) {
+                                                    return label;
+                                                }
+                                            }
+                                        }
+                                    }],
+                                    xAxes: [{
+                                        ticks: {
+                                            userCallback: function(label) {
+                                                if(window.innerWidth > 500) {
                                                     return label;
                                                 }
                                             }

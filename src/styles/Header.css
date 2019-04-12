@@ -6,19 +6,19 @@
 
 .HeaderContainer {
     background: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .Header {
     display: flex;
     align-items: center;
     list-style-type: none;
-    padding: 1em 0;
+    padding: 0.5em 0;
     max-width: 90%;
     margin: 0 auto;
 }
 
-.Header div:first-child {
+.Header > div:first-child {
     margin-right: auto;
 }
 
@@ -27,19 +27,27 @@
     align-items: center;
 }
 
+.Logo {
+    font-family: 'Nunito', 'sans-serif';
+    font-weight: 700;
+    font-size: 32px;
+}
 
 @media screen and (max-width: 992px) {
     .Header {
         flex-wrap: wrap;
+        justify-content: center;
     }
-    .Header>div:first-child {
+    .Header > div:first-child{
         flex: 0 0 100%;
         text-align: center;
     }
     .HeaderLinks {
-        flex-wrap: wrap;
+        flex-wrap: no-wrap;
         overflow: auto;
         margin-top: 0.5em;
-        justify-content: center;
+        width: 100%;
+        justify-content: space-between;
+        
     }
 }

@@ -60,6 +60,7 @@ export default class Meals extends Component {
     }
 
     render() {
+
       let form = null;
       if (this.state.displayForm) {
         form = (

@@ -1,6 +1,7 @@
 .Statistics {
     padding: 1em;
     background: white;
+    border-radius: 8px;
 }
 
 .TimePicker {
@@ -13,14 +14,27 @@
 }
 
 .StatGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     margin-top: 1em;
+    
 }
 
 .StatLeftColumn, .StatRightColumn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1em;
+    flex: 1;
+}
+
+.StatName {
+    margin-bottom: 1em;
+}
+
+@media screen and (max-width: 992px) {
+    .StatGrid {
+        flex-direction: column;
+        min-height: 0;
+        height: auto;
+    }
+    .StatLeftColumn, .StatRightColumn {
+        margin-top: 2em;
+    }
 }

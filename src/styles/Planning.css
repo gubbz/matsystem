@@ -5,7 +5,7 @@
 
 .RightAdmin h1 {
     font-weight: 400;
-    color: #304FFE;
+    color: #1b224c;
     line-height: 1;
     margin-bottom: 0.5em;
 }
@@ -14,4 +14,10 @@ table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 1em;
+}
+
+@media screen and (max-width: 992px) {
+    table {
+        font-size: 14px;
+    }
 }

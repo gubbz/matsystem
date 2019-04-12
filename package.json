@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "babel-preset-react-app": "^7.0.0",
+    "bcrypt": "^3.0.5",
     "chart.js": "^2.7.3",
     "concurrently": "^4.1.0",
     "crypto-js": "^3.1.9-1",

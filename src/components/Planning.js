@@ -11,39 +11,8 @@ export default class Planning extends Component {
         super(props);
         this.onSend = this.onSend.bind(this);
         this.state = {
-            meals: [
-                {
-                    date: "03-18",
-                    meal: "Tomatsoppa med brödbuffé & ost, frukt",
-                    question: "Vad tyckte du om maten?",
-                    waste: "10 kg",
-                },
-                {
-                    date: "03-18",
-                    meal: "Tomatsoppa med brödbuffé & ost, frukt",
-                    question: "Vad tyckte du om maten?",
-                    waste: "10 kg",
-                },
-                {
-                    date: "03-18",
-                    meal: "Tomatsoppa med brödbuffé & ost, frukt",
-                    question: "Vad tyckte du om maten?",
-                    waste: "10 kg",
-                },
-                {
-                    date: "03-18",
-                    meal: "Tomatsoppa med brödbuffé & ost, frukt",
-                    question: "Vad tyckte du om maten?",
-                    waste: "10 kg",
-                },
-                {
-                    date: "03-18",
-                    meal: "Tomatsoppa med brödbuffé & ost, frukt",
-                    question: "Vad tyckte du om maten?",
-                    waste: "10 kg",
-                },
-            ],
-        }
+          meals: this.props.planningMeals
+                    }
 
         //Om skärmen är fullstor skapas tabellen annars som en kortlayout
         if(window.innerWidth >= 992) {
@@ -63,14 +32,15 @@ export default class Planning extends Component {
                         <tbody>
                             {
                                 this.state.meals.map((items, i) =>
-                                    <TableItem
-                                        datum={items.date}
-                                        måltid={items.meal}
-                                        fråga={items.question}
-                                        slängt={items.waste}
-                                        index={i}
-                                        onSend={this.onSend}
-                                    />
+                                                                <TableItem
+                                key={i}
+                                datum={items.localDate}
+                                måltid={items.meal}
+                                fråga={items.question}
+                                slängt={items.waste}
+                                index={i}
+                                onSend={this.onSend}
+                            />
                                 )
                             }
                         </tbody>
@@ -97,6 +67,7 @@ export default class Planning extends Component {
                 </div>
             )
         }
+        console.log(this.state);
     }
     onSend(date, question, waste) {
         this.props.onSend(date, question, waste);

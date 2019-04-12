@@ -25,6 +25,7 @@ var mm;
 var dd;
 
 const socketURL = "localhost:8080";
+
 var state = {
   vGood: 0,
   good: 0,
@@ -33,7 +34,10 @@ var state = {
   socket: null,
   todaysMeal: null,
   displayVote: null,
-  mealsArray: null
+
+  ratedFoods: [],
+  planningMeals: []
+
 }
 class App extends Component {
   constructor() {
@@ -62,6 +66,10 @@ class App extends Component {
     });
   }
 
+  handleLogin(username, password) {
+    this.state.socket.emit('login',{username: username, password: password});
+  }
+
   componentWillMount() {
     this.initSocket()
   }
@@ -85,7 +93,14 @@ class App extends Component {
         this.child.current.displayVote(typeOfVote);
       }
     })
-
+    socket.on('returnlogin',function (data) {
+      console.log("login");
+      if(data){
+        alert("Login successful");
+      }else{
+        alert("Login failed");
+      }
+    })
 
     socket.on('grades', (arr) => {
       console.log(arr)
@@ -112,13 +127,21 @@ class App extends Component {
             this.setState({ todaysMeal: todaysMeal });
           }
         }
+        this.setState({planningMeals: arr});
       }
     })
-  }
 
-  // Login -> Client -> hit
-  handleLogin(username, password) {
+    socket.on('ratedFood', (arr) => {
+      console.log(arr);
+      this.setState({ratedFoods: arr});
+    })
 
+    socket.on('ChangeQuestion', (question) => {
+      if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
+        this.child.current.ChangeQuestion(question);
+      }
+      
+    })
   }
 
   updateChart(data, amount) {
@@ -200,21 +223,22 @@ class App extends Component {
             } />
             <Route path="/admin" render={() =>
               <Admin
-                onSend={this.sendMealInfo}
-                ref={this.child}
-                mealsArray={this.state.mealsArray}
+                 onSend={this.sendMealInfo}
+              ref={this.child}
+              planningMeals={this.state.planningMeals}
               />
             } />
             <Route path="/" render={() =>
               <Client
-                vGood={this.state.vGood}
-                good={this.state.good}
-                bad={this.state.bad}
-                vBad={this.state.vBad}
-                data={this.state.data}
-                meal={this.state.todaysMeal}
-                ref={this.chartElement}
-                handleLogin={this.handleLogin}
+               vGood={this.state.vGood}
+              good={this.state.good}
+              bad={this.state.bad}
+              vBad={this.state.vBad}
+              data={this.state.data}
+              meal={this.state.todaysMeal}
+              ref={this.chartElement}
+              handleLogin={this.handleLogin}
+              ratedFoods={this.state.ratedFoods}
               />
             } />
 

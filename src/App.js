@@ -23,6 +23,7 @@ var mm;
 var dd;
 
 const socketURL = "localhost:8080";
+
 var state = {
   vGood: 0,
   good: 0,

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Planning from './Planning'
 import Statistics from './Statistics';
 import QuestionView from './QuestionView'
-
+import ErrorPage from './ErrorPage'
 
 export default class Admin extends Component {
     constructor(props) {
@@ -20,38 +20,41 @@ export default class Admin extends Component {
         this.props.onSend(date, question, waste);
     }
 
-    displayVote(type) {        
+    displayVote(type) {
         this.child.current.displayVote(type);
     }
     render() {
-        
-        
+
+
         return (
             <Router>
                 <div className="AdminContainer">
                     <Sidebar />
                     <div className="RightAdmin">
                         <div className="AdminMainContainer">
-                            <Route exact path="/admin/" render={() => <Planning
-                                onSend={this.onSend}
-                                pageName={"Planering"} 
-                            />}
-                            />
-                            <Route path="/admin/planning" render={() => <Planning
-                                onSend={this.onSend}
-                                pageName={"Planering"}
-                                
-                            />}
-                            />
-                            <Route path="/admin/statistics" render={() => <Statistics
-                                pageName={"Statistik"}
-                                shadow={0}
-                            />}
-                            />
-                            <Route path="/admin/question" render={() => <QuestionView
-                                ref={this.child}
-                            />}
-                            />
+                            <Switch>
+                                <Route exact path="/admin" render={() => <Planning
+                                    onSend={this.onSend}
+                                    pageName={"Planering"}
+                                />}
+                                />
+                                <Route path="/admin/planning" render={() => <Planning
+                                    onSend={this.onSend}
+                                    pageName={"Planering"}
+
+                                />}
+                                />
+                                <Route path="/admin/statistics" render={() => <Statistics
+                                    pageName={"Statistik"}
+                                    shadow={0}
+                                />}
+                                />
+                                <Route path="/admin/question" render={() => <QuestionView
+                                    ref={this.child}
+                                />}
+                                />
+                                <Route path="*" component={ErrorPage} />
+                            </Switch>
                         </div>
                     </div>
                 </div>

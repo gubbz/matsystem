@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import Header from './components/Header.js';
 import MainContainer from './components/MainContainer.js';
@@ -10,6 +10,7 @@ import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
+import ErrorPage from './components/ErrorPage.js'
 import './styles/MainContainer.css'
 import Sidebar from './components/Sidebar.js'
 import AdminContainer from './components/AdminContainer.js'
@@ -56,7 +57,7 @@ class App extends Component {
     });
   }
 
-  sendWaste(waste, date, menu){
+  sendWaste(waste, date, menu) {
     this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
   }
@@ -79,10 +80,10 @@ class App extends Component {
     })
 
     socket.on('vote', (typeOfVote) => {
-        this.updateChart(typeOfVote, 1);
-        if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
-          this.child.current.displayVote(typeOfVote);
-        }
+      this.updateChart(typeOfVote, 1);
+      if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
+        this.child.current.displayVote(typeOfVote);
+      }
     })
 
 
@@ -108,7 +109,7 @@ class App extends Component {
           if (arr[i]['localDate'] == (mm + "-" + dd)) {
             var todaysMeal = arr[i]['meal'];
             console.log(todaysMeal);
-            this.setState({todaysMeal: todaysMeal});
+            this.setState({ todaysMeal: todaysMeal });
           }
         }
       }
@@ -130,7 +131,7 @@ class App extends Component {
       case "bad":
         this.setState({
           bad: this.state.bad + amount,
-          });
+        });
         break;
       case "good":
         this.setState({
@@ -158,7 +159,7 @@ class App extends Component {
       case "bad":
         this.setState({
           bad: amount
-          });
+        });
         break;
       case "good":
         this.setState({
@@ -187,34 +188,37 @@ class App extends Component {
   }
 
   render() {
-    
-    
+
+
     return (
       <Router>
         <div className="Container">
-          <Route path="/landing" render={() =>
-            <Landing
-            />
-          } />
-          <Route path="/admin" render={() =>
-            <Admin
-              onSend={this.sendMealInfo}
-              ref={this.child}
-              mealsArray={this.state.mealsArray}
-            />
-          } />
-          <Route path="/" render={() =>
-            <Client
-              vGood={this.state.vGood}
-              good={this.state.good}
-              bad={this.state.bad}
-              vBad={this.state.vBad}
-              data={this.state.data}
-              meal={this.state.todaysMeal}
-              ref={this.chartElement}
-              handleLogin={this.handleLogin}
-            />
-          } />
+          <Switch>
+            <Route path="/landing" render={() =>
+              <Landing
+              />
+            } />
+            <Route path="/admin" render={() =>
+              <Admin
+                onSend={this.sendMealInfo}
+                ref={this.child}
+                mealsArray={this.state.mealsArray}
+              />
+            } />
+            <Route path="/" render={() =>
+              <Client
+                vGood={this.state.vGood}
+                good={this.state.good}
+                bad={this.state.bad}
+                vBad={this.state.vBad}
+                data={this.state.data}
+                meal={this.state.todaysMeal}
+                ref={this.chartElement}
+                handleLogin={this.handleLogin}
+              />
+            } />
+
+          </Switch>
         </div>
       </Router>
     );

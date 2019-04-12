@@ -23,6 +23,9 @@ export default class Admin extends Component {
     displayVote(type) {
         this.child.current.displayVote(type);
     }
+    ChangeQuestion(question){
+      this.child.current.ChangeQuestion(question);
+    }
     render() {
         return (
             <Router>

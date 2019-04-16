@@ -9,7 +9,6 @@ export default class Meals extends Component {
       super(props);
       this.state = {
         ratedFoods: this.props.ratedFoods,
-        stateOfArray: false,
         displayForm: false
       }
       console.log(this.state);
@@ -42,20 +41,46 @@ export default class Meals extends Component {
     }
 
     updateRatedFoods = (text) => {
-      //ligger en efter från formet i mealsorer så radiobuttons börjar tvärtom får fixas senare stateOfArray är false när den ska vara true
       console.log(text);
-      if (text === "option1" && !this.state.stateOfArray) {
-        const reverseData = this.state.ratedFoods.reverse().map((data, i) => {})
+      if (text === "option1") {
+        this.state.ratedFoods.sort(function(a,b) {
+          return a[1] - b[1];
+        });
         this.setState({ratedFoods: this.state.ratedFoods});
-        this.setState({stateOfArray: true});
-      } else if (text === "option2" && this.state.stateOfArray) {
-        const reverseData = this.state.ratedFoods.reverse().map((data, i) => {})
+      } else if (text === "option2") {
+        this.state.ratedFoods.sort(function(a,b) {
+          return a[1] - b[1];
+        });
+        this.state.ratedFoods.reverse();
         this.setState({ratedFoods: this.state.ratedFoods});
-        this.setState({stateOfArray: false});
       } else {
         this.state.ratedFoods.sort();
-
-        this.setState({ratedFoods: this.state.ratedFoods});
+        console.log(this.state.ratedFoods);
+        var startpos;
+        for (var i = 0; i < this.state.ratedFoods.length; i++) {
+          console.log(this.state.ratedFoods[i][0]);
+          console.log(this.state.ratedFoods[i][0].includes(text));
+          if (this.state.ratedFoods[i][0].includes(text)) {
+            startpos = i;
+            console.log("startpos" + startpos);
+            break;
+          }
+        }
+        var tempArr = this.state.ratedFoods;
+        var newNum = 0;
+        for (var i = 0; i < this.state.ratedFoods.length; i++) {
+          if (startpos + i === this.state.ratedFoods.length) {
+            tempArr[i][0] = this.state.ratedFoods[newNum][0];
+            tempArr[i][1] = this.state.ratedFoods[newNum][1];
+            newNum++;
+          } else {
+            tempArr[i][0] = this.state.ratedFoods[startpos + i][0];
+            tempArr[i][1] = this.state.ratedFoods[startpos + i][1];
+          }
+          console.log("sdfsdf");
+          console.log(tempArr);
+        }
+        this.setState({ratedFoods: tempArr});
       }
     }
 

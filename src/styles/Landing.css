@@ -1,0 +1,189 @@
+.LandingContainer {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.LandingHeader {
+    width: 80%;
+    max-width: 1400px;
+    display: flex;
+    align-items: center;
+    padding: 1em 0;
+    margin: 0 auto;
+}
+
+.LandingHeaderLink, .LandingLogin {
+    margin-left: 2em;
+    cursor: pointer;
+}
+
+.LandingLogin {
+    padding: 0.5em 1em;
+    background: #304FFE;
+    color: white;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.16);
+    border-radius: 1000px;
+}
+
+.LandingLogo {
+    margin-right: auto;
+    margin-left: 0;
+}
+
+.LandingLogo h1 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+}
+
+.MobileLandingHeader {
+    display: flex;
+    align-items: center;
+    padding: 0.5em 5%;
+}
+
+.Section1 {
+    padding: 2em 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: center;
+}
+
+h2 {
+    font-size: 2.2em;
+    margin-bottom: 0.5em;
+}
+
+.Buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.Section1 h1 {
+    font-size: 2em;
+}
+
+.Section1 h1, .Section1 button {
+    margin-bottom: 0.6em;
+}
+
+.Section1 p {
+    margin-bottom: 2em;
+    font-size: 18px;
+    line-height: 1.6;
+    color: grey;
+}
+
+.ImageContainer {
+    min-width: 0;
+    max-width: 80%;
+    max-height: 200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Section1 div:first-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.SectionImage {
+    max-width: 100%;
+    max-height: 200px;
+}
+
+.HeroImage {
+    max-width: 100%;
+    max-height: 200px;
+    margin: 2em auto;
+}
+
+.Section1:nth-child(odd) {
+    background: #f2f8ff;
+}
+
+._OutlinedButton {
+    box-shadow: none;
+    border: 1px solid #304FFE;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 0.8em;
+    font-size: 16px;
+    background: transparent;
+    color: #304FFE;
+}
+
+._FilledButton {
+    box-shadow: none;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 0.8em;
+    font-size: 16px;
+    background: #304FFE;
+    color: white;
+}
+
+.LandingFooter {
+    background: #1b224c;
+    color: white;
+    padding: 2em 5%;
+}
+
+.LandingFooter p:nth-child(2) {
+    margin-top: 1em;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.LandingFooter a, .LandingFooter p {
+    text-decoration: none;
+    color: white;
+    margin: 0.4em 0;
+}
+
+.FooterLink, button {
+    cursor: pointer;
+}
+
+@media screen and (min-width: 992px) {
+    .Section1 {
+        padding: 3em 10%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .Section1 h1 {
+        font-size: 3em;
+        line-height: 1;
+    }
+    .Section1 p {
+        font-size: 1.3em;
+    }
+    .Buttons {
+        flex-direction: row;
+        max-height: 56px;
+    }
+    .Buttons button {
+        padding: 0.7em 1.4em;
+        margin-right: 1em;
+    }
+    .Section1>div {
+        flex-basis: 45%;
+    }
+    .ImageContainer, .HeroImage, .SectionImage {
+        max-height: 400px;
+        margin: 0;
+    }
+    .Section1 div:first-child {
+        flex-direction: column;
+    }
+    .Section1:nth-child(odd) {
+        flex-direction: row-reverse
+    }
+    .LandingFooter {
+        padding: 2em 10%;
+    }
+}

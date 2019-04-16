@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import Header from './components/Header.js';
 import MainContainer from './components/MainContainer.js';
@@ -10,6 +10,7 @@ import TodayGrid from './components/TodayGrid.js'
 import Planning from './components/Planning.js'
 import Statistics from './components/Statistics.js'
 import QuestionView from './components/QuestionView.js'
+import ErrorPage from './components/ErrorPage.js'
 import './styles/MainContainer.css'
 import Sidebar from './components/Sidebar.js'
 import AdminContainer from './components/AdminContainer.js'
@@ -17,6 +18,7 @@ import socketIOClient from 'socket.io-client'
 import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
+import Landing from './components/Landing';
 
 var today;
 var mm;
@@ -32,8 +34,10 @@ var state = {
   socket: null,
   todaysMeal: null,
   displayVote: null,
+
   ratedFoods: [],
   planningMeals: []
+
 }
 class App extends Component {
   constructor() {
@@ -57,7 +61,7 @@ class App extends Component {
     });
   }
 
-  sendWaste(waste, date, menu){
+  sendWaste(waste, date, menu) {
     this.state.socket.emit('updateWaste', (waste, date, menu) => {
     });
   }
@@ -84,10 +88,10 @@ class App extends Component {
     })
 
     socket.on('vote', (typeOfVote) => {
-        this.updateChart(typeOfVote, 1);
-        if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
-          this.child.current.displayVote(typeOfVote);
-        }
+      this.updateChart(typeOfVote, 1);
+      if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
+        this.child.current.displayVote(typeOfVote);
+      }
     })
     socket.on('returnlogin',function (data) {
       console.log("login");
@@ -108,7 +112,9 @@ class App extends Component {
     })
 
     socket.on('menu', (arr) => {
-      console.log(arr);
+      this.setState({
+        mealsArray: arr,
+      });
       today = new Date();
       mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
@@ -118,7 +124,7 @@ class App extends Component {
           if (arr[i]['localDate'] == (mm + "-" + dd)) {
             var todaysMeal = arr[i]['meal'];
             console.log(todaysMeal);
-            this.setState({todaysMeal: todaysMeal});
+            this.setState({ todaysMeal: todaysMeal });
           }
         }
         this.setState({planningMeals: arr});
@@ -148,7 +154,7 @@ class App extends Component {
       case "bad":
         this.setState({
           bad: this.state.bad + amount,
-          });
+        });
         break;
       case "good":
         this.setState({
@@ -176,7 +182,7 @@ class App extends Component {
       case "bad":
         this.setState({
           bad: amount
-          });
+        });
         break;
       case "good":
         this.setState({
@@ -205,19 +211,26 @@ class App extends Component {
   }
 
   render() {
+
+
     return (
       <Router>
         <div className="Container">
-          <Route path="/admin" render={() =>
-            <Admin
-              onSend={this.sendMealInfo}
+          <Switch>
+            <Route path="/landing" render={() =>
+              <Landing
+              />
+            } />
+            <Route path="/admin" render={() =>
+              <Admin
+                 onSend={this.sendMealInfo}
               ref={this.child}
               planningMeals={this.state.planningMeals}
-            />
-          } />
-          <Route path="/" render={() =>
-            <Client
-              vGood={this.state.vGood}
+              />
+            } />
+            <Route path="/" render={() =>
+              <Client
+               vGood={this.state.vGood}
               good={this.state.good}
               bad={this.state.bad}
               vBad={this.state.vBad}
@@ -226,9 +239,10 @@ class App extends Component {
               ref={this.chartElement}
               handleLogin={this.handleLogin}
               ratedFoods={this.state.ratedFoods}
-            />
-          } />
+              />
+            } />
 
+          </Switch>
         </div>
       </Router>
     );

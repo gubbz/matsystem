@@ -46,43 +46,31 @@ export default class Meals extends Component {
         this.state.ratedFoods.sort(function(a,b) {
           return a[1] - b[1];
         });
+        this.state.ratedFoods.reverse();
         this.setState({ratedFoods: this.state.ratedFoods});
       } else if (text === "option2") {
         this.state.ratedFoods.sort(function(a,b) {
           return a[1] - b[1];
         });
-        this.state.ratedFoods.reverse();
         this.setState({ratedFoods: this.state.ratedFoods});
-      } else {
-        this.state.ratedFoods.sort();
-        console.log(this.state.ratedFoods);
-        var startpos;
+      } else if (text.length > 2) {
+        var tempArr = new Array();
+        var usedFoods = new Array();
         for (var i = 0; i < this.state.ratedFoods.length; i++) {
-          console.log(this.state.ratedFoods[i][0]);
-          console.log(this.state.ratedFoods[i][0].includes(text));
           if (this.state.ratedFoods[i][0].includes(text)) {
-            startpos = i;
-            console.log("startpos" + startpos);
-            break;
+            tempArr.push(this.state.ratedFoods[i]);
+            usedFoods.push(i);
           }
         }
-        var tempArr = this.state.ratedFoods;
-        var newNum = 0;
         for (var i = 0; i < this.state.ratedFoods.length; i++) {
-          if (startpos + i === this.state.ratedFoods.length) {
-            tempArr[i][0] = this.state.ratedFoods[newNum][0];
-            tempArr[i][1] = this.state.ratedFoods[newNum][1];
-            newNum++;
-          } else {
-            tempArr[i][0] = this.state.ratedFoods[startpos + i][0];
-            tempArr[i][1] = this.state.ratedFoods[startpos + i][1];
+          if (!usedFoods.includes(i)) {
+            tempArr.push(this.state.ratedFoods[i]);
           }
-          console.log("sdfsdf");
-          console.log(tempArr);
         }
         this.setState({ratedFoods: tempArr});
       }
     }
+
 
     render() {
       let form = null;

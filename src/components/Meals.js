@@ -9,7 +9,6 @@ export default class Meals extends Component {
       super(props);
       this.state = {
         ratedFoods: this.props.ratedFoods,
-        stateOfArray: false,
         displayForm: false
       }
       console.log(this.state);
@@ -42,25 +41,38 @@ export default class Meals extends Component {
     }
 
     updateRatedFoods = (text) => {
-      //ligger en efter från formet i mealsorer så radiobuttons börjar tvärtom får fixas senare stateOfArray är false när den ska vara true
       console.log(text);
-      if (text === "option1" && !this.state.stateOfArray) {
-        const reverseData = this.state.ratedFoods.reverse().map((data, i) => {})
+      if (text === "option1") {
+        this.state.ratedFoods.sort(function(a,b) {
+          return a[1] - b[1];
+        });
+        this.state.ratedFoods.reverse();
         this.setState({ratedFoods: this.state.ratedFoods});
-        this.setState({stateOfArray: true});
-      } else if (text === "option2" && this.state.stateOfArray) {
-        const reverseData = this.state.ratedFoods.reverse().map((data, i) => {})
+      } else if (text === "option2") {
+        this.state.ratedFoods.sort(function(a,b) {
+          return a[1] - b[1];
+        });
         this.setState({ratedFoods: this.state.ratedFoods});
-        this.setState({stateOfArray: false});
-      } else {
-        this.state.ratedFoods.sort();
-
-        this.setState({ratedFoods: this.state.ratedFoods});
+      } else if (text.length > 2) {
+        var tempArr = new Array();
+        var usedFoods = new Array();
+        for (var i = 0; i < this.state.ratedFoods.length; i++) {
+          if (this.state.ratedFoods[i][0].includes(text)) {
+            tempArr.push(this.state.ratedFoods[i]);
+            usedFoods.push(i);
+          }
+        }
+        for (var i = 0; i < this.state.ratedFoods.length; i++) {
+          if (!usedFoods.includes(i)) {
+            tempArr.push(this.state.ratedFoods[i]);
+          }
+        }
+        this.setState({ratedFoods: tempArr});
       }
     }
 
-    render() {
 
+    render() {
       let form = null;
       if (this.state.displayForm) {
         form = (

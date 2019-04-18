@@ -11,11 +11,11 @@ export default class Planning extends Component {
         super(props);
         this.onSend = this.onSend.bind(this);
         this.state = {
-          meals: this.props.planningMeals
-                    }
+            meals: this.props.planningMeals 
+        }
 
         //Om skärmen är fullstor skapas tabellen annars som en kortlayout
-        if(window.innerWidth >= 992) {
+        if (window.innerWidth >= 992) {
             this.state.renderPlanning = (
                 <div>
                     <h1 className="AdminPageName">{this.props.pageName}</h1>
@@ -32,15 +32,15 @@ export default class Planning extends Component {
                         <tbody>
                             {
                                 this.state.meals.map((items, i) =>
-                                                                <TableItem
-                                key={i}
-                                datum={items.localDate}
-                                måltid={items.meal}
-                                fråga={items.question}
-                                slängt={items.waste}
-                                index={i}
-                                onSend={this.onSend}
-                            />
+                                    <TableItem
+                                        key={i}
+                                        datum={items.localDate}
+                                        måltid={items.meal}
+                                        fråga={items.question}
+                                        slängt={items.waste}
+                                        index={i}
+                                        onSend={this.onSend}
+                                    />
                                 )
                             }
                         </tbody>

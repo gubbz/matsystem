@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import '../styles/Header.css'
 import HeaderItem from './HeaderItem.js'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import LoadingView from './LoadingView'
 
 export default class Header extends Component {
     constructor(props) {

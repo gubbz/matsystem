@@ -37,7 +37,17 @@ export default class Meals extends Component {
     }
 
     displayForm = () => {
-      this.setState({displayForm: !this.state.displayForm});
+      this.setState({displayForm: !this.state.displayForm}, () => {
+        if(this.state.displayForm) {
+          this.setState({
+            arrowDirection: "rotate(180deg)"
+          })
+        } else {
+          this.setState({
+            arrowDirection: "rotate(0deg)"
+          })
+        }
+      });
     }
 
     updateRatedFoods = (text) => {
@@ -86,7 +96,7 @@ export default class Meals extends Component {
               <div className="Meals">
                   <div className="MealTableLabels">
                       <h2>Måltider</h2>
-                      <button onClick={this.displayForm}>Sortera</button>
+              <button onClick={this.displayForm}><i style={{transform: this.state.arrowDirection, transition: "transform 0.5s"}} className="material-icons">arrow_drop_down</i>Sortera</button>
                   </div>
                   {form}
                   <hr/>

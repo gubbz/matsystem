@@ -9,6 +9,18 @@
 .MealTableLabels {
     display: flex;
     align-items: center;
+    margin: 1em 0;
+}
+
+.MealTableLabels button {
+    background: transparent;
+    border: 0;
+    outline: 0;
+    box-shadow: 0;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .Meals hr {
@@ -16,5 +28,16 @@
 }
 
 .MealTableLabels h2 {
+    margin-bottom: 0;
     margin-right: auto;
+    line-height: 1;
+}
+
+@media screen and (max-width: 992px) {
+    .MealTableLabels {
+        margin: 1em 0 2em 0;
+    }
+    .MealTableLabels h2 {
+        font-size: 1.6em;
+    }
 }

@@ -51,22 +51,20 @@ export default class Client extends Component {
                                 />
                             }
                             />
-                        } />
-      <Route path="/statistics" render={() =>
+                            <Route path="/statistics" render={() =>
                                 <Statistics
                                     shadow="0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.08)"
                                 />
                             } />
-                        <Route path="/meals" render={() => <Meals
-                          ratedFoods={this.props.ratedFoods}
-                        />} />
-
-                        <Route path="/login" render={() =>
-                            <Login
-                                handleLogin={this.handleLogin}
+                            <Route path="/meals" render={() => <Meals
+                                ratedFoods={this.props.ratedFoods}
                             />} />
-      <Route path="*" component={ErrorPage} />
-      </Switch>
+                            <Route path="/login" render={() =>
+                                <Login
+                                    handleLogin={this.handleLogin}
+                                />} />
+                            <Route path="*" component={ErrorPage} />
+                        </Switch>
                     </div>
 
                 </div>

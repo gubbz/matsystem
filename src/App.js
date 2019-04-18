@@ -19,6 +19,8 @@ import { NONAME } from 'dns';
 import Admin from './components/Admin';
 import Client from './components/Client';
 import Landing from './components/Landing';
+import LoadingView from './components/LoadingView';
+
 
 var today;
 var mm;
@@ -34,6 +36,7 @@ var state = {
   socket: null,
   todaysMeal: null,
   displayVote: null,
+  isLoading: true,
 
   ratedFoods: [],
   planningMeals: []
@@ -67,7 +70,7 @@ class App extends Component {
   }
 
   handleLogin(username, password) {
-    this.state.socket.emit('login',{username: username, password: password});
+    this.state.socket.emit('login', { username: username, password: password });
   }
 
   componentWillMount() {
@@ -78,10 +81,17 @@ class App extends Component {
     state = this.state;
   }
 
+  componentDidMount() {
+    this.state.socket.on('ratedFood', (arr) => {
+      this.setState({ ratedFoods: arr }, () => {
+        this.setState({ isLoading: false });
+      });
+    })
+  }
+
   initSocket = () => {
     const socket = socketIOClient(socketURL);
     this.setState({ socket });
-
     socket.on('connect', () => {
       console.log("Connected");
       this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
@@ -93,11 +103,11 @@ class App extends Component {
         this.child.current.displayVote(typeOfVote);
       }
     })
-    socket.on('returnlogin',function (data) {
+    socket.on('returnlogin', function (data) {
       console.log("login");
-      if(data){
+      if (data) {
         alert("Login successful");
-      }else{
+      } else {
         alert("Login failed");
       }
     })
@@ -123,24 +133,18 @@ class App extends Component {
         for (var i = 0; i < arr.length; i++) {
           if (arr[i]['localDate'] == (mm + "-" + dd)) {
             var todaysMeal = arr[i]['meal'];
-            console.log(todaysMeal);
             this.setState({ todaysMeal: todaysMeal });
           }
         }
-        this.setState({planningMeals: arr});
+        this.setState({ planningMeals: arr });
       }
-    })
-
-    socket.on('ratedFood', (arr) => {
-      console.log(arr);
-      this.setState({ratedFoods: arr});
     })
 
     socket.on('ChangeQuestion', (question) => {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
         this.child.current.ChangeQuestion(question);
       }
-      
+
     })
   }
 
@@ -211,41 +215,43 @@ class App extends Component {
   }
 
   render() {
+    if (!this.state.isLoading) {
+      return (
+        <Router>
+          <div className="Container">
+            <Switch>
+              <Route path="/landing" render={() =>
+                <Landing
+                />
+              } />
+              <Route path="/admin" render={() =>
+                <Admin
+                  onSend={this.sendMealInfo}
+                  ref={this.child}
+                  planningMeals={this.state.planningMeals}
+                />
+              } />
+              <Route path="/" render={() =>
+                <Client
+                  vGood={this.state.vGood}
+                  good={this.state.good}
+                  bad={this.state.bad}
+                  vBad={this.state.vBad}
+                  data={this.state.data}
+                  meal={this.state.todaysMeal}
+                  ref={this.chartElement}
+                  handleLogin={this.handleLogin}
+                  ratedFoods={this.state.ratedFoods}
+                />
+              } />
 
-
-    return (
-      <Router>
-        <div className="Container">
-          <Switch>
-            <Route path="/landing" render={() =>
-              <Landing
-              />
-            } />
-            <Route path="/admin" render={() =>
-              <Admin
-                 onSend={this.sendMealInfo}
-              ref={this.child}
-              planningMeals={this.state.planningMeals}
-              />
-            } />
-            <Route path="/" render={() =>
-              <Client
-               vGood={this.state.vGood}
-              good={this.state.good}
-              bad={this.state.bad}
-              vBad={this.state.vBad}
-              data={this.state.data}
-              meal={this.state.todaysMeal}
-              ref={this.chartElement}
-              handleLogin={this.handleLogin}
-              ratedFoods={this.state.ratedFoods}
-              />
-            } />
-
-          </Switch>
-        </div>
-      </Router>
-    );
+            </Switch>
+          </div>
+        </Router>
+      );
+    } else {
+      return <LoadingView/>
+    }
   }
 }
 

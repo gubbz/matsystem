@@ -87,8 +87,8 @@ export default class TodayGrid extends Component {
                                     }],
                                     xAxes: [{
                                         ticks: {
-                                            userCallback: function(label) {
-                                                if(window.innerWidth > 500) {
+                                            userCallback: function (label) {
+                                                if (window.innerWidth > 500) {
                                                     return label;
                                                 }
                                             }

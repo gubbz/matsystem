@@ -15,15 +15,15 @@ export default class Meal extends Component {
     }
 
     handleChange(event) {
-      this.setState({mealName: event.target.value});
-      this.props.updateRatedFoods(this.state.mealName);
+      this.setState({mealName: event.target.value}, () => {
+        this.props.updateRatedFoods(this.state.mealName);
+      });
     }
 
     handleOptionChange(event) {
-      this.setState({
-        selectedOption: event.target.value
+      this.setState({selectedOption: event.target.value}, () => {
+        this.props.updateRatedFoods(this.state.selectedOption);
       });
-      this.props.updateRatedFoods(this.state.selectedOption);
     }
 
     handleSubmit(event) {

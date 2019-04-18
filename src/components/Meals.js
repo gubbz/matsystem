@@ -92,7 +92,6 @@ export default class Meals extends Component {
         )
       }
       return (
-          <div className="MainContainer">
               <div className="Meals">
                   <div className="MealTableLabels">
                       <h2>Måltider</h2>
@@ -102,7 +101,6 @@ export default class Meals extends Component {
                   <hr/>
                   {this.createMealComponent()}
               </div>
-          </div>
       )
     }
 }

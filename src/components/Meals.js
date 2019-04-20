@@ -63,15 +63,16 @@ export default class Meals extends Component {
           return a[1] - b[1];
         });
         this.setState({ratedFoods: this.state.ratedFoods});
-      } else if (text.length > 2) {
+      } else {
         var tempArr = new Array();
         var usedFoods = new Array();
         for (var i = 0; i < this.state.ratedFoods.length; i++) {
-          if (this.state.ratedFoods[i][0].includes(text)) {
+          if (this.state.ratedFoods[i][0].toLowerCase().includes(text.toLowerCase())) {
             tempArr.push(this.state.ratedFoods[i]);
             usedFoods.push(i);
           }
         }
+        
         for (var i = 0; i < this.state.ratedFoods.length; i++) {
           if (!usedFoods.includes(i)) {
             tempArr.push(this.state.ratedFoods[i]);
@@ -95,7 +96,7 @@ export default class Meals extends Component {
               <div className="Meals">
                   <div className="MealTableLabels">
                       <h2>Måltider</h2>
-              <button onClick={this.displayForm}><i style={{transform: this.state.arrowDirection, transition: "transform 0.5s"}} className="material-icons">arrow_drop_down</i>Sortera</button>
+                      <button onClick={this.displayForm}><i style={{transform: this.state.arrowDirection, transition: "transform 0.5s"}} className="material-icons">arrow_drop_down</i>Sortera</button>
                   </div>
                   {form}
                   <hr/>

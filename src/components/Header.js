@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import '../styles/Header.css'
 import HeaderItem from './HeaderItem.js'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import LoadingView from './LoadingView'
 
 export default class Header extends Component {
     constructor(props) {
@@ -27,28 +28,30 @@ export default class Header extends Component {
         if (urlCheck.includes("question")) {
             return null;
         } else if (urlCheck.includes("admin")) {
-            return null
+            return null;
+        } else if (urlCheck.includes("landing")) {
+            return null;
         }
         else {
             return (
                 <div className="HeaderContainer">
                     <div className="Header">
-                        <div><h1>MealRate</h1></div>
+                        <div><h1 className="Logo">mealrate</h1></div>
                         <div className="HeaderLinks">
                             <HeaderItem
-                                text="IDAG"
+                                text="Idag"
                                 route="/today"
                             />
                             <HeaderItem
-                                text="STATISTIK"
+                                text="Statistik"
                                 route="/statistics"
                             />
                             <HeaderItem
-                                text="MÅLTIDER"
+                                text="Måltider"
                                 route="/meals"
                             />
                             <HeaderItem
-                                text="LOGGA IN"
+                                text="Logga in"
                                 route="/login"
                             />
                         </div>

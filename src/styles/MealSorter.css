@@ -1,0 +1,68 @@
+.MealSorterForm {
+  width: 100%;
+  height: auto;
+}
+
+.MealSorterForm>form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.radioButton {
+  display: none;
+}
+
+.radioButton:checked+.radioLabel {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.radioLabel {
+  margin-left: 2em;
+}
+
+#searchbar {
+  padding: 0.8em 1.6em;
+  border-radius: 0.5em;
+  border: 1px solid #304FFE;
+  outline: 0;
+}
+
+#searchButton {
+  background: #304FFE;
+  border: 0;
+  outline: 0;
+  box-shadow: 0;
+  box-sizing: border-box;
+  padding: 0.8em 2em;
+  color: white;
+  margin-left: auto;
+  border-radius: 0.5em;
+}
+
+#searchButton i {
+  font-size: 20px;
+  margin-right: 0.4em;
+}
+
+@media screen and (max-width: 992px) {
+  .MealSorterForm form {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .radioLabel, #searchButton, #searchbar {
+    width: 100%;
+    margin-left: 0;
+  }
+  .MealSorterForm>form>div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .radioLabel {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+  }
+}

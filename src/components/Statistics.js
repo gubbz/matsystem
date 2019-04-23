@@ -66,9 +66,9 @@ export default class Statistics extends Component {
     render() {
         return (
             <div>
-                <h1>{this.props.pageName}</h1>
+                <h1 className="AdminPageName">{this.props.pageName}</h1>
                 <div className="Statistics"
-                style={{boxShadow: this.props.shadow}}
+                    style={{ boxShadow: this.props.shadow }}
                 >
                     <div className="TimePicker">
                         <p>Tidsperiod: </p>
@@ -86,6 +86,7 @@ export default class Statistics extends Component {
                                         display: true,
                                         position: 'bottom',
                                     },
+
                                 }}
                             />
                         </div>

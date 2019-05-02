@@ -10,7 +10,6 @@ const saltRounds = 12;
 module.exports = class DatabaseHandler {
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
   constructor() {
-
     console.log("DatabaseHandler constructor")
     this.con;
     this.meal= new Array();
@@ -68,53 +67,74 @@ module.exports = class DatabaseHandler {
           }
         }
       }
+    });
+    console.log(grades);
+    socket.emit(typeOfCall, grades);
+  }
+  checkQuestion(socket){
 
-      console.log(grades);
+      //Get Grades from DB when client first opens the webapplication
+      var grades = [];
+      var today = new Date().toISOString().substring(0, 10);
 
-/*
-      console.log("idag" +today);
-
-      const mat = {
-        text: '(SELECT * FROM menu WHERE date_pk = $1)',
-        values: [today]
+      const query = {
+        text: 'SELECT * FROM grades WHERE date_pk = $1',
+        values: [today],
       }
-      this.con.query(mat, (err, res) => {
-        if(err){
-          console.log(err);
-        }else{
-          console.log(res.rows[0]['menu']);
-          var dagens = (res.rows[0]['menu']);
-          var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
-          var rating = Number(grades[4][1]);
-          var ord = dagens.toLowerCase().split(' ');
-
-          if(votes <= 10 && rating <= 25){
-          for(i = 0; i < ord.length; i++ ){
-            //fixa så att det finns nya tables för andra frågor som man kan pusha upp till för att man ska hålla koll på vilken fråga som det är just nu samt vad folk tyckte om frågan
-            const array = {
-              name: 'getMealWord',
-              text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
-              values: ['%'+ ord[i]+ '%' ]
-            }
-
-            this.con.query(array, (err, res) => {
-              if(err){
-                console.log(err);
-              }else{
-                if(res.rows == ""){
-                }else{
-                socket.emit('ChangeQuestion','vad tyckte du om ' + res.rows[0]['meal_word']);
-                }
-              }
-            });
-          }
+      // callback
+      this.con.query(query, (err, res) => {
+        if (err) {
+          console.log(err.stack);
+        } else {
+          for (var i = 1; i < res.fields.length; i++) {
+              var fieldName = res.fields[i].name;
+              var grade = new Array();
+              grade[0] = fieldName;
+              grade[1] = res.rows[0][fieldName];
+              grades.push(grade);
           }
         }
+
+        const mat = {
+          text: '(SELECT * FROM menu WHERE date_pk = $1)',
+          values: [today]
+        }
+        this.con.query(mat, (err, res) => {
+          if(err){
+            console.log(err);
+          }else{
+
+            var dagens = (res.rows[0]['menu']);
+            var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
+            var rating = Number(grades[4][1]);
+            var ord = dagens.toLowerCase().split(' ');
+            if(votes <= 10 && rating <= 25){
+            for(i = 0; i < ord.length; i++ ){
+              //fixa så att det finns nya tables för andra frågor som man kan pusha upp till för att man ska hålla koll på vilken fråga som det är just nu samt vad folk tyckte om frågan
+              const array = {
+                name: 'getMealWord',
+                text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
+                values: ['%'+ ord[i]+ '%' ]
+              }
+
+              this.con.query(array, (err, res) => {
+                if(err){
+                  console.log(err);
+                }else{
+                  if(res.rows == ""){
+                  }else{
+                    socket.emit('ChangeQuestion','vad tyckte du om ' + res.rows[0]['meal_word']);
+                  }
+                }
+              });
+            }
+            }
+          }
+        });
       });
-*/
-      socket.emit(typeOfCall, grades);
-    });
   }
+
+
 
   addVote(typeOfVote) {
 
@@ -171,34 +191,13 @@ module.exports = class DatabaseHandler {
   getMenuFromDB() {
     //Get weekly menu from db when databse starts
     var startDate = this.startOfWeek(new Date());
-    //console.log("startDate " + startDate);
+
     var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
 
     for(var i = 0; i < 5; i++) {
       var day = new Date(startDate);
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
-/*
-      if( i == 0){
-
-        const query = {
-          name: 'getMenu',
-          text: 'SELECT * FROM menu WHERE date_pk = $1',
-          values: [idag]
-        }
-        this.con.query(query, (err, res) => {
-          if(err){
-          }else{
-            var dateName = res.fields[0].name;
-            var mealName = res.fields[1].name;
-            var date = res.rows[0][dateName];
-            var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
-            var meal = res.rows[0][mealName];
-            this.meal.push({meal});
-          }
-        });
-      }
-*/
       const query = {
         name: 'getMenu',
         text: 'SELECT * FROM menu WHERE date_pk = $1',
@@ -228,26 +227,6 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-  updateQuestion(date, question) {
-    //get question from form
-    //form pushes info to here, insert to DB
-    console.log("insertquestion, date: " + date + " question: " + question);
-
-    const query = {
-    name: 'insertQuestion',
-    text: 'UPDATE question SET question = $1 WHERE date_pk = $2',
-    values: [question, date],
-    }
-
-    this.con.query(query, (err, res) => {
-      if(err){
-        return console.log(err.stack);
-      } else {
-        console.log("question inserted successfully");
-      }
-    });
-  }
-
   login(username, password, socket) {
 
     const query = {
@@ -270,7 +249,7 @@ module.exports = class DatabaseHandler {
   }
 
   updateWaste(waste, date, menu)  {
-    console.log("update waste +: " + waste);
+
 
     var query = "UPDATE menu SET waste = $1 WHERE date_pk = $2 AND menu = $3";
     var values = [waste, date, menu];
@@ -283,47 +262,6 @@ module.exports = class DatabaseHandler {
       }
     });
   }
-
-/*
-  getQuestion() {
-
-    var startDate = this.startOfWeek(new Date());
-    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-
-    var questions = [];
-
-    for(var i = 0; i < 5; i++){
-      var day = new Date();
-      day.setDate(startDate.getDate() + i);
-      day = day.toISOString().substring(0, 10);
-
-      const query = {
-       name: 'getQuestion',
-       text: "SELECT * FROM question WHERE date_pk = $1",
-       values: [day],
-     }
-
-     this.con.query(query, (err, res) => {
-        if(err)  {
-         console.log(err.stack);
-        } else {
-          console.log("getQuestion successfull")
-          console.log(res.rows);
-
-          var dateName = res.fields[0].name;
-          var questionName = res.fields[1].name;
-          console.log(res.rows);
-          console.log("res,rows");
-          var date = res.rows[0][dateName];
-          var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
-          var question = res.rows[0][questionName];
-        }
-        this.weekQuestions.push([localDate, question]);
-      });
-    }
-    console.log(this.weekQuestions);
-  }
-*/
   getTopRatedFood(socket) {
    var meals = new Array();
 
@@ -345,7 +283,7 @@ module.exports = class DatabaseHandler {
         meal[1] = res.rows[i][mealRatingName];
         meals.push(meal);
       }
-      console.log(meals);
+
       socket.emit('ratedFood', meals);
     }
    });

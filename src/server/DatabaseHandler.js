@@ -167,7 +167,7 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-  addQuestion(date, question) {
+  updateQuestion(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
 

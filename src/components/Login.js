@@ -14,12 +14,15 @@ export default class Login extends Component {
         }
     }
 
-    handleSubmit() {
+    handleSubmit(e) {
+
         if (this.state.username && this.state.password) {
             this.props.handleLogin(this.state.username, this.state.password);
+            console.log("yerr");
         } else {
             alert("Bad login");
         }
+        e.preventDefault();
     }
 
     invalidInput() {
@@ -72,4 +75,3 @@ export default class Login extends Component {
         )
     }
 }
-

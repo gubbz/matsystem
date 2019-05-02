@@ -1,8 +1,8 @@
 'use strict'
 const pg = require('pg');
 const mysql = require('mysql2');
-var CryptoJS = require("crypto-js");
-
+const bcrypt = require('bcrypt');
+const saltRounds = 12;
 
 /**
   Database communication and functionality
@@ -10,8 +10,10 @@ var CryptoJS = require("crypto-js");
 module.exports = class DatabaseHandler {
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
   constructor() {
+
     console.log("DatabaseHandler constructor")
     this.con;
+    this.meal= new Array();
     this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
     this.weekQuestions = new Array();
@@ -40,9 +42,9 @@ module.exports = class DatabaseHandler {
 
   }
 
- getGrades(socket) {
+  getGrades(socket, typeOfCall) {
     //Get Grades from DB when client first opens the webapplication
-    console.log("GET GRADES for " + socket.id);
+    console.log("GET GRADES " + typeOfCall + " for " + socket.id);
     var grades = [];
     var today = new Date().toISOString().substring(0, 10);
 
@@ -52,7 +54,6 @@ module.exports = class DatabaseHandler {
     }
     // callback
     this.con.query(query, (err, res) => {
-
       if (err) {
         console.log(err.stack);
       } else {
@@ -67,13 +68,55 @@ module.exports = class DatabaseHandler {
           }
         }
       }
-      console.log(grades);
-      socket.emit('grades', grades);
-    });
 
+      console.log(grades);
+
+/*
+      console.log("idag" +today);
+
+      const mat = {
+        text: '(SELECT * FROM menu WHERE date_pk = $1)',
+        values: [today]
+      }
+      this.con.query(mat, (err, res) => {
+        if(err){
+          console.log(err);
+        }else{
+          console.log(res.rows[0]['menu']);
+          var dagens = (res.rows[0]['menu']);
+          var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
+          var rating = Number(grades[4][1]);
+          var ord = dagens.toLowerCase().split(' ');
+
+          if(votes <= 10 && rating <= 25){
+          for(i = 0; i < ord.length; i++ ){
+            //fixa så att det finns nya tables för andra frågor som man kan pusha upp till för att man ska hålla koll på vilken fråga som det är just nu samt vad folk tyckte om frågan
+            const array = {
+              name: 'getMealWord',
+              text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
+              values: ['%'+ ord[i]+ '%' ]
+            }
+
+            this.con.query(array, (err, res) => {
+              if(err){
+                console.log(err);
+              }else{
+                if(res.rows == ""){
+                }else{
+                socket.emit('ChangeQuestion','vad tyckte du om ' + res.rows[0]['meal_word']);
+                }
+              }
+            });
+          }
+          }
+        }
+      });
+*/
+      socket.emit(typeOfCall, grades);
+    });
   }
 
- addVote(typeOfVote) {
+  addVote(typeOfVote) {
 
     var currentVote;
     var query;
@@ -125,7 +168,6 @@ module.exports = class DatabaseHandler {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
     return new Date(date.setDate(diff));
   }
-
   getMenuFromDB() {
     //Get weekly menu from db when databse starts
     var startDate = this.startOfWeek(new Date());
@@ -133,16 +175,35 @@ module.exports = class DatabaseHandler {
     var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
 
     for(var i = 0; i < 5; i++) {
-      var day = new Date();
+      var day = new Date(startDate);
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
-      //console.log(day);
+/*
+      if( i == 0){
+
+        const query = {
+          name: 'getMenu',
+          text: 'SELECT * FROM menu WHERE date_pk = $1',
+          values: [idag]
+        }
+        this.con.query(query, (err, res) => {
+          if(err){
+          }else{
+            var dateName = res.fields[0].name;
+            var mealName = res.fields[1].name;
+            var date = res.rows[0][dateName];
+            var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
+            var meal = res.rows[0][mealName];
+            this.meal.push({meal});
+          }
+        });
+      }
+*/
       const query = {
         name: 'getMenu',
         text: 'SELECT * FROM menu WHERE date_pk = $1',
         values: [day]
       }
-
       this.con.query(query, (err, res) => {
         if (err) {
           return console.log(err.stack);
@@ -170,7 +231,6 @@ module.exports = class DatabaseHandler {
   updateQuestion(date, question) {
     //get question from form
     //form pushes info to here, insert to DB
-
     console.log("insertquestion, date: " + date + " question: " + question);
 
     const query = {
@@ -188,36 +248,23 @@ module.exports = class DatabaseHandler {
     });
   }
 
-  login(username, password) {
-
-    var myUsername =  "myUsername";
-    var myPassword =  "myPassword";
-
-    // Encrypt
-    var encryptoUsername = CryptoJS.AES.encrypt(username, myUsername).toString();
-    var encryptoPassword = CryptoJS.AES.encrypt(password, myPassword).toString();
-    // Decrypt
-
-    var originalUsername = decryptoUsername.toString(CryptoJS.enc.Utf8);
-    var originalPassword = decryptoPassword.toString(CryptoJS.enc.Utf8);
-
-    console.log(originalUsername); // 'username as it was in the beginning'
-    console.log(originalPassword); // 'password as it was in the beginning'
+  login(username, password, socket) {
 
     const query = {
       name: 'getUsers',
-      text: 'SELECT * FROM users WHERE encryptoUsername = $1 AND encryptoPassword = $2',
-      values: [username, password]
+      text: 'SELECT password FROM users where username = $1',
+      values: [username]
     }
 
-    var decryptoUsername  = CryptoJS.AES.decrypt(username, myUsername);
-    var decryptoPassword  = CryptoJS.AES.decrypt(password, myPassword);
-
     this.con.query(query, (err, res) => {
-      if(err){
-        return console.log(err.stack);
-      } else {
-        console.log("Login successful");
+        if(res.rows[0]){
+        if(bcrypt.compareSync(password, res.rows[0]["password"])){
+          socket.emit('returnlogin',true);
+        } else {
+          socket.emit('returnlogin',false);
+          }
+      }else{
+        socket.emit('returnlogin',false);
       }
     });
   }
@@ -237,6 +284,7 @@ module.exports = class DatabaseHandler {
     });
   }
 
+/*
   getQuestion() {
 
     var startDate = this.startOfWeek(new Date());
@@ -249,28 +297,58 @@ module.exports = class DatabaseHandler {
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
 
+      const query = {
+       name: 'getQuestion',
+       text: "SELECT * FROM question WHERE date_pk = $1",
+       values: [day],
+     }
+
+     this.con.query(query, (err, res) => {
+        if(err)  {
+         console.log(err.stack);
+        } else {
+          console.log("getQuestion successfull")
+          console.log(res.rows);
+
+          var dateName = res.fields[0].name;
+          var questionName = res.fields[1].name;
+          console.log(res.rows);
+          console.log("res,rows");
+          var date = res.rows[0][dateName];
+          var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
+          var question = res.rows[0][questionName];
+        }
+        this.weekQuestions.push([localDate, question]);
+      });
+    }
+    console.log(this.weekQuestions);
+  }
+*/
+  getTopRatedFood(socket) {
+   var meals = new Array();
+
+   //hämta måltider och deras grades ordnade efter mealrating
    const query = {
-     name: 'getQuestion',
-     text: "SELECT * FROM question WHERE date_pk = $1",
-     values: [day],
+     name: 'getRatedFood',
+     text: 'SELECT M.menu, Max(G.meal_rating) FROM menu M join grades G ON M.date_pk=G.date_pk group by G.meal_rating, M.menu ORDER BY G.meal_rating DESC'
    }
 
    this.con.query(query, (err, res) => {
-     if(err)  {
-       console.log(err.stack);
-     } else {
-       console.log("getQuestion successfull")
-       console.log(res.rows);
-
-         var dateName = res.fields[0].name;
-         var questionName = res.fields[1].name;
-         var date = res.rows[0][dateName];
-         var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
-         var question = res.rows[0][questionName];
-       }
-       this.weekQuestions.push([localDate, question]);
-     });
-   }
-   console.log(this.weekQuestions);
+    if(err)  {
+      console.log(err.stack);
+    } else {
+      var mealName = res.fields[0].name;
+      var mealRatingName = res.fields[1].name;
+      for (var i = 0; i < res.rows.length; i++) {
+        var meal = new Array();
+        meal[0] = res.rows[i][mealName];
+        meal[1] = res.rows[i][mealRatingName];
+        meals.push(meal);
+      }
+      console.log(meals);
+      socket.emit('ratedFood', meals);
+    }
+   });
  }
+
 }

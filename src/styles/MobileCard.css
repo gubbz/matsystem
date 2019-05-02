@@ -1,0 +1,16 @@
+.MobileCard {
+    padding: 1em;
+    margin-bottom: 1em;
+    background: white;
+    border-radius: 8px;
+}
+
+.MobileCard p {
+    margin-bottom: 0.5em;
+}
+
+.MobileMealTitle {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #304EFE;
+}

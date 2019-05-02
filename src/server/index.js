@@ -21,17 +21,31 @@ app.get('/*',(req, res) => {
 
 var dbcon = new DatabaseHandler();
 
-io.on('connection', socket => {
-  dbcon.getQuestion();
+var socketsConnected = new Set();
+
+setInterval(function() {
+  console.log("sockets connected " + socketsConnected.size);
+}, 60000);
+
+io.on('connection', (socket) => {
   console.log('User connected');
+  socketsConnected.add(socket);
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    socketsConnected.delete(socket);
   })
 
   socket.on('response', () => {
-    dbcon.getGrades(socket);
+    dbcon.getGrades(socket, "grades");
+    dbcon.getTopRatedFood(socket);
+    //dbcon.getQuestion(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
+    setInterval(() => {
+      console.log("Antal sockets anslutna " + socketsConnected.size);
+      dbcon.getGrades(socket, "grades");
+    }, 60000);
   })
 
   socket.on('vote', (typeOfVote) => {
@@ -45,20 +59,28 @@ io.on('connection', socket => {
     dbcon.updateQuestion(date, question);
   })
 
+<<<<<<< HEAD
 
 
   socket.on('getQuestion', () => {
     var question = dbcon.getQuestion();
     io.emit(getQuestion, question);
+=======
+  socket.on('ChangeQuestion', (question) => {
+    //var question = dbcon.getQuestion();
+    socket.emit('ChangeQuestion', question);
+
+  })
+
+  socket.on('login',function (data) {
+    dbcon.login(data.username, data.password, socket);
+>>>>>>> 5616c9049dbe6939c80d72556bdff3f7246330be
   })
 
   socket.on('updateWaste', (waste, date, menu) => {
     dbcon.updateWaste(waste, date, menu);
   })
 
-  socket.on('login', (username, password) =>  {
-    dbcon.login(username, password);
-  })
 })
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));

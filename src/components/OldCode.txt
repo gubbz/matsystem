@@ -1,0 +1,28 @@
+Bar chart todaygrid
+
+<Bar
+                            data={this.getChartData()}
+                            options={{
+                                legend: {
+                                    display: false,
+                                },
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                            userCallback: function (label, index, labels) {
+                                                if (Math.floor(label) === label) {
+                                                    return label;
+                                                }
+                                            }
+                                        }
+                                    }]
+                                }
+                            }}
+                        />
+
+Pie chart
+
+

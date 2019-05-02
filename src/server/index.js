@@ -9,9 +9,6 @@ const DatabaseHandler = require('./DatabaseHandler.js');
 
 const PORT = process.env.PORT || 8080;
 
-server.use(helmet()); //varför funkar inte den
-app.disable('x-powered-by');
-
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(__dirname + '/../../build'));
 }

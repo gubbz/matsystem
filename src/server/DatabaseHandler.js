@@ -54,7 +54,6 @@ module.exports = class DatabaseHandler {
     }
     // callback
     this.con.query(query, (err, res) => {
-
       if (err) {
         console.log(err.stack);
       } else {
@@ -69,28 +68,48 @@ module.exports = class DatabaseHandler {
           }
         }
       }
-      var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
-      var rating = Number(grades[4][1]);
-      var ord = this.meal[0]['meal'].toLowerCase().split(' ');
-      console.log(ord);
-      if(votes <= 100 && rating <= 25){
 
-        /*const query = {
-          name: 'getMealWords',
-          text: 'SELECT * FROM mealWords WHERE ord_i_ = $1',
-          values: [en del av hela maten idag]
-        }*/
-        //console.log(dagens);
-        var nextQuestion = this.meal[0]['meal'].toLowerCase();
+      console.log("idag" +today);
 
-
-        //socket.emit('ChangeQuestion','vad tyckte du om ' +ord[0]);
-        //byt fråga
+      const mat = {
+        text: '(SELECT * FROM menu WHERE date_pk = $1)',
+        values: [today]
       }
-      console.log(grades);
+      this.con.query(mat, (err, res) => {
+        if(err){
+          console.log(err);
+        }else{
+          console.log(res.rows[0]['menu']);
+          var dagens = (res.rows[0]['menu']);
+          var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
+          var rating = Number(grades[4][1]);
+          var ord = dagens.toLowerCase().split(' ');
+
+          if(votes <= 10 && rating <= 25){
+          for(i = 0; i < ord.length; i++ ){
+            //fixa så att det finns nya tables för andra frågor som man kan pusha upp till för att man ska hålla koll på vilken fråga som det är just nu samt vad folk tyckte om frågan
+            const array = {
+              name: 'getMealWord',
+              text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
+              values: ['%'+ ord[i]+ '%' ]
+            }
+
+            this.con.query(array, (err, res) => {
+              if(err){
+                console.log(err);
+              }else{
+                if(res.rows == ""){
+                }else{
+                socket.emit('ChangeQuestion','vad tyckte du om ' + res.rows[0]['meal_word']);
+                }
+              }
+            });
+          }
+          }
+        }
+      });
       socket.emit(typeOfCall, grades);
     });
-
   }
 
   addVote(typeOfVote) {
@@ -145,9 +164,6 @@ module.exports = class DatabaseHandler {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
     return new Date(date.setDate(diff));
   }
-
-
-
   getMenuFromDB() {
     //Get weekly menu from db when databse starts
     var startDate = this.startOfWeek(new Date());
@@ -160,6 +176,7 @@ module.exports = class DatabaseHandler {
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
       if( i == 0){
+
         const query = {
           name: 'getMenu',
           text: 'SELECT * FROM menu WHERE date_pk = $1',

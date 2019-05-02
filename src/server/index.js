@@ -9,6 +9,9 @@ const DatabaseHandler = require('./DatabaseHandler.js');
 
 const PORT = process.env.PORT || 8080;
 
+server.use(helmet()); //varför funkar inte den
+app.disable('x-powered-by');
+
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(__dirname + '/../../build'));
 }
@@ -36,8 +39,8 @@ io.on('connection', (socket) => {
 
   socket.on('response', () => {
     dbcon.getGrades(socket, "grades");
+    dbcon.checkQuestion(socket);
     dbcon.getTopRatedFood(socket);
-    //dbcon.getQuestion(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
     setInterval(() => {
@@ -48,13 +51,19 @@ io.on('connection', (socket) => {
 
   socket.on('vote', (typeOfVote) => {
     console.log("röst mottagen typeofvote: " + typeOfVote);
-    dbcon.addVote(typeOfVote)
+    dbcon.addVote(typeOfVote);
+    dbcon.checkQuestion(socket);
     io.emit('vote', typeOfVote);
   })
-
-  socket.on('newQuestion', (date, question) => {
+  /*
+  socket.on('updateQuestion', (date, question) => {
     console.log("newquestion körs");
-    dbcon.addQuestion(date, question);
+    dbcon.updateQuestion(date, question);
+  })
+
+  socket.on('getQuestion', () => {
+    var question = dbcon.getQuestion();
+    io.emit(getQuestion, question);
   })
 
   socket.on('ChangeQuestion', (question) => {
@@ -62,9 +71,10 @@ io.on('connection', (socket) => {
     socket.emit('ChangeQuestion', question);
 
   })
-
+  */
   socket.on('login',function (data) {
     dbcon.login(data.username, data.password, socket);
+
   })
 
   socket.on('updateWaste', (waste, date, menu) => {

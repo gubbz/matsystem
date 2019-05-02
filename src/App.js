@@ -130,10 +130,11 @@ class App extends Component {
     })
 
     socket.on('ChangeQuestion', (question) => {
+      console.log("frågan " +question);
       if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
         this.child.current.ChangeQuestion(question);
       }
-      
+
     })
   }
 

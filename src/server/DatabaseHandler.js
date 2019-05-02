@@ -249,8 +249,6 @@ module.exports = class DatabaseHandler {
     return new Date(date.setDate(diff));
   }
 
-
-
   login(username, password, socket) {
 
     const query = {

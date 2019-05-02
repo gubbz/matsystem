@@ -9,6 +9,9 @@ const DatabaseHandler = require('./DatabaseHandler.js');
 
 const PORT = process.env.PORT || 8080;
 
+server.use(helmet()); //varför funkar inte den
+app.disable('x-powered-by');
+
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(__dirname + '/../../build'));
 }
@@ -51,11 +54,18 @@ io.on('connection', (socket) => {
     io.emit('vote', typeOfVote);
   })
 
-  socket.on('newQuestion', (date, question) => {
+  socket.on('updateQuestion', (date, question) => {
     console.log("newquestion körs");
-    dbcon.addQuestion(date, question);
+    dbcon.updateQuestion(date, question);
   })
 
+<<<<<<< HEAD
+
+
+  socket.on('getQuestion', () => {
+    var question = dbcon.getQuestion();
+    io.emit(getQuestion, question);
+=======
   socket.on('ChangeQuestion', (question) => {
     //var question = dbcon.getQuestion();
     socket.emit('ChangeQuestion', question);
@@ -64,6 +74,7 @@ io.on('connection', (socket) => {
 
   socket.on('login',function (data) {
     dbcon.login(data.username, data.password, socket);
+>>>>>>> 5616c9049dbe6939c80d72556bdff3f7246330be
   })
 
   socket.on('updateWaste', (waste, date, menu) => {

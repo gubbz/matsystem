@@ -22,9 +22,6 @@ var socketsConnected = new Set();
 
 setInterval(function() {
   console.log("sockets connected " + socketsConnected.size);
-
-
-
 }, 60000);
 
 io.on('connection', (socket) => {

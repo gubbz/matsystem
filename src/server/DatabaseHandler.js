@@ -69,24 +69,6 @@ module.exports = class DatabaseHandler {
           }
         }
       }
-      var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
-      var rating = Number(grades[4][1]);
-      var ord = this.meal[0]['meal'].toLowerCase().split(' ');
-      console.log(ord);
-      if(votes <= 100 && rating <= 25){
-
-        /*const query = {
-          name: 'getMealWords',
-          text: 'SELECT * FROM mealWords WHERE ord_i_ = $1',
-          values: [en del av hela maten idag]
-        }*/
-        //console.log(dagens);
-        var nextQuestion = this.meal[0]['meal'].toLowerCase();
-
-
-        //socket.emit('ChangeQuestion','vad tyckte du om ' +ord[0]);
-        //byt fråga
-      }
       console.log(grades);
       socket.emit(typeOfCall, grades);
     });
@@ -155,28 +137,9 @@ module.exports = class DatabaseHandler {
     var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
 
     for(var i = 0; i < 5; i++) {
-      var day = new Date();
-      var idag = day.toISOString().substring(0, 10);
+      var day = new Date(startDate);
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
-      if( i == 0){
-        const query = {
-          name: 'getMenu',
-          text: 'SELECT * FROM menu WHERE date_pk = $1',
-          values: [idag]
-        }
-        this.con.query(query, (err, res) => {
-          if(err){
-          }else{
-            var dateName = res.fields[0].name;
-            var mealName = res.fields[1].name;
-            var date = res.rows[0][dateName];
-            var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
-            var meal = res.rows[0][mealName];
-            this.meal.push({meal});
-          }
-        });
-      }
       const query = {
         name: 'getMenu',
         text: 'SELECT * FROM menu WHERE date_pk = $1',
@@ -191,7 +154,6 @@ module.exports = class DatabaseHandler {
           var date = res.rows[0][dateName];
           var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
           var meal = res.rows[0][mealName];
-
         }
         this.weekFoodMenu.push({localDate, meal});
       });

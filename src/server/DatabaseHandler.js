@@ -69,6 +69,9 @@ module.exports = class DatabaseHandler {
         }
       }
 
+      console.log(grades);
+
+/*
       console.log("idag" +today);
 
       const mat = {
@@ -108,6 +111,7 @@ module.exports = class DatabaseHandler {
           }
         }
       });
+*/
       socket.emit(typeOfCall, grades);
     });
   }
@@ -171,10 +175,10 @@ module.exports = class DatabaseHandler {
     var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
 
     for(var i = 0; i < 5; i++) {
-      var day = new Date();
-      var idag = day.toISOString().substring(0, 10);
+      var day = new Date(startDate);
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
+/*
       if( i == 0){
 
         const query = {
@@ -194,6 +198,7 @@ module.exports = class DatabaseHandler {
           }
         });
       }
+*/
       const query = {
         name: 'getMenu',
         text: 'SELECT * FROM menu WHERE date_pk = $1',
@@ -208,7 +213,6 @@ module.exports = class DatabaseHandler {
           var date = res.rows[0][dateName];
           var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
           var meal = res.rows[0][mealName];
-
         }
         this.weekFoodMenu.push({localDate, meal});
       });

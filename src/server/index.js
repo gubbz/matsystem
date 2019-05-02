@@ -59,13 +59,10 @@ io.on('connection', (socket) => {
     dbcon.updateQuestion(date, question);
   })
 
-<<<<<<< HEAD
-
-
   socket.on('getQuestion', () => {
     var question = dbcon.getQuestion();
     io.emit(getQuestion, question);
-=======
+
   socket.on('ChangeQuestion', (question) => {
     //var question = dbcon.getQuestion();
     socket.emit('ChangeQuestion', question);
@@ -74,7 +71,7 @@ io.on('connection', (socket) => {
 
   socket.on('login',function (data) {
     dbcon.login(data.username, data.password, socket);
->>>>>>> 5616c9049dbe6939c80d72556bdff3f7246330be
+
   })
 
   socket.on('updateWaste', (waste, date, menu) => {

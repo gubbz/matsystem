@@ -10,7 +10,6 @@ const saltRounds = 12;
 module.exports = class DatabaseHandler {
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
   constructor() {
-
     console.log("DatabaseHandler constructor")
     this.con;
     this.meal= new Array();
@@ -68,9 +67,9 @@ module.exports = class DatabaseHandler {
           }
         }
       }
-
-      socket.emit(typeOfCall, grades);
     });
+    console.log(grades);
+    socket.emit(typeOfCall, grades);
   }
   checkQuestion(socket){
 
@@ -199,27 +198,6 @@ module.exports = class DatabaseHandler {
       var day = new Date(startDate);
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
-/*
-      if( i == 0){
-
-        const query = {
-          name: 'getMenu',
-          text: 'SELECT * FROM menu WHERE date_pk = $1',
-          values: [idag]
-        }
-        this.con.query(query, (err, res) => {
-          if(err){
-          }else{
-            var dateName = res.fields[0].name;
-            var mealName = res.fields[1].name;
-            var date = res.rows[0][dateName];
-            var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
-            var meal = res.rows[0][mealName];
-            this.meal.push({meal});
-          }
-        });
-      }
-*/
       const query = {
         name: 'getMenu',
         text: 'SELECT * FROM menu WHERE date_pk = $1',

@@ -38,8 +38,8 @@ io.on('connection', (socket) => {
 
   socket.on('response', () => {
     dbcon.getGrades(socket, "grades");
+    dbcon.checkQuestion(socket);
     dbcon.getTopRatedFood(socket);
-    //dbcon.getQuestion(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
     setInterval(() => {
@@ -50,7 +50,8 @@ io.on('connection', (socket) => {
 
   socket.on('vote', (typeOfVote) => {
     console.log("röst mottagen typeofvote: " + typeOfVote);
-    dbcon.addVote(typeOfVote)
+    dbcon.addVote(typeOfVote);
+    dbcon.checkQuestion(socket);
     io.emit('vote', typeOfVote);
   })
 

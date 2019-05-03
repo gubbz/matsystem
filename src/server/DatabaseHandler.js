@@ -106,28 +106,40 @@ module.exports = class DatabaseHandler {
 
             var dagens = (res.rows[0]['menu']);
             var votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
+
             var rating = Number(grades[4][1]);
             var ord = dagens.toLowerCase().split(' ');
-            if(votes <= 10 && rating <= 25){
-            for(i = 0; i < ord.length; i++ ){
+            var frågor = [];
+            for(var x = 0; x < ord.length; x++ ){
               //fixa så att det finns nya tables för andra frågor som man kan pusha upp till för att man ska hålla koll på vilken fråga som det är just nu samt vad folk tyckte om frågan
+
               const array = {
                 name: 'getMealWord',
                 text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
-                values: ['%'+ ord[i]+ '%' ]
+                values: ['%'+ ord[x]+ '%' ]
               }
 
               this.con.query(array, (err, res) => {
                 if(err){
                   console.log(err);
                 }else{
+                  console.log(x);
                   if(res.rows == ""){
                   }else{
-                    socket.emit('ChangeQuestion','vad tyckte du om ' + res.rows[0]['meal_word']);
+                    for(var y = 0; y < res.rows.length; y++){
+                      if(frågor)
+                      frågor.push(ord[y]);
+                      console.log(ord[y]);
+                      console.log(ord);
+
+                    }
+                      //console.log(res.rows.length);
+                      //console.log(res.rows[0]['meal_word'] +res.rows[1]['meal_word'] );
+                      socket.emit('ChangeQuestion','vad tyckte du om ' +res.rows[0]['meal_word'] +res.rows[1]['meal_word']+ "?");
+
                   }
                 }
               });
-            }
             }
           }
         });

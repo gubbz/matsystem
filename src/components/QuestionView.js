@@ -19,9 +19,10 @@ export default class QuestionView extends Component {
 
     componentWillMount() {
         this.text = "white";
-        this.text = "Vad tyckte du om maten?";
+        this.text = "Vad tyckte du om maten? \n What did you think about the food?";
     }
     ChangeQuestion(data){
+      console.log("data");
         this.text = data;
         this.forceUpdate();
     }

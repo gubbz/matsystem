@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 
 var state = {
   vGood: 0,
@@ -140,11 +140,10 @@ class App extends Component {
       }
     })
 
+
     socket.on('ChangeQuestion', (question) => {
       console.log("frågan " +question);
-      if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
-        this.child.current.ChangeQuestion(question);
-      }
+      this.child.current.ChangeQuestion(question);
 
     })
   }

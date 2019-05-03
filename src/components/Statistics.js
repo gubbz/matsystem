@@ -80,6 +80,7 @@ export default class Statistics extends Component {
                     <div className="StatGrid">
                         <div className="StatLeftColumn">
                             <Pie
+                                //data={this.props.stats.pie.pieStats}
                                 data={this.state.pieData}
                                 options={{
                                     legend: {

@@ -262,6 +262,40 @@ module.exports = class DatabaseHandler {
       }
     });
   }
+
+getStatistics(socket) {
+  var pie;
+  var pieStats;
+  var pieLabels;
+  var line;
+  var lineStats;
+  var lineLabels;
+  var stats;
+
+  const query = {
+    name: 'getStatistics',
+    //text: 'SELECT';
+  }
+
+  this.con.query(query, (err, res) => {
+    if(err) {
+      console.log(err.stack);
+    } else {
+      /**
+       * skapa array med mycket dåligt, dåligt, bra, mycket bra röster
+       * stats ska innehålla piedata och linedata så att dessa går att ta ut 
+       * linedata ska innehålla mealrating för varje dag i den valda perioden.
+       * 
+       * typ stats = line, pie
+       *     line = linestats, linelabels
+       *     pie = linestats, linelabels
+       *  */
+      
+    }
+  })
+
+}
+
   getTopRatedFood(socket) {
    var meals = new Array();
 

@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
     dbcon.getGrades(socket, "grades");
     dbcon.checkQuestion(socket);
     dbcon.getTopRatedFood(socket);
+    dbcon.getStatistics(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
     setInterval(() => {

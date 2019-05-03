@@ -27,8 +27,6 @@ export default class Admin extends Component {
         this.child.current.ChangeQuestion(question);
     }
     render() {
-
-
         return (
             <Router>
                 <div className="AdminContainer">

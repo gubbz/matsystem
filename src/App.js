@@ -149,6 +149,10 @@ class App extends Component {
         this.child.current.ChangeQuestion(question);
       }
     })
+
+    socket.on('stats', (arr) => {
+      this.setState({stats: arr});
+    })
   }
 
   updateChart(data, amount) {
@@ -245,6 +249,7 @@ class App extends Component {
                   ref={this.chartElement}
                   handleLogin={this.handleLogin}
                   ratedFoods={this.state.ratedFoods}
+                  stats={this.state.stats}
                 />
               } />
 

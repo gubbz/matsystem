@@ -43,6 +43,7 @@ io.on('connection', (socket) => {
     socket.emit('menu', menu);
     setInterval(() => {
       console.log("Antal sockets anslutna " + socketsConnected.size);
+      dbcon.checkQuestion(socket);
       dbcon.getGrades(socket, "grades");
     }, 60000);
   })
@@ -53,7 +54,7 @@ io.on('connection', (socket) => {
     dbcon.checkQuestion(socket);
     io.emit('vote', typeOfVote);
   })
-  /*
+
   socket.on('updateQuestion', (date, question) => {
     console.log("newquestion körs");
     dbcon.updateQuestion(date, question);
@@ -65,11 +66,11 @@ io.on('connection', (socket) => {
   })
 
   socket.on('ChangeQuestion', (question) => {
-    //var question = dbcon.getQuestion();
+    var question = dbcon.getQuestion();
     socket.emit('ChangeQuestion', question);
 
   })
-  */
+
   socket.on('login',function (data) {
     dbcon.login(data.username, data.password, socket);
 

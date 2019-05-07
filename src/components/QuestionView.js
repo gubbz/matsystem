@@ -13,6 +13,7 @@ export default class QuestionView extends Component {
     constructor(props) {
         var color;
         var text;
+        var original;
         super(props);
         this.displayVote = this.displayVote.bind(this);
     }
@@ -24,6 +25,7 @@ export default class QuestionView extends Component {
     ChangeQuestion(data){
       console.log("data");
         this.text = data;
+        this.original = data;
         this.forceUpdate();
     }
 
@@ -47,7 +49,7 @@ export default class QuestionView extends Component {
         var that = this;
         setTimeout(function () {
             that.color = "white";
-            that.text = "Vad tyckte du om maten? \n What did you think about the food?";
+            that.text = this.original;
             that.forceUpdate();
         }, 1340);
     }

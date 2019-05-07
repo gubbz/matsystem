@@ -23,10 +23,10 @@ module.exports = class DatabaseHandler {
   establishConnection() {
 
     this.con = new pg.Client({
-      host: 'ec2-79-125-4-72.eu-west-1.compute.amazonaws.com',
-      user: 'eehwvfixxiwamp',
-      database: 'df34h992q2uhdj',
-      password: '55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8',
+      host: 'ec2-54-247-72-30.eu-west-1.compute.amazonaws.com',
+      user: 'wneyxoesnscgzy',
+      database: 'drkgu78hpqtso',
+      password: '9f1537d79e9e919240cf324b0abbff6c40ff864c0f9ecf94f196e73a0ed24180',
       port: 5432,
       ssl: true
     });

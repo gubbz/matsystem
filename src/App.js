@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 
 var state = {
   vGood: 0,
@@ -74,7 +74,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.initSocket()
+    this.initSocket();
   }
 
   componentWillUnmount() {
@@ -84,9 +84,11 @@ class App extends Component {
   componentDidMount() {
     this.state.socket.on('ratedFood', (arr) => {
       this.setState({ ratedFoods: arr }, () => {
-        this.setState({ isLoading: false });
+        this.setState({
+          isLoading: false,
+        })
       });
-    })
+    });
   }
 
   initSocket = () => {
@@ -138,6 +140,7 @@ class App extends Component {
         }
         this.setState({ planningMeals: arr });
       }
+      
     })
 
     socket.on('ChangeQuestion', (question) => {
@@ -145,7 +148,10 @@ class App extends Component {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
         this.child.current.ChangeQuestion(question);
       }
+    })
 
+    socket.on('stats', (arr) => {
+      this.setState({stats: arr});
     })
   }
 
@@ -243,6 +249,7 @@ class App extends Component {
                   ref={this.chartElement}
                   handleLogin={this.handleLogin}
                   ratedFoods={this.state.ratedFoods}
+                  stats={this.state.stats}
                 />
               } />
 
@@ -251,7 +258,7 @@ class App extends Component {
         </Router>
       );
     } else {
-      return <LoadingView/>
+      return <LoadingView />
     }
   }
 }

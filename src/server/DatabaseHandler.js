@@ -3,7 +3,9 @@ const pg = require('pg');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const saltRounds = 12;
-
+const jwt = require('jsonwebtoken');
+const secret = 'mysecretsshhh';
+var cookie  = require('cookie');
 /**
   Database communication and functionality
 **/
@@ -67,10 +69,11 @@ module.exports = class DatabaseHandler {
           }
         }
       }
+      console.log(grades);
+      socket.emit(typeOfCall, grades);
     });
-    console.log(grades);
-    socket.emit(typeOfCall, grades);
   }
+
   checkQuestion(socket){
 
       //Get Grades from DB when client first opens the webapplication
@@ -228,7 +231,8 @@ module.exports = class DatabaseHandler {
   }
 
   login(username, password, socket) {
-
+    console.log("login början");
+    var self = this;
     const query = {
       name: 'getUsers',
       text: 'SELECT password FROM users where username = $1',
@@ -236,20 +240,83 @@ module.exports = class DatabaseHandler {
     }
 
     this.con.query(query, (err, res) => {
-        if(res.rows[0]){
+      if(res.rows[0]) {
         if(bcrypt.compareSync(password, res.rows[0]["password"])){
-          socket.emit('returnlogin',true);
-        } else {
-          socket.emit('returnlogin',false);
+          var cookief = socket.handshake.headers.cookie;
+          var cookies = cookie.parse(socket.handshake.headers.cookie);
+          console.log("login " + cookies['token']);
+          if (!cookies['token']) {
+            console.log("new token " + username);
+            const payload = {username};
+            const token = jwt.sign(payload, secret, {
+              expiresIn: '1h'
+            });
+            console.log("token innan addTokenToDB " + token);
+            self.addTokenToDB(username, res.rows[0]["password"], token, socket, self);
+            console.log("socket emit return login " + token);
+            socket.emit("returnlogin", token, username);
+          } else {
+            console.log("cookies token exists");
+            self.addTokenToDB(username, res.rows[0]["password"], cookies['token'], socket, self);
           }
-      }else{
-        socket.emit('returnlogin',false);
+        } else {
+          socket.emit('returnlogin', null);
+        }
+      } else {
+        socket.emit('returnlogin', null);
       }
     });
   }
 
-  updateWaste(waste, date, menu)  {
+  addTokenToDB(username, password, token, socket, self) {
+    //console.log(token + " ; " +  username+ " ; " +  password+ " ; " +  socket.id);
+    console.log("addTokenToDB början");
+    const query = {
+      name: 'updateToken',
+      text: 'UPDATE users SET token = $1 WHERE username = $2 AND password = $3',
+      values: [token, username, password]
+    }
 
+    this.con.query(query, (err, res) => {
+      if (err) {
+        return console.log(err.stack);
+      } else {
+        console.log("updated token");
+        var cookief = socket.handshake.headers.cookie;
+        var cookies = cookie.parse(socket.handshake.headers.cookie);
+
+        console.log("cookie token " + cookies['token'] + " cookie user " + cookies['user']);
+        self.checkAuthentication(socket, cookies['token'], cookies['user']);
+      }
+    })
+  }
+
+  checkAuthentication(socket, token, user) {
+
+    console.log("checkAuthentication " + user + " ; " + token);
+      const query = {
+        name: 'verifyAuth',
+        text: 'SELECT token from users WHERE username = $1',
+        values: [user]
+      }
+
+      this.con.query(query, (err, res) => {
+        if (err) {
+          return console.log(err.stack);
+        } else {
+          console.log(res.rows[0]['token']);
+          console.log(token);
+          if (res.rows[0]['token'] == token) {
+            console.log("auth socket emit");
+            socket.emit('auth', true);
+          } else {
+            socket.emit('auth', false);
+          }
+        }
+      })
+  }
+
+  updateWaste(waste, date, menu)  {
 
     var query = "UPDATE menu SET waste = $1 WHERE date_pk = $2 AND menu = $3";
     var values = [waste, date, menu];

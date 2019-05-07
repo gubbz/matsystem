@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import Header from './components/Header.js';
 import MainContainer from './components/MainContainer.js';
@@ -20,7 +20,7 @@ import Admin from './components/Admin';
 import Client from './components/Client';
 import Landing from './components/Landing';
 import LoadingView from './components/LoadingView';
-
+import Cookies from 'universal-cookie';
 
 var today;
 var mm;
@@ -39,22 +39,20 @@ var state = {
   isLoading: true,
 
   ratedFoods: [],
-  planningMeals: []
+  planningMeals: [],
 
+  authenticated: false
 }
 class App extends Component {
   constructor() {
     super();
     this.url = window.location.toString();
     this.chartElement = React.createRef();
-    this.isAdminPage = this.isAdminPage.bind(this);
     this.updateChart = this.updateChart.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.child = React.createRef();
     this.state = state;
   }
-
-
 
   //FIXA HÄR TB
   sendMealInfo(date, question) {
@@ -71,6 +69,7 @@ class App extends Component {
 
   handleLogin(username, password) {
     this.state.socket.emit('login', { username: username, password: password });
+
   }
 
   componentWillMount() {
@@ -83,13 +82,13 @@ class App extends Component {
 
   componentDidMount() {
     this.state.socket.on('ratedFood', (arr) => {
-      this.setState({ ratedFoods: arr }, () => {
-        this.setState({ isLoading: false });
-      });
+      this.setState({ ratedFoods: arr });
     })
   }
 
   initSocket = () => {
+    console.log(this);
+    var self = this;
     const socket = socketIOClient(socketURL);
     this.setState({ socket });
     socket.on('connect', () => {
@@ -103,10 +102,19 @@ class App extends Component {
         this.child.current.displayVote(typeOfVote);
       }
     })
-    socket.on('returnlogin', function (data) {
-      console.log("login");
-      if (data) {
-        alert("Login successful");
+
+    socket.on('auth', (data) => {
+      console.log("onauth " + data);
+      this.setState({authenticated: data}, () => {
+        this.setState({ isLoading: false })
+      });
+    })
+
+    socket.on('returnlogin', function (token, user) {
+      if (token && user) {
+        const cookies = new Cookies();
+        cookies.set('token', token, { path: '/' });
+        cookies.set('user', user, { path: '/' });
       } else {
         alert("Login failed");
       }
@@ -125,6 +133,7 @@ class App extends Component {
       this.setState({
         mealsArray: arr,
       });
+
       today = new Date();
       mm = String(today.getMonth() + 1).padStart(2, '0');
       dd = String(today.getDate()).padStart(2, '0');
@@ -145,7 +154,6 @@ class App extends Component {
       if (this.url.substring(this.url.lastIndexOf("/")) === "/question") {
         this.child.current.ChangeQuestion(question);
       }
-
     })
   }
 
@@ -205,18 +213,19 @@ class App extends Component {
     });
   }
 
-  isAdminPage() {
-    if (window.location.toString().includes("question")) {
+  isAuthenticated() {
+    console.log("isAuth " + this.state.authenticated);
+    if (!this.state.authenticated) {
       return false;
-    } else if (window.location.toString().includes("admin")) {
-      return true;
     } else {
-      return false;
+      return true;
     }
   }
 
   render() {
+    var self = this;
     if (!this.state.isLoading) {
+      console.log("render");
       return (
         <Router>
           <div className="Container">
@@ -225,13 +234,18 @@ class App extends Component {
                 <Landing
                 />
               } />
-              <Route path="/admin" render={() =>
-                <Admin
-                  onSend={this.sendMealInfo}
-                  ref={this.child}
-                  planningMeals={this.state.planningMeals}
-                />
-              } />
+              <Route path="/admin" render={() => (
+                console.log("admin router"),
+                self.isAuthenticated() ? (
+                  <Admin
+                    onSend={this.sendMealInfo}
+                    ref={this.child}
+                    planningMeals={this.state.planningMeals}
+                  />
+                ) : (
+                  <Redirect to="/login"/>
+                )
+              )} />
               <Route path="/" render={() =>
                 <Client
                   vGood={this.state.vGood}

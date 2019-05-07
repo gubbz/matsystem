@@ -28,7 +28,6 @@ setInterval(function() {
 io.on('connection', (socket) => {
   console.log('User connected');
   socketsConnected.add(socket);
-
   socket.on('disconnect', () => {
     console.log('user disconnected');
     socketsConnected.delete(socket);

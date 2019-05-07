@@ -25,10 +25,10 @@ module.exports = class DatabaseHandler {
   establishConnection() {
 
     this.con = new pg.Client({
-      host: 'ec2-79-125-4-72.eu-west-1.compute.amazonaws.com',
-      user: 'eehwvfixxiwamp',
-      database: 'df34h992q2uhdj',
-      password: '55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8',
+      host: 'ec2-54-247-72-30.eu-west-1.compute.amazonaws.com',
+      user: 'wneyxoesnscgzy',
+      database: 'drkgu78hpqtso',
+      password: '9f1537d79e9e919240cf324b0abbff6c40ff864c0f9ecf94f196e73a0ed24180',
       port: 5432,
       ssl: true
     });
@@ -368,36 +368,62 @@ module.exports = class DatabaseHandler {
   }
 
 getStatistics(socket) {
-  var pie;
-  var pieStats;
-  var pieLabels;
-  var line;
-  var lineStats;
-  var lineLabels;
-  var stats;
+
+  var pie = new Array();
+  var line = new Array();
+  var stats = new Array();
 
   const query = {
     name: 'getStatistics',
-    //text: 'SELECT';
+    text: 'SELECT * FROM grades',
   }
 
   this.con.query(query, (err, res) => {
     if(err) {
       console.log(err.stack);
     } else {
+      for(var i = 0; i > res.fields.length; i++)
+      var k = res.rows[i];
+        JSON.stringify(k);
+      }
+    var dateName = res.fields[0].name;
+    var v_goodName = res.fields[1].name;
+    var goodName = res.fields[2].name;
+    var badName = res.fields[3].name;
+    var v_badName = res.fields[4].name;
+    var mealRatingName = res.fields[5].name;
+
+    var v_goodTotal = 0;
+    var goodTotal = 0;
+    var badTotal = 0;
+    var v_badTotal = 0;
+
+    for(var i = 2; i < res.rows.length; i++){
+       var linestats = res.rows[i][mealRatingName];
+       var date = res.rows[i][dateName];
+       var linelabels = date.toISOString().substring(5, 7);
+       line.push(linestats, linelabels);
+
+       v_goodTotal += parseInt(res.rows[i][v_goodName], 10);
+       goodTotal += parseInt(res.rows[i][goodName], 10);
+       badTotal += parseInt(res.rows[i][badName], 10);
+       v_badTotal += parseInt(res.rows[i][v_badName], 10);
+    }
+
+    pie.push(v_goodTotal, goodTotal, badTotal, v_badTotal);
+    stats.push(pie, line);
+    socket.emit('stats', stats);
       /**
        * skapa array med mycket dåligt, dåligt, bra, mycket bra röster
-       * stats ska innehålla piedata och linedata så att dessa går att ta ut 
+       * stats ska innehålla piedata och linedata så att dessa går att ta ut
        * linedata ska innehålla mealrating för varje dag i den valda perioden.
-       * 
+       *
        * typ stats = line, pie
        *     line = linestats, linelabels
        *     pie = linestats, linelabels
        *  */
-      
-    }
-  })
 
+  })
 }
 
   getTopRatedFood(socket) {

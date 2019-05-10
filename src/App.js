@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 
 var state = {
   vGood: 0,
@@ -140,7 +140,7 @@ class App extends Component {
         }
         this.setState({ planningMeals: arr });
       }
-      
+
     })
 
     socket.on('ChangeQuestion', (question) => {

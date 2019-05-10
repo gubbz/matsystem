@@ -85,6 +85,7 @@ module.exports = class DatabaseHandler {
 
 
 
+
       const query = {
         text: 'SELECT * FROM grades WHERE date_pk = $1',
         values: [today],
@@ -168,25 +169,28 @@ module.exports = class DatabaseHandler {
 
                             console.log(err);
                           }else{
-
-                            if(res.rows == ""){
-                              const subfrågor ={
-                                name: "insertQuestion",
-                                text: 'INSERT INTO "subQuestions"(date_fk, question) VALUES ($1, $2) ',
-                                values: [today, this.question]
+                            /*const subfrågor ={
+                              name: "deleteQuestion",
+                              text: 'DELETE FROM "subQuestions" WHERE question = $1',
+                              value: ['lax']
+                            }
+                            this.con.query(subfrågor, (err, res) =>{
+                              if(err){
+                                console.log(err.stack);
+                              }else {
+                                console.log("great suxxes");
 
                               }
-                              this.con.query(subfrågor, (err, res) =>{
-                                if(err){
-                                  console.log(err.stack);
-                                }else {
-                                  console.log("great suxxes");
-                                }
-                              });
+                            });*/
+                            console.log(res.rows);
+
+                            if(res.rows == ""){
+                              console.log("error");
+
                             }else{
 
                             var antalSubRöster = Number(Number(res.rows[0]['v_bad']) +Number(res.rows[0]['bad']) +Number(res.rows[0]['good']) +Number(res.rows[0]['v_good']));
-                            
+
                             if(antalSubRöster > (antalElever/30) && Number(Number(res.rows[0]['v_bad']) +Number(res.rows[0]['bad'])) > 5){
 
                               for(var p = 0; p < dagensfrågor.length; p++){
@@ -200,6 +204,8 @@ module.exports = class DatabaseHandler {
                                   }
                                 }
                               }
+                            }else if(true){
+                              console.log("funkar");
                             }
                           }
                           }

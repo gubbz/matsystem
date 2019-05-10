@@ -140,7 +140,7 @@ class App extends Component {
         }
         this.setState({ planningMeals: arr });
       }
-      
+
     })
 
     socket.on('ChangeQuestion', (question) => {

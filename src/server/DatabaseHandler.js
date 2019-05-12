@@ -25,10 +25,10 @@ module.exports = class DatabaseHandler {
   establishConnection() {
 
     this.con = new pg.Client({
-      host: 'ec2-79-125-4-72.eu-west-1.compute.amazonaws.com',
-      user: 'eehwvfixxiwamp',
-      database: 'df34h992q2uhdj',
-      password: '55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8',
+      host: 'ec2-54-247-72-30.eu-west-1.compute.amazonaws.com',
+      user: 'wneyxoesnscgzy',
+      database: 'drkgu78hpqtso',
+      password: '9f1537d79e9e919240cf324b0abbff6c40ff864c0f9ecf94f196e73a0ed24180',
       port: 5432,
       ssl: true
     });
@@ -97,7 +97,7 @@ module.exports = class DatabaseHandler {
               grades.push(grade);
           }
         }
-
+        /*
         const mat = {
           text: '(SELECT * FROM menu WHERE date_pk = $1)',
           values: [today]
@@ -134,6 +134,7 @@ module.exports = class DatabaseHandler {
             }
           }
         });
+        */
       });
   }
 
@@ -257,7 +258,7 @@ module.exports = class DatabaseHandler {
             socket.emit("returnlogin", token, username);
           } else {
             console.log("cookies token exists");
-            self.addTokenToDB(username, res.rows[0]["password"], cookies['token'], socket, self);
+            self.checkAuthentication(socket, cookies['token'], username);
           }
         } else {
           socket.emit('returnlogin', null);
@@ -269,7 +270,6 @@ module.exports = class DatabaseHandler {
   }
 
   addTokenToDB(username, password, token, socket, self) {
-    //console.log(token + " ; " +  username+ " ; " +  password+ " ; " +  socket.id);
     console.log("addTokenToDB början");
     const query = {
       name: 'updateToken',
@@ -282,13 +282,8 @@ module.exports = class DatabaseHandler {
         return console.log(err.stack);
       } else {
         console.log("updated token");
-        var cookief = socket.handshake.headers.cookie;
-        var cookies = cookie.parse(socket.handshake.headers.cookie);
-
-        console.log("cookie token " + cookies['token'] + " cookie user " + cookies['user']);
-        self.checkAuthentication(socket, cookies['token'], cookies['user']);
       }
-    })
+    });
   }
 
   checkAuthentication(socket, token, user) {

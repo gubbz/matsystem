@@ -113,8 +113,8 @@ class App extends Component {
     socket.on('returnlogin', function (token, user) {
       if (token && user) {
         const cookies = new Cookies();
-        cookies.set('token', token, { path: '/' });
-        cookies.set('user', user, { path: '/' });
+        cookies.set('token', token, { path: '/', maxAge: 3600 });
+        cookies.set('user', user, { path: '/', maxAge: 3600 });
       } else {
         alert("Login failed");
       }

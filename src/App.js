@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 
 var state = {
   vGood: 0,
@@ -105,6 +105,8 @@ class App extends Component {
         this.child.current.displayVote(typeOfVote);
       }
     })
+
+
     socket.on('returnlogin', function (data) {
       console.log("login");
       if (data) {
@@ -113,6 +115,7 @@ class App extends Component {
         alert("Login failed");
       }
     })
+
 
     socket.on('grades', (arr) => {
       console.log(arr)
@@ -140,7 +143,7 @@ class App extends Component {
         }
         this.setState({ planningMeals: arr });
       }
-      
+
     })
 
     socket.on('ChangeQuestion', (question) => {

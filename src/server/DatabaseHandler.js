@@ -11,6 +11,7 @@ module.exports = class DatabaseHandler {
   //const DBURL = process.env.DATABASE_URL || "postgres://eehwvfixxiwamp:55d64c3b425aebf6fce5678970cef00d3293df5896d7f43fbad2059297a979c8@ec2-79-125-4-72.eu-west-1.compute.amazonaws.com:5432/df34h992q2uhdj"
   constructor() {
     console.log("DatabaseHandler constructor")
+
     this.con;
     this.meal= new Array();
     this.weekFoodMenu = new Array();
@@ -19,7 +20,7 @@ module.exports = class DatabaseHandler {
     this.weekQuestions = new Array();
     this.establishConnection();
     this.getMenuFromDB();
-    this.question = "";
+
   }
 
   establishConnection() {
@@ -73,154 +74,213 @@ module.exports = class DatabaseHandler {
     console.log(grades);
     socket.emit(typeOfCall, grades);
   }
-  checkQuestion(socket){
 
-      //Get Grades from DB when client first opens the webapplication
-      var grades = [];
-      var today = new Date().toISOString().substring(0, 10);
-      var dagensfrågor = [];
-      var ord = [];
-      var votes;
-      var rating;
-
-
-
-
-      const query = {
-        text: 'SELECT * FROM grades WHERE date_pk = $1',
-        values: [today],
-      }
-      // callback
-
-      this.con.query(query, (err, res) => {
-
-        if (err) {
-          console.log(err.stack);
-
-        } else {
-          for (var i = 1; i < res.fields.length; i++) {
-              var fieldName = res.fields[i].name;
-              var grade = new Array();
-              grade[0] = fieldName;
-              grade[1] = res.rows[0][fieldName];
-              grades.push(grade);
-          }
-        }
-
-        const mat = {
-          text: '(SELECT * FROM menu WHERE date_pk = $1)',
+  async subfrågor(antalElever, dagensfrågor, today){
+    return new Promise(resolve => {
+      setTimeout(() => {
+        var question;
+        const frågor={
+          name: 'getQuestion',
+          text: 'SELECT * FROM "subQuestions" WHERE date_fk = ($1)',
           values: [today]
         }
+        this.con.query(frågor, (err, res) => {
+          if(err){
 
-          this.con.query(mat, (err, res) => {
-            if(err){
-              console.log(err);
-            }else{
-              var dagens = (res.rows[0]['menu']);
-              votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
-              rating = Number(grades[4][1]);
-              ord.push(dagens.toLowerCase().split(' '));
-            }
+            console.log(err);
+          }else{
+            if(res.rows == ""){
+              for (var i = 0; i < dagensfrågor.length; i++) {
+                console.log(dagensfrågor[i]);
 
-            for(var i = 0; i < ord.length ; i++){
-                const array = {
-                  name: 'getMealWord',
-                  text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
-                  values: ['%'+ ord[i]+ '%' ]
-                }
-
-            this.con.query(array, (err, res) => {
-              if(err){
-                console.log(err);
-              }else{
-                if(res.rows == ""){
+              const insertquestion={
+                name: 'InsertQuestion',
+                text: 'INSERT INTO "subQuestions" (date_fk, question, v_good, good, bad, v_bad) VALUES ($1, $2 ,0 ,0 ,0 ,0)',
+                values: [today, dagensfrågor[i]]
+              }
+              this.con.query(insertquestion, (err, res) => {
+                if(err){
+                  console.log(err);
                 }else{
-                  for(var x = 0; x<ord[0].length;x++){
-
-                    for(var y = 0; y<res.rows.length; y++){
-                      if(ord[0][x].includes( res.rows[y]['meal_word'])){
-                        if(dagensfrågor.includes(ord[0][x])){
-                        }else{
-
-                        this.question = ord[0][x];
-                        var antalElever;
-
-                        const elever={
-                          name: 'getStudents',
-                          text: 'SELECT * FROM "schools"',
-                          values: []
-                        }
-                        this.con.query(elever, (err, res) => {
-                          if(err){
-
-                            console.log(err);
-                          }else{
-                            antalElever = Number(res.rows[0]['students']);
-                          }
-                        });
-
-                        const frågor={
-                          name: 'getQuestion',
-                          text: 'SELECT * FROM "subQuestions" WHERE date_fk = ($1) AND question = ($2)',
-                          values: [today, this.question]
-                        }
-                        this.con.query(frågor, (err, res) => {
-                          if(err){
-
-                            console.log(err);
-                          }else{
-                            /*const subfrågor ={
-                              name: "deleteQuestion",
-                              text: 'DELETE FROM "subQuestions" WHERE question = $1',
-                              value: ['lax']
-                            }
-                            this.con.query(subfrågor, (err, res) =>{
-                              if(err){
-                                console.log(err.stack);
-                              }else {
-                                console.log("great suxxes");
-
-                              }
-                            });*/
-                            console.log(res.rows);
-
-                            if(res.rows == ""){
-                              console.log("error");
-
-                            }else{
-
-                            var antalSubRöster = Number(Number(res.rows[0]['v_bad']) +Number(res.rows[0]['bad']) +Number(res.rows[0]['good']) +Number(res.rows[0]['v_good']));
-
-                            if(antalSubRöster > (antalElever/30) && Number(Number(res.rows[0]['v_bad']) +Number(res.rows[0]['bad'])) > 5){
-
-                              for(var p = 0; p < dagensfrågor.length; p++){
-                                if(dagensfrågor[p] == (res.rows[0]['question'])){
-
-                                  if(p == dagensfrågor.length -1){
-                                    socket.emit('ChangeQuestion','vad tyckte du om maten?');
-
-                                  }else{
-                                    socket.emit('ChangeQuestion','vad tyckte du om ' +dagensfrågor[p+1] + "?");
-                                  }
-                                }
-                              }
-                            }else if(true){
-                              console.log("funkar");
-                            }
-                          }
-                          }
-                        });
-                        dagensfrågor.push(ord[0][x]);
-                      }
-                      }
-                    }
-                  }
-                }
+                  console.log("succes");
                 }
               });
             }
+            }else{
+            var antalSubRöster = Number(Number(res.rows[0]['v_bad']) +Number(res.rows[0]['bad']) +Number(res.rows[0]['good']) +Number(res.rows[0]['v_good']));
+
+            question = dagensfrågor[0]
+            for(var p = 0; p < dagensfrågor.length; p++){
+              if ( antalSubRöster > (antalElever/1110) && Number(Number(res.rows[p]['v_bad']) +Number(res.rows[p]['bad'])) > 5){
+                if(dagensfrågor[p] == (res.rows[p]['question'])){
+                  console.log(p);
+                  if(p == dagensfrågor.length -1){
+                    question = "";
+                  }else{
+                    question = dagensfrågor[p+1];
+                  }
+                }
+              }
+            }
+            resolve(question);
+          }
+          }
+        });
+      }, 30);
+    });
+  }
+
+  async elever(){
+    return new Promise(resolve => {
+      setTimeout(() => {
+        var antalElever;
+
+        const elever={
+          name: 'getStudents',
+          text: 'SELECT * FROM "schools"',
+          values: []
+        }
+        this.con.query(elever, (err, res) => {
+          if(err){
+
+            console.log(err);
+          }else{
+            resolve( Number(res.rows[0]['students']));
+          }
+        });
+    }, 30);
+  });
+  }
+
+  async getMealWord(ord){
+    return new Promise(resolve => {
+      setTimeout(() => {
+        var dagensfrågor = new Array;
+        const array = {
+          name: 'getMealWord',
+          text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
+          values: ['%'+ ord+ '%' ]
+        }
+
+      this.con.query(array, (err, res) => {
+        if(err){
+          console.log(err);
+        }else{
+          if(res.rows == ""){
+            resolve("");
+          }else{
+
+              for(var y = 0; y<res.rows.length; y++){
+                if(ord.includes( res.rows[y]['meal_word'])){
+                  if(dagensfrågor.includes(ord)){
+                  }else{
+                  this.question = ord;
+                  dagensfrågor.push(ord);
+                  //console.log(ord);
+                  resolve(ord);
+                  }
+                  }
+                }
+            }
+            }
           });
+    }, 30);
+  });
+  }
+  async todayFood(){
+  return new Promise(resolve => {
+    setTimeout(() => {
+      var ord = [];
+      var today = new Date().toISOString().substring(0, 10);
+      const mat = {
+        text: 'SELECT * FROM menu WHERE date_pk = $1',
+        values: ['2019-05-10']
+      }
+
+      this.con.query(mat, (err, res) => {
+        if(err){
+          console.log(err);
+        }else{
+          var dagens = (res.rows[0]['menu']);
+          ord.push(dagens.toLowerCase().split(' '));
+          resolve(ord);
+        }
       });
+    }, 30);
+  });
+  }
+
+  async todayGrade(today){
+  return new Promise(resolve => {
+    setTimeout(() => {
+      var grades = new Array();
+
+        const query = {
+          text: 'SELECT * FROM grades WHERE date_pk = $1',
+          values: [today],
+        }
+        // callback
+        this.con.query(query, (err, res) => {
+          if (err) {
+            console.log(err.stack);
+          } else {
+            for (var i = 1; i < res.fields.length; i++) {
+                var fieldName = res.fields[i].name;
+                var grade = new Array();
+                grade[0] = fieldName;
+                grade[1] = res.rows[0][fieldName];
+                grades.push(grade);
+
+            }
+
+            resolve(grades);
+          }
+        });
+      }, 30);
+    });
+  }
+
+  async checkQuestion(socket){
+
+      //Get Grades from DB when client first opens the webapplication
+
+      var today = new Date().toISOString().substring(0, 10);
+      var dagensfrågor = new Array();
+      var antalElever;
+      var votes;
+      var rating;
+
+      var grade = await this.todayGrade(today);
+
+      console.log(grade);
+      var totalVotes = Number(Number(grade[0][1])+Number(grade[1][1])+Number(grade[2][1])+Number(grade[3][1]))
+
+      var antalElever = await this.elever();
+      console.log(antalElever);
+
+      if(totalVotes >= antalElever*0 && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/3)){
+
+        var word = await this.todayFood();
+        for(var i = 0; i < word[0].length; i++){
+
+          var mealWord = await this.getMealWord(word[0][i]);
+
+          if(mealWord != ""){
+            dagensfrågor.push(mealWord);
+          }
+        }
+      }
+
+      var subquestion = await this.subfrågor(antalElever, dagensfrågor, today);
+      if(subquestion == ""){
+        socket.emit("ChangeQuestion", "Vad tyckte du om dagensmaten?  What did you think of the food today?")
+      }else{
+        socket.emit("ChangeQuestion", "Vad tyckte du om "+ subquestion +"?")
+      }
+
+
+
+
   }
 
   addVote(typeOfVote) {

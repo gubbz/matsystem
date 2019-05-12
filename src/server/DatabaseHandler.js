@@ -73,6 +73,8 @@ module.exports = class DatabaseHandler {
     console.log(grades);
     socket.emit(typeOfCall, grades);
   }
+
+  /*
   checkQuestion(socket){
 
       //Get Grades from DB when client first opens the webapplication
@@ -114,7 +116,7 @@ module.exports = class DatabaseHandler {
 
           this.con.query(mat, (err, res) => {
             if(err){
-              console.log(err);
+              console.log(err.stack);
             }else{
               var dagens = (res.rows[0]['menu']);
               votes = Number(Number(grades[0][1]) +Number(grades[1][1]) +Number(grades[2][1]) +Number(grades[3][1]));
@@ -131,7 +133,7 @@ module.exports = class DatabaseHandler {
 
             this.con.query(array, (err, res) => {
               if(err){
-                console.log(err);
+                console.log(err.stack);
               }else{
                 if(res.rows == ""){
                 }else{
@@ -153,7 +155,7 @@ module.exports = class DatabaseHandler {
                         this.con.query(elever, (err, res) => {
                           if(err){
 
-                            console.log(err);
+                            console.log(err.stack);
                           }else{
                             antalElever = Number(res.rows[0]['students']);
                           }
@@ -167,7 +169,7 @@ module.exports = class DatabaseHandler {
                         this.con.query(frågor, (err, res) => {
                           if(err){
 
-                            console.log(err);
+                            console.log(err.stack);
                           }else{
                             /*const subfrågor ={
                               name: "deleteQuestion",
@@ -181,7 +183,7 @@ module.exports = class DatabaseHandler {
                                 console.log("great suxxes");
 
                               }
-                            });*/
+                            });
                             console.log(res.rows);
 
                             if(res.rows == ""){
@@ -222,6 +224,7 @@ module.exports = class DatabaseHandler {
           });
       });
   }
+*/
 
   addVote(typeOfVote) {
 

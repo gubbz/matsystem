@@ -65,8 +65,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('ChangeQuestion', (question) => {
-    var question = dbcon.getQuestion();
-    socket.emit('ChangeQuestion', question);
+    //var question = dbcon.getQuestion();
+    //socket.emit('ChangeQuestion', question);
 
   })
 

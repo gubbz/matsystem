@@ -75,7 +75,8 @@ module.exports = class DatabaseHandler {
     socket.emit(typeOfCall, grades);
   }
 
-  async subfrågor(antalElever, dagensfrågor, today){
+//hämta vilken fråga som ska stå på fråge sidan
+  async subQuestions(antalElever, todaysQuestions, today){
     return new Promise(resolve => {
       setTimeout(() => {
         var question;
@@ -90,13 +91,13 @@ module.exports = class DatabaseHandler {
             console.log(err);
           }else{
             if(res.rows == ""){
-              for (var i = 0; i < dagensfrågor.length; i++) {
-                console.log(dagensfrågor[i]);
+              for (var i = 0; i < todaysQuestions.length; i++) {
+                console.log(todaysQuestions[i]);
 
               const insertquestion={
                 name: 'InsertQuestion',
                 text: 'INSERT INTO "subQuestions" (date_fk, question, v_good, good, bad, v_bad) VALUES ($1, $2 ,0 ,0 ,0 ,0)',
-                values: [today, dagensfrågor[i]]
+                values: [today, todaysQuestions[i]]
               }
               this.con.query(insertquestion, (err, res) => {
                 if(err){
@@ -109,15 +110,15 @@ module.exports = class DatabaseHandler {
             }else{
             var antalSubRöster = Number(Number(res.rows[0]['v_bad']) +Number(res.rows[0]['bad']) +Number(res.rows[0]['good']) +Number(res.rows[0]['v_good']));
 
-            question = dagensfrågor[0]
-            for(var p = 0; p < dagensfrågor.length; p++){
-              if ( antalSubRöster > (antalElever/1110) && Number(Number(res.rows[p]['v_bad']) +Number(res.rows[p]['bad'])) > 5){
-                if(dagensfrågor[p] == (res.rows[p]['question'])){
+            question = todaysQuestions[0]
+            for(var p = 0; p < todaysQuestions.length; p++){
+              if ((antalSubRöster > (antalElever/12) && Number(Number(res.rows[p]['v_bad']) +Number(res.rows[p]['bad'])) > antalSubRöster *(2/3)) || antalSubRöster > antalElever*(1/6)){
+                if(todaysQuestions[p] == (res.rows[p]['question'])){
                   console.log(p);
-                  if(p == dagensfrågor.length -1){
+                  if(p == todaysQuestions.length -1){
                     question = "";
                   }else{
-                    question = dagensfrågor[p+1];
+                    question = todaysQuestions[p+1];
                   }
                 }
               }
@@ -130,6 +131,7 @@ module.exports = class DatabaseHandler {
     });
   }
 
+//hämta antalElever på skolan
   async elever(){
     return new Promise(resolve => {
       setTimeout(() => {
@@ -152,10 +154,11 @@ module.exports = class DatabaseHandler {
   });
   }
 
+//hämta ordmaten ur matsedel
   async getMealWord(ord){
     return new Promise(resolve => {
       setTimeout(() => {
-        var dagensfrågor = new Array;
+        var todaysQuestions = new Array;
         const array = {
           name: 'getMealWord',
           text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
@@ -169,16 +172,15 @@ module.exports = class DatabaseHandler {
           if(res.rows == ""){
             resolve("");
           }else{
-
               for(var y = 0; y<res.rows.length; y++){
                 if(ord.includes( res.rows[y]['meal_word'])){
-                  if(dagensfrågor.includes(ord)){
+                  if(todaysQuestions.includes(ord)){
                   }else{
-                  this.question = ord;
-                  dagensfrågor.push(ord);
-                  //console.log(ord);
-                  resolve(ord);
-                  }
+
+                    this.question = ord;
+                    todaysQuestions.push(ord);
+                    resolve(ord);
+                    }
                   }
                 }
             }
@@ -187,29 +189,35 @@ module.exports = class DatabaseHandler {
     }, 30);
   });
   }
-  async todayFood(){
+
+  //hämta dagensmat
+  async todayFood(today){
   return new Promise(resolve => {
     setTimeout(() => {
-      var ord = [];
-      var today = new Date().toISOString().substring(0, 10);
+      var word = [];
       const mat = {
         text: 'SELECT * FROM menu WHERE date_pk = $1',
-        values: ['2019-05-10']
+        values: [today]
       }
 
       this.con.query(mat, (err, res) => {
         if(err){
           console.log(err);
         }else{
-          var dagens = (res.rows[0]['menu']);
-          ord.push(dagens.toLowerCase().split(' '));
-          resolve(ord);
+          if(res.rows == ""){
+            resolve("");
+          }else{
+            var dagens = (res.rows[0]['menu']);
+            word.push(dagens.toLowerCase().split(' '));
+            resolve(word);
+          }
         }
       });
     }, 30);
   });
   }
 
+//hämta betygen från dag
   async todayGrade(today){
   return new Promise(resolve => {
     setTimeout(() => {
@@ -240,47 +248,33 @@ module.exports = class DatabaseHandler {
     });
   }
 
+//main matod för att kolla vilken fråga som ska vara aktiv.
   async checkQuestion(socket){
 
-      //Get Grades from DB when client first opens the webapplication
+    var today = new Date().toISOString().substring(0, 10);
+    var todaysQuestions = new Array();
 
-      var today = new Date().toISOString().substring(0, 10);
-      var dagensfrågor = new Array();
-      var antalElever;
-      var votes;
-      var rating;
+    var grade = await this.todayGrade(today);
+    var totalVotes = Number(Number(grade[0][1])+Number(grade[1][1])+Number(grade[2][1])+Number(grade[3][1]))
 
-      var grade = await this.todayGrade(today);
-
-      console.log(grade);
-      var totalVotes = Number(Number(grade[0][1])+Number(grade[1][1])+Number(grade[2][1])+Number(grade[3][1]))
-
+    if(totalVotes >= antalElever*(1/10) && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/3)){
       var antalElever = await this.elever();
-      console.log(antalElever);
-
-      if(totalVotes >= antalElever*0 && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/3)){
-
-        var word = await this.todayFood();
-        for(var i = 0; i < word[0].length; i++){
-
-          var mealWord = await this.getMealWord(word[0][i]);
-
-          if(mealWord != ""){
-            dagensfrågor.push(mealWord);
-          }
+      var word = await this.todayFood(today);
+      for(var i = 0; i < word[0].length; i++){
+        var mealWord = await this.getMealWord(word[0][i]);
+        if(mealWord != ""){
+          todaysQuestions.push(mealWord);
         }
       }
-
-      var subquestion = await this.subfrågor(antalElever, dagensfrågor, today);
-      if(subquestion == ""){
-        socket.emit("ChangeQuestion", "Vad tyckte du om dagensmaten?  What did you think of the food today?")
-      }else{
-        socket.emit("ChangeQuestion", "Vad tyckte du om "+ subquestion +"?")
+      if (todaysQuestions <= 4 && todaysQuestions != undefined) {
+        var subquestion = await this.subQuestions(antalElever, todaysQuestions, today);
+        if(subquestion == ""){
+          socket.emit("ChangeQuestion", "Vad tyckte du om dagensmaten?  What did you think of the food today?")
+        }else{
+          socket.emit("ChangeQuestion", "Vad tyckte du om "+ subquestion +"?")
+        }
       }
-
-
-
-
+    }
   }
 
   addVote(typeOfVote) {

@@ -42,7 +42,6 @@ io.on('connection', (socket) => {
     socket.emit('menu', menu);
     setInterval(() => {
       console.log("Antal sockets anslutna " + socketsConnected.size);
-      dbcon.checkQuestion(socket);
       dbcon.getGrades(socket, "grades");
     }, 60000);
   })
@@ -50,9 +49,10 @@ io.on('connection', (socket) => {
   socket.on('vote', (typeOfVote) => {
     console.log("röst mottagen typeofvote: " + typeOfVote);
     dbcon.addVote(typeOfVote);
-    dbcon.checkQuestion(socket);
+    //dbcon.checkQuestion(socket);
     io.emit('vote', typeOfVote);
   })
+
 
   socket.on('updateQuestion', (date, question) => {
     console.log("newquestion körs");

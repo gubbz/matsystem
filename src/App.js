@@ -105,6 +105,8 @@ class App extends Component {
         this.child.current.displayVote(typeOfVote);
       }
     })
+
+
     socket.on('returnlogin', function (data) {
       console.log("login");
       if (data) {
@@ -113,6 +115,7 @@ class App extends Component {
         alert("Login failed");
       }
     })
+
 
     socket.on('grades', (arr) => {
       console.log(arr)

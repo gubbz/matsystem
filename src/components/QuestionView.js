@@ -13,7 +13,7 @@ export default class QuestionView extends Component {
     constructor(props) {
         var color;
         var text;
-        var original;
+        var original = "Vad tyckte du om maten? \n What did you think about the food?";;
         super(props);
         this.displayVote = this.displayVote.bind(this);
     }

@@ -3,6 +3,8 @@ var app     = express();
 const path  = require('path');
 var cookie  = require('cookie');
 const PORT  = process.env.PORT || 8080;
+var server = app.listen(PORT);
+var io     = require('socket.io').listen(server);
 
 const DatabaseHandler = require('./DatabaseHandler.js');
 
@@ -16,9 +18,6 @@ if(process.env.NODE_ENV === 'production'){
     res.sendFile(path.resolve( __dirname + '/../../public/', 'index.html'));
   });
 }
-
-var server = app.listen(PORT);
-var io     = require('socket.io').listen(server);
 
 var dbcon = new DatabaseHandler();
 var socketsConnected = new Set();

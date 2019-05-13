@@ -13,16 +13,20 @@ export default class QuestionView extends Component {
     constructor(props) {
         var color;
         var text;
+        var original = "Vad tyckte du om maten? \n What did you think about the food?";;
         super(props);
         this.displayVote = this.displayVote.bind(this);
     }
 
     componentWillMount() {
         this.text = "white";
-        this.text = "Vad tyckte du om maten?";
+        this.text = "Vad tyckte du om maten? \n What did you think about the food?";
     }
     ChangeQuestion(data){
+
         this.text = data;
+        console.log(data);
+        this.original = data;
         this.forceUpdate();
     }
 
@@ -46,7 +50,7 @@ export default class QuestionView extends Component {
         var that = this;
         setTimeout(function () {
             that.color = "white";
-            that.text = "Vad tyckte du om maten? \n What did you think about the food?";
+            that.text = that.original;
             that.forceUpdate();
         }, 1340);
     }

@@ -30,7 +30,6 @@ setInterval(function() {
 io.on('connection', (socket) => {
   //console.log('User connected' + socket.id);
   socketsConnected.add(socket);
-
   socket.on('disconnect', () => {
     //console.log('user disconnected');
     socketsConnected.delete(socket);
@@ -48,6 +47,7 @@ io.on('connection', (socket) => {
     } else {
       socket.emit('auth', false);
     }
+    dbcon.getStatistics(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
   })
@@ -55,8 +55,15 @@ io.on('connection', (socket) => {
   socket.on('vote', (typeOfVote) => {
     console.log("röst mottagen typeofvote: " + typeOfVote);
     dbcon.addVote(typeOfVote);
-    dbcon.checkQuestion(socket);
     io.emit('vote', typeOfVote);
+    dbcon.checkQuestion(socket);
+  })
+
+
+  socket.on('ChangeQuestion', (question) => {
+    var question = dbcon.getQuestion();
+    //console.log(question);
+    socket.emit('ChangeQuestion', question);
   })
 
   socket.on('login',function (data) {

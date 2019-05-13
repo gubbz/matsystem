@@ -70,9 +70,9 @@ module.exports = class DatabaseHandler {
           }
         }
       }
+      console.log(grades);
+      socket.emit(typeOfCall, grades);
     });
-    console.log(grades);
-    socket.emit(typeOfCall, grades);
   }
 
 //hämta vilken fråga som ska stå på fråge sidan

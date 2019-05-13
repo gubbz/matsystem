@@ -49,16 +49,17 @@ io.on('connection', (socket) => {
   socket.on('vote', (typeOfVote) => {
     console.log("röst mottagen typeofvote: " + typeOfVote);
     dbcon.addVote(typeOfVote);
-    dbcon.checkQuestion(socket);
     io.emit('vote', typeOfVote);
+    dbcon.checkQuestion(socket);
   })
 
 
   socket.on('ChangeQuestion', (question) => {
     var question = dbcon.getQuestion();
+    //console.log(question);
     socket.emit('ChangeQuestion', question);
-
   })
+
 
   socket.on('login',function (data) {
     dbcon.login(data.username, data.password, socket);

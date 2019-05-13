@@ -69,7 +69,9 @@ module.exports = class DatabaseHandler {
             this.currentVotes.push(res.rows[0][fieldName]);
           }
         }
+
       }
+
       console.log(grades);
       socket.emit(typeOfCall, grades);
     });
@@ -257,7 +259,7 @@ module.exports = class DatabaseHandler {
     var grade = await this.todayGrade(today);
     var totalVotes = Number(Number(grade[0][1])+Number(grade[1][1])+Number(grade[2][1])+Number(grade[3][1]))
     var antalElever = await this.elever();
-    
+
     if(totalVotes >= antalElever*(1/10) && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/4) ){
 
 
@@ -291,42 +293,46 @@ module.exports = class DatabaseHandler {
 
     switch(typeOfVote)  {
       case "very_bad":
-        currentVote = (parseInt(this.currentVotes[3], 10) + 1);
-        currentSubVote = (parseInt(this.currentSubVotes[3], 10) + 1);
+        currentVote = parseInt(this.currentVotes[3], 10) + 1;
+        currentSubVote = parseInt(this.currentSubVotes[3], 10) + 1;
         this.currentVotes[3] = currentVote;
+        this.currentSubVotes[3] = currentSubVote;
         query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
         if(this.question != ""){
-          query2 = "UPDATE subQuestions SET v_bad = ($1) WHERE date_fk = ($2) AND question = ($4)"
+          query2 = "UPDATE subQuestions SET v_bad = ($3) WHERE date_fk = ($2) AND question = ($4)"
         }
         console.log("currentvote: " + currentVote);
         console.log("query i switchen: " + query);
         break;
       case "bad":
         currentVote = parseInt(this.currentVotes[2], 10) + 1;
-        currentSubVote = (parseInt(this.currentSubVotes[2], 10) + 1);
+        currentSubVote = parseInt(this.currentSubVotes[2], 10) + 1;
         this.currentVotes[2] = currentVote;
+        this.currentSubVotes[2] = currentSubVote;
         if(this.question != ""){
-          query2 = "UPDATE subQuestions SET bad = ($1) WHERE date_fk = ($2) AND question = ($4)"
+          query2 = "UPDATE subQuestions SET bad = ($3) WHERE date_fk = ($2) AND question = ($4)"
         }
         query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
       case "good":
         currentVote = parseInt(this.currentVotes[1], 10) + 1;
-        currentSubVote = (parseInt(this.currentSubVotes[1], 10) + 1);
+        currentSubVote = parseInt(this.currentSubVotes[1], 10) + 1;
         this.currentVotes[1] = currentVote;
+        this.currentSubVotes[1] = currentSubVote;
         if(this.question != ""){
-          query2 = "UPDATE subQuestions SET good = ($1) WHERE date_fk = ($2) AND question = ($4)"
+          query2 = "UPDATE subQuestions SET good = ($3) WHERE date_fk = ($2) AND question = ($4)"
         }
         query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
       case "very_good":
         currentVote = parseInt(this.currentVotes[0], 10) + 1;
-        currentSubVote = (parseInt(this.currentSubVotes[0], 10) + 1);
+        currentSubVote = parseInt(this.currentSubVotes[0], 10) + 1;
         this.currentVotes[0] = currentVote;
+        this.currentSubVotes[0] = currentSubVote;
         if(this.question != ""){
-          query2 = "UPDATE subQuestions SET v_good = ($1) WHERE date_fk = ($2) AND question = ($4)"
+          query2 = "UPDATE subQuestions SET v_good = ($3) WHERE date_fk = ($2) AND question = ($4)"
         }
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);

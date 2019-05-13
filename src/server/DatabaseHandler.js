@@ -170,7 +170,7 @@ module.exports = class DatabaseHandler {
           console.log(err);
         }else{
           if(res.rows == ""){
-            resolve("");  
+            resolve("");
           }else{
               for(var y = 0; y<res.rows.length; y++){
                 if(ord.includes( res.rows[y]['meal_word'])){
@@ -257,7 +257,7 @@ module.exports = class DatabaseHandler {
     var grade = await this.todayGrade(today);
     var totalVotes = Number(Number(grade[0][1])+Number(grade[1][1])+Number(grade[2][1])+Number(grade[3][1]))
     var antalElever = await this.elever();
-
+    
     if(totalVotes >= antalElever*(1/10) && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/4) ){
 
 

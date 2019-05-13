@@ -114,7 +114,7 @@ module.exports = class DatabaseHandler {
             for(var p = 0; p < todaysQuestions.length; p++){
               if ((antalSubRöster > (antalElever/12) && Number(Number(res.rows[p]['v_bad']) +Number(res.rows[p]['bad'])) > antalSubRöster *(2/3)) || antalSubRöster > antalElever*(1/6)){
                 if(todaysQuestions[p] == (res.rows[p]['question'])){
-                  console.log(p);
+
                   if(p == todaysQuestions.length -1){
                     question = "";
                   }else{
@@ -256,9 +256,11 @@ module.exports = class DatabaseHandler {
 
     var grade = await this.todayGrade(today);
     var totalVotes = Number(Number(grade[0][1])+Number(grade[1][1])+Number(grade[2][1])+Number(grade[3][1]))
+    var antalElever = await this.elever();
 
-    if(totalVotes >= antalElever*(1/10) && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/3)){
-      var antalElever = await this.elever();
+    if(totalVotes >= antalElever*(1/10) && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/4) ){
+
+
       var word = await this.todayFood(today);
       for(var i = 0; i < word[0].length; i++){
         var mealWord = await this.getMealWord(word[0][i]);
@@ -266,11 +268,15 @@ module.exports = class DatabaseHandler {
           todaysQuestions.push(mealWord);
         }
       }
-      if (todaysQuestions <= 4 && todaysQuestions != undefined) {
+
+      if (todaysQuestions.length <= 4 && todaysQuestions != undefined) {
         var subquestion = await this.subQuestions(antalElever, todaysQuestions, today);
+
         if(subquestion == ""){
+          this.question = "";
           socket.emit("ChangeQuestion", "Vad tyckte du om dagensmaten?  What did you think of the food today?")
         }else{
+          this.question = subquestion;
           socket.emit("ChangeQuestion", "Vad tyckte du om "+ subquestion +"?")
         }
       }

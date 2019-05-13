@@ -75,6 +75,7 @@ module.exports = class DatabaseHandler {
 
       socket.emit(typeOfCall, grades);
     });
+
     const query2 = {
       text: 'SELECT * FROM "subQuestions" WHERE date_fk = ($1)',
       values: [today]
@@ -84,7 +85,7 @@ module.exports = class DatabaseHandler {
         console.log(err.stack);
       } else {
         this.currentSubVotes = res.rows;
-        console.log(this.currentSubVotes[0]);
+        
       }
     });
 

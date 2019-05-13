@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 
   socket.on('response', () => {
     dbcon.getGrades(socket, "grades");
-    dbcon.checkQuestion(socket);
+    //dbcon.checkQuestion(socket);
     dbcon.getTopRatedFood(socket);
     dbcon.getStatistics(socket);
     var menu = dbcon.getMenu();
@@ -65,8 +65,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('ChangeQuestion', (question) => {
-    var question = dbcon.getQuestion();
-    socket.emit('ChangeQuestion', question);
+    //var question = dbcon.getQuestion();
+    //socket.emit('ChangeQuestion', question);
 
   })
 

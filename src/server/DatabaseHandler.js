@@ -170,7 +170,7 @@ module.exports = class DatabaseHandler {
           console.log(err);
         }else{
           if(res.rows == ""){
-            resolve("");
+            resolve("");  
           }else{
               for(var y = 0; y<res.rows.length; y++){
                 if(ord.includes( res.rows[y]['meal_word'])){

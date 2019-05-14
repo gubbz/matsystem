@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 
 var state = {
   vGood: 0,
@@ -37,9 +37,9 @@ var state = {
   todaysMeal: null,
   displayVote: null,
   isLoading: true,
-
   ratedFoods: [],
-  planningMeals: []
+  planningMeals: [],
+  allStats: [],
 
 }
 class App extends Component {
@@ -115,7 +115,6 @@ class App extends Component {
     })
 
     socket.on('grades', (arr) => {
-      console.log(arr)
       for (var i = 0; i < arr.length; i++) {
         for (var j = 0; j < arr[i].length; j += 2) {
           this.resetChart(arr[i][j], parseInt(arr[i][j + 1]));
@@ -151,8 +150,13 @@ class App extends Component {
     })
 
     socket.on('stats', (arr) => {
-      this.setState({stats: arr});
-    })
+      
+      this.setState({
+        allStats: {pie: arr[0], line: arr[1]},
+        lineStats: arr[1].stats,
+        lineLabels: arr[1].labels,
+      });
+    });
   }
 
   updateChart(data, amount) {
@@ -249,7 +253,9 @@ class App extends Component {
                   ref={this.chartElement}
                   handleLogin={this.handleLogin}
                   ratedFoods={this.state.ratedFoods}
-                  stats={this.state.stats}
+                  allStats={this.state.allStats}
+                  lineStats={this.state.lineStats}
+                  lineLabels={this.state.lineLabels}
                 />
               } />
 

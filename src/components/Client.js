@@ -54,6 +54,9 @@ export default class Client extends Component {
                             <Route path="/statistics" render={() =>
                                 <Statistics
                                     shadow="0 1px 2px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.08)"
+                                    allStats={this.props.allStats}
+                                    lineStats={this.props.lineStats}
+                                    lineLabels={this.props.lineLabels}
                                 />
                             } />
                             <Route path="/meals" render={() => <Meals

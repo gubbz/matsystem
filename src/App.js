@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 const cookies = new Cookies();
 
 var state = {

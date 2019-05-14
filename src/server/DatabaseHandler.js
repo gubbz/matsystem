@@ -26,7 +26,7 @@ module.exports = class DatabaseHandler {
   }
 
   establishConnection() {
-
+    console.log("början på db conn");
     this.con = new pg.Client({
       host: 'ec2-54-247-72-30.eu-west-1.compute.amazonaws.com',
       user: 'wneyxoesnscgzy',
@@ -85,7 +85,6 @@ module.exports = class DatabaseHandler {
         console.log(err.stack);
       } else {
         this.currentSubVotes = res.rows;
-        
       }
     });
 

@@ -26,7 +26,8 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
+const cookies = new Cookies();
 
 var state = {
   vGood: 0,
@@ -92,8 +93,8 @@ class App extends Component {
     const socket = socketIOClient(socketURL);
     this.setState({ socket });
     socket.on('connect', () => {
-      console.log("Connected");
-      this.state.socket.emit('response', "HELLO SERVER GE MIG GRADES och veckans måltider");
+      console.log("Connected ");
+      this.state.socket.emit('response', "");
     })
 
     socket.on('vote', (typeOfVote) => {

@@ -50,7 +50,7 @@ export default class QuestionView extends Component {
         var that = this;
         setTimeout(function () {
             that.color = "white";
-            that.text = that.original;
+            that.text = "Vad tyckte du om maten?";
             that.forceUpdate();
         }, 1340);
     }

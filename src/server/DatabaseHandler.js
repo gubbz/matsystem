@@ -85,11 +85,6 @@ module.exports = class DatabaseHandler {
         console.log(err.stack);
       } else {
         this.currentSubVotes = res.rows;
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> 6fe2697c11a2a8ca9d49cf9d918922d3891ea486
       }
     });
 

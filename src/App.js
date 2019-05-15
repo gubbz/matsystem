@@ -29,6 +29,7 @@ var dd;
 const socketURL = "localhost:8080";
 const cookies = new Cookies();
 
+
 var state = {
   vGood: 0,
   good: 0,
@@ -38,7 +39,6 @@ var state = {
   todaysMeal: null,
   displayVote: null,
   isLoading: true,
-
   ratedFoods: [],
   planningMeals: [],
 
@@ -127,7 +127,6 @@ class App extends Component {
 
 
     socket.on('grades', (arr) => {
-      console.log(arr)
       for (var i = 0; i < arr.length; i++) {
         for (var j = 0; j < arr[i].length; j += 2) {
           this.resetChart(arr[i][j], parseInt(arr[i][j + 1]));
@@ -171,6 +170,7 @@ class App extends Component {
         lineLabels: arr[1].labels,
       });
     })
+
   }
 
   updateChart(data, amount) {
@@ -279,6 +279,7 @@ class App extends Component {
                   ratedFoods={this.state.ratedFoods}
                   allStats={this.state.allStats}
                   pieStats={this.state.pieStats}
+
                   lineStats={this.state.lineStats}
                   lineLabels={this.state.lineLabels}
                 />

@@ -320,8 +320,10 @@ module.exports = class DatabaseHandler {
 
 
         query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
+
+
         if (this.question != "") {
-          query2 = "UPDATE subQuestions SET v_bad = ($3) WHERE date_fk = ($2) AND question = ($4)"
+          query2 = "UPDATE subQuestions SET v_bad = ($1) WHERE date_fk = ($2) AND question = ($4)"
         }
         console.log("currentvote: " + currentVote);
         console.log("query i switchen: " + query);
@@ -435,8 +437,11 @@ module.exports = class DatabaseHandler {
     }
 
     this.con.query(query, (err, res) => {
-      if (res.rows[0]) {
-        if (bcrypt.compareSync(password, res.rows[0]["password"])) {
+
+
+      if(res.rows[0]) {
+        if(bcrypt.compareSync(password, res.rows[0]["password"])){
+
           var cookief = socket.handshake.headers.cookie;
           var cookies = cookie.parse(socket.handshake.headers.cookie);
           console.log("login " + cookies['token']);

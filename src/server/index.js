@@ -38,12 +38,9 @@ io.on('connection', (socket) => {
     dbcon.checkQuestion(socket);
     dbcon.getTopRatedFood(socket);
     var cookief = socket.handshake.headers.cookie;
-    console.log(cookief);
     if (cookief) {
-      console.log("i cookie fan");
       var cookies = cookie.parse(socket.handshake.headers.cookie);
       if (cookies['token'] && cookies['user']) {
-        console.log("i cookie token fan");
         dbcon.checkAuthentication(socket, cookies['token'], cookies['user']);
       } else {
         socket.emit('auth', false);

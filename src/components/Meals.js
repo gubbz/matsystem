@@ -9,6 +9,7 @@ export default class Meals extends Component {
       super(props);
       this.state = {
         ratedFoods: this.props.ratedFoods,
+        allFood: this.props.ratedFoods,
         displayForm: false
       }
       console.log(this.state);
@@ -65,17 +66,9 @@ export default class Meals extends Component {
         this.setState({ratedFoods: this.state.ratedFoods});
       } else {
         var tempArr = new Array();
-        var usedFoods = new Array();
-        for (var i = 0; i < this.state.ratedFoods.length; i++) {
-          if (this.state.ratedFoods[i][0].toLowerCase().includes(text.toLowerCase())) {
-            tempArr.push(this.state.ratedFoods[i]);
-            usedFoods.push(i);
-          }
-        }
-        
-        for (var i = 0; i < this.state.ratedFoods.length; i++) {
-          if (!usedFoods.includes(i)) {
-            tempArr.push(this.state.ratedFoods[i]);
+        for (var i = 0; i < this.state.allFood.length; i++) {
+          if (this.state.allFood[i][0].toLowerCase().includes(text.toLowerCase())) {
+            tempArr.push(this.state.allFood[i]);
           }
         }
         this.setState({ratedFoods: tempArr});

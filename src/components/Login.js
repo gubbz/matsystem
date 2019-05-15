@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import "../styles/Login.css"
 
 export default class Login extends Component {
@@ -11,16 +12,14 @@ export default class Login extends Component {
             username: "",
             password: "",
             invalid: true,
+            redirectPath: false
         }
     }
 
     handleSubmit(e) {
-
         if (this.state.username && this.state.password) {
             this.props.handleLogin(this.state.username, this.state.password);
-            console.log("yerr");
-        } else {
-            alert("Bad login");
+            this.setState({redirectPath: true});
         }
         e.preventDefault();
     }
@@ -46,32 +45,36 @@ export default class Login extends Component {
     }
 
     render() {
-        return (
-            <div>
-                <form onSubmit={this.handleSubmit} className="LoginForm">
-                    <input
-                        type="text"
-                        placeholder="Användarnamn"
-                        name="username"
-                        onChange={this.handleChange}
-                        className="LoginInput"
-                    />
-                    <input
-                        type="password"
-                        placeholder="Lösenord"
-                        name="password"
-                        onChange={this.handleChange}
-                        className="LoginInput"
-                    />
-                    <input
-                        type="submit"
-                        value="Logga in"
-                        name="submit"
-                        disabled={this.state.invalid}
-                        className="LoginSubmit"
-                    />
-                </form>
-            </div>
-        )
+      if (this.state.redirectPath) {
+        console.log("redirect to admin");
+        return <Redirect to='/admin' />
+      }
+      return (
+          <div>
+              <form onSubmit={this.handleSubmit} className="LoginForm">
+                  <input
+                      type="text"
+                      placeholder="Användarnamn"
+                      name="username"
+                      onChange={this.handleChange}
+                      className="LoginInput"
+                  />
+                  <input
+                      type="password"
+                      placeholder="Lösenord"
+                      name="password"
+                      onChange={this.handleChange}
+                      className="LoginInput"
+                  />
+                  <input
+                      type="submit"
+                      value="Logga in"
+                      name="submit"
+                      disabled={this.state.invalid}
+                      className="LoginSubmit"
+                  />
+              </form>
+          </div>
+      )
     }
 }

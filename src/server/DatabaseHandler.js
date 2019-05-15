@@ -15,7 +15,7 @@ module.exports = class DatabaseHandler {
     console.log("DatabaseHandler constructor")
 
     this.con;
-    this.meal= new Array();
+    this.meal = new Array();
     this.weekFoodMenu = new Array();
     this.currentVotes = new Array();
     this.currentSubVotes = new Array();
@@ -36,7 +36,7 @@ module.exports = class DatabaseHandler {
       ssl: true
     });
 
-    this.con.connect(function(err) {
+    this.con.connect(function (err) {
       if (err) {
         console.log(err);
       } else {
@@ -62,12 +62,12 @@ module.exports = class DatabaseHandler {
         console.log(err.stack);
       } else {
         for (var i = 1; i < res.fields.length; i++) {
-            var fieldName = res.fields[i].name;
-            var grade = new Array();
-            grade[0] = fieldName;
-            grade[1] = res.rows[0][fieldName];
-            grades.push(grade);
-            if(this.currentVotes.length < 4){
+          var fieldName = res.fields[i].name;
+          var grade = new Array();
+          grade[0] = fieldName;
+          grade[1] = res.rows[0][fieldName];
+          grades.push(grade);
+          if (this.currentVotes.length < 4) {
             this.currentVotes.push(res.rows[0][fieldName]);
           }
         }
@@ -311,7 +311,7 @@ module.exports = class DatabaseHandler {
       }
     }
 
-    switch(typeOfVote)  {
+    switch (typeOfVote) {
       case "very_bad":
         currentVote = parseInt(this.currentVotes[3], 10) + 1;
         currentSubVote = Number(this.currentSubVotes[x]['v_bad']) + 1;
@@ -320,8 +320,9 @@ module.exports = class DatabaseHandler {
 
 
         query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
-        if(this.question != ""){
-          query2 = "UPDATE subQuestions SET v_bad = ($3) WHERE date_fk = ($2) AND question = ($4)"
+
+        if (this.question != "") {
+          query2 = "UPDATE subQuestions SET v_bad = ($1) WHERE date_fk = ($2) AND question = ($4)"
         }
         console.log("currentvote: " + currentVote);
         console.log("query i switchen: " + query);
@@ -366,7 +367,7 @@ module.exports = class DatabaseHandler {
     var values = [currentVote, currentDate, currentSubVote, this.question];
 
     this.con.query(query, values, (err, res) => {
-      if(err){
+      if (err) {
         console.log(err.stack);
       } else {
         console.log("grades + 1 successful");
@@ -374,13 +375,13 @@ module.exports = class DatabaseHandler {
     });
 
     this.con.query(query2, values, (err, res) => {
-      if(err){
+      if (err) {
         console.log(err.stack);
       } else {
         console.log("grades + 1 successful");
       }
     });
- }
+  }
 
   startOfWeek(date) {
     var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
@@ -392,7 +393,7 @@ module.exports = class DatabaseHandler {
 
     var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
 
-    for(var i = 0; i < 5; i++) {
+    for (var i = 0; i < 5; i++) {
       var day = new Date(startDate);
       day.setDate(startDate.getDate() + i);
       day = day.toISOString().substring(0, 10);
@@ -411,7 +412,7 @@ module.exports = class DatabaseHandler {
           var localDate = (new Date(date - tzoffset)).toISOString().substring(5, 10);
           var meal = res.rows[0][mealName];
         }
-        this.weekFoodMenu.push({localDate, meal});
+        this.weekFoodMenu.push({ localDate, meal });
       });
     }
   }
@@ -435,6 +436,7 @@ module.exports = class DatabaseHandler {
     }
 
     this.con.query(query, (err, res) => {
+
       if(res.rows[0]) {
         if(bcrypt.compareSync(password, res.rows[0]["password"])){
           var cookief = socket.handshake.headers.cookie;
@@ -511,7 +513,7 @@ module.exports = class DatabaseHandler {
     var values = [waste, date, menu];
 
     this.con.query(query, values, (err, res) => {
-      if(err){
+      if (err) {
         return console.log(err.stack);
       } else {
         console.log("waste updated");
@@ -519,52 +521,58 @@ module.exports = class DatabaseHandler {
     });
   }
 
-getStatistics(socket) {
+  getStatistics(socket) {
 
-  var pie = new Array();
-  var line = new Array();
-  var stats = new Array();
+    var pie = new Array();
+    var stats = new Array();
 
-  const query = {
-    name: 'getStatistics',
-    text: 'SELECT * FROM grades',
-  }
-
-  this.con.query(query, (err, res) => {
-    if(err) {
-      console.log(err.stack);
-    } else {
-      for(var i = 0; i > res.fields.length; i++)
-      var k = res.rows[i];
-        JSON.stringify(k);
-      }
-    var dateName = res.fields[0].name;
-    var v_goodName = res.fields[1].name;
-    var goodName = res.fields[2].name;
-    var badName = res.fields[3].name;
-    var v_badName = res.fields[4].name;
-    var mealRatingName = res.fields[5].name;
-
-    var v_goodTotal = 0;
-    var goodTotal = 0;
-    var badTotal = 0;
-    var v_badTotal = 0;
-
-    for(var i = 2; i < res.rows.length; i++){
-       var linestats = res.rows[i][mealRatingName];
-       var date = res.rows[i][dateName];
-       var linelabels = date.toISOString().substring(5, 7);
-       line.push(linestats, linelabels);
-
-       v_goodTotal += parseInt(res.rows[i][v_goodName], 10);
-       goodTotal += parseInt(res.rows[i][goodName], 10);
-       badTotal += parseInt(res.rows[i][badName], 10);
-       v_badTotal += parseInt(res.rows[i][v_badName], 10);
+    const query = {
+      name: 'getStatistics',
+      text: 'SELECT * FROM grades',
     }
 
-    pie.push(v_goodTotal, goodTotal, badTotal, v_badTotal);
-    stats.push(pie, line);
-    socket.emit('stats', stats);
+    this.con.query(query, (err, res) => {
+      if (err) {
+        console.log(err.stack);
+      } else {
+        for (var i = 0; i > res.fields.length; i++)
+          var k = res.rows[i];
+        JSON.stringify(k);
+      }
+      var dateName = res.fields[0].name;
+      var v_goodName = res.fields[1].name;
+      var goodName = res.fields[2].name;
+      var badName = res.fields[3].name;
+      var v_badName = res.fields[4].name;
+      var mealRatingName = res.fields[5].name;
+
+      var v_goodTotal = 0;
+      var goodTotal = 0;
+      var badTotal = 0;
+      var v_badTotal = 0;
+
+      /**
+       * 
+       */
+
+      var linelabels = [];
+      var linestats = [];
+      var line = [];
+      
+      for (var i = 2; i < res.rows.length; i++) {
+        var date = res.rows[i][dateName];
+        linestats.push(res.rows[i][mealRatingName]);
+        linelabels.push(date.toISOString().substring(5, 7));
+
+        v_goodTotal += parseInt(res.rows[i][v_goodName], 10);
+        goodTotal += parseInt(res.rows[i][goodName], 10);
+        badTotal += parseInt(res.rows[i][badName], 10);
+        v_badTotal += parseInt(res.rows[i][v_badName], 10);
+      }
+      line = {stats: linestats, labels: linelabels};
+      pie.push(v_goodTotal, goodTotal, badTotal, v_badTotal);
+      stats.push(pie, line);
+      socket.emit('stats', stats);
       /**
        * skapa array med mycket dåligt, dåligt, bra, mycket bra röster
        * stats ska innehålla piedata och linedata så att dessa går att ta ut
@@ -575,34 +583,34 @@ getStatistics(socket) {
        *     pie = linestats, linelabels
        *  */
 
-  })
-}
+    })
+  }
 
   getTopRatedFood(socket) {
-   var meals = new Array();
+    var meals = new Array();
 
-   //hämta måltider och deras grades ordnade efter mealrating
-   const query = {
-     name: 'getRatedFood',
-     text: 'SELECT M.menu, Max(G.meal_rating) FROM menu M join grades G ON M.date_pk=G.date_pk group by G.meal_rating, M.menu ORDER BY G.meal_rating DESC'
-   }
-
-   this.con.query(query, (err, res) => {
-    if(err)  {
-      console.log(err.stack);
-    } else {
-      var mealName = res.fields[0].name;
-      var mealRatingName = res.fields[1].name;
-      for (var i = 0; i < res.rows.length; i++) {
-        var meal = new Array();
-        meal[0] = res.rows[i][mealName];
-        meal[1] = res.rows[i][mealRatingName];
-        meals.push(meal);
-      }
-
-      socket.emit('ratedFood', meals);
+    //hämta måltider och deras grades ordnade efter mealrating
+    const query = {
+      name: 'getRatedFood',
+      text: 'SELECT M.menu, Max(G.meal_rating) FROM menu M join grades G ON M.date_pk=G.date_pk group by G.meal_rating, M.menu ORDER BY G.meal_rating DESC'
     }
-   });
- }
+
+    this.con.query(query, (err, res) => {
+      if (err) {
+        console.log(err.stack);
+      } else {
+        var mealName = res.fields[0].name;
+        var mealRatingName = res.fields[1].name;
+        for (var i = 0; i < res.rows.length; i++) {
+          var meal = new Array();
+          meal[0] = res.rows[i][mealName];
+          meal[1] = res.rows[i][mealRatingName];
+          meals.push(meal);
+        }
+
+        socket.emit('ratedFood', meals);
+      }
+    });
+  }
 
 }

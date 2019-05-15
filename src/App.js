@@ -42,6 +42,10 @@ var state = {
   ratedFoods: [],
   planningMeals: [],
 
+  allStats: [],
+  lineStats: [],
+
+
   authenticated: false
 }
 class App extends Component {
@@ -160,7 +164,12 @@ class App extends Component {
     })
 
     socket.on('stats', (arr) => {
-      this.setState({stats: arr});
+      this.setState({
+        allStats: { pie: arr[0], line: arr[1] },
+        pieStats: arr[0],
+        lineStats: arr[1].stats,
+        lineLabels: arr[1].labels,
+      });
     })
   }
 
@@ -248,6 +257,10 @@ class App extends Component {
                     onSend={this.sendMealInfo}
                     ref={this.child}
                     planningMeals={this.state.planningMeals}
+                    allStats={this.state.allStats}
+                    pieStats={this.state.pieStats}
+                    lineStats={this.state.lineStats}
+                    lineLabels={this.state.lineLabels}
                   />
                 ) : (
                   <Redirect to="/login"/>
@@ -264,7 +277,10 @@ class App extends Component {
                   ref={this.chartElement}
                   handleLogin={this.handleLogin}
                   ratedFoods={this.state.ratedFoods}
-                  stats={this.state.stats}
+                  allStats={this.state.allStats}
+                  pieStats={this.state.pieStats}
+                  lineStats={this.state.lineStats}
+                  lineLabels={this.state.lineLabels}
                 />
               } />
 

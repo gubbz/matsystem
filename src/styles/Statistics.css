@@ -1,5 +1,5 @@
 .Statistics {
-    padding: 1em;
+    padding: 0 1em;
     background: white;
     border-radius: 8px;
 }
@@ -20,12 +20,24 @@
     
 }
 
+.StatLabels {
+    font-size: 1.2em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
 .StatLeftColumn, .StatRightColumn {
     flex: 1;
+    margin-bottom: 2em;
 }
 
 .StatName {
     margin-bottom: 1em;
+}
+
+.StatSeparator {
+    display: none;
+    opacity: 0.4;
 }
 
 @media screen and (max-width: 992px) {
@@ -34,7 +46,10 @@
         min-height: 0;
         height: auto;
     }
-    .StatLeftColumn, .StatRightColumn {
-        margin-top: 2em;
+    .StatLeftColumn {
+        margin-bottom: 1.2em;
+    }
+    .StatSeparator {
+        display: initial;
     }
 }

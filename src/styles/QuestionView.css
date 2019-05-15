@@ -14,6 +14,11 @@
     align-items: center;
 }
 
+.QuestionText {
+    text-align: center;
+    font-size: 2em;
+}
+
 .emojis {
     display: flex;
     flex-direction: row-reverse;

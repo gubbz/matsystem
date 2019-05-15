@@ -1,8 +1,8 @@
 const pg = require('pg');
 const mysql = require('mysql2');
 
-//var today = new Date().toISOString().substring(0, 10);
-var today = "2019-05-04";
+var today = new Date().toISOString().substring(0, 10);
+//var today = "2019-05-04";
 var client;
 var grades = new Array();
 

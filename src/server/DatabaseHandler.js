@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 12;
 const jwt = require('jsonwebtoken');
 const secret = 'mysecretsshhh';
-var cookie  = require('cookie');
+var cookie = require('cookie');
 /**
   Database communication and functionality
 **/
@@ -90,153 +90,153 @@ module.exports = class DatabaseHandler {
 
   }
 
-//hämta vilken fråga som ska stå på fråge sidan
-  async subQuestions(antalElever, todaysQuestions, today){
+  //hämta vilken fråga som ska stå på fråge sidan
+  async subQuestions(antalElever, todaysQuestions, today) {
     return new Promise(resolve => {
       setTimeout(() => {
         var question;
-        const frågor={
+        const frågor = {
           name: 'getQuestion',
           text: 'SELECT * FROM "subQuestions" WHERE date_fk = ($1)',
           values: [today]
         }
         this.con.query(frågor, (err, res) => {
-          if(err){
+          if (err) {
 
             console.log(err);
-          }else{
-            if(res.rows == ""){
+          } else {
+            if (res.rows == "") {
               for (var i = 0; i < todaysQuestions.length; i++) {
                 console.log(todaysQuestions[i]);
 
-              const insertquestion={
-                name: 'InsertQuestion',
-                text: 'INSERT INTO "subQuestions" (date_fk, question, v_good, good, bad, v_bad) VALUES ($1, $2 ,0 ,0 ,0 ,0)',
-                values: [today, todaysQuestions[i]]
-              }
-              this.con.query(insertquestion, (err, res) => {
-                if(err){
-                  console.log(err);
-                }else{
-                  console.log("succes");
+                const insertquestion = {
+                  name: 'InsertQuestion',
+                  text: 'INSERT INTO "subQuestions" (date_fk, question, v_good, good, bad, v_bad) VALUES ($1, $2 ,0 ,0 ,0 ,0)',
+                  values: [today, todaysQuestions[i]]
                 }
-              });
-            }
-            }else{
-            var antalSubRöster = Number(Number(res.rows[0]['v_bad']) +Number(res.rows[0]['bad']) +Number(res.rows[0]['good']) +Number(res.rows[0]['v_good']));
+                this.con.query(insertquestion, (err, res) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("succes");
+                  }
+                });
+              }
+            } else {
+              var antalSubRöster = Number(Number(res.rows[0]['v_bad']) + Number(res.rows[0]['bad']) + Number(res.rows[0]['good']) + Number(res.rows[0]['v_good']));
 
-            question = todaysQuestions[0]
-            for(var p = 0; p < todaysQuestions.length; p++){
-              if ((antalSubRöster > (antalElever/12) && Number(Number(res.rows[p]['v_bad']) +Number(res.rows[p]['bad'])) > antalSubRöster *(2/3)) || antalSubRöster > antalElever*(1/6)){
-                if(todaysQuestions[p] == (res.rows[p]['question'])){
+              question = todaysQuestions[0]
+              for (var p = 0; p < todaysQuestions.length; p++) {
+                if ((antalSubRöster > (antalElever / 12) && Number(Number(res.rows[p]['v_bad']) + Number(res.rows[p]['bad'])) > antalSubRöster * (2 / 3)) || antalSubRöster > antalElever * (1 / 6)) {
+                  if (todaysQuestions[p] == (res.rows[p]['question'])) {
 
-                  if(p == todaysQuestions.length -1){
-                    question = "";
-                  }else{
-                    question = todaysQuestions[p+1];
+                    if (p == todaysQuestions.length - 1) {
+                      question = "";
+                    } else {
+                      question = todaysQuestions[p + 1];
+                    }
                   }
                 }
               }
+              resolve(question);
             }
-            resolve(question);
-          }
           }
         });
       }, 30);
     });
   }
 
-//hämta antalElever på skolan
-  async elever(){
+  //hämta antalElever på skolan
+  async elever() {
     return new Promise(resolve => {
       setTimeout(() => {
         var antalElever;
 
-        const elever={
+        const elever = {
           name: 'getStudents',
           text: 'SELECT * FROM "schools"',
           values: []
         }
         this.con.query(elever, (err, res) => {
-          if(err){
+          if (err) {
 
             console.log(err);
-          }else{
-            resolve( Number(res.rows[0]['students']));
+          } else {
+            resolve(Number(res.rows[0]['students']));
           }
         });
-    }, 30);
-  });
+      }, 30);
+    });
   }
 
-//hämta ordmaten ur matsedel
-  async getMealWord(ord){
+  //hämta ordmaten ur matsedel
+  async getMealWord(ord) {
     return new Promise(resolve => {
       setTimeout(() => {
         var todaysQuestions = new Array;
         const array = {
           name: 'getMealWord',
           text: "SELECT * FROM meal_word_list WHERE $1 LIKE CONCAT('%',meal_word,'%')",
-          values: ['%'+ ord+ '%' ]
+          values: ['%' + ord + '%']
         }
 
-      this.con.query(array, (err, res) => {
-        if(err){
-          console.log(err);
-        }else{
-          if(res.rows == ""){
-            resolve("");
-          }else{
-              for(var y = 0; y<res.rows.length; y++){
-                if(ord.includes( res.rows[y]['meal_word'])){
-                  if(todaysQuestions.includes(ord)){
-                  }else{
+        this.con.query(array, (err, res) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (res.rows == "") {
+              resolve("");
+            } else {
+              for (var y = 0; y < res.rows.length; y++) {
+                if (ord.includes(res.rows[y]['meal_word'])) {
+                  if (todaysQuestions.includes(ord)) {
+                  } else {
 
                     this.question = ord;
                     todaysQuestions.push(ord);
                     resolve(ord);
-                    }
                   }
                 }
+              }
             }
-            }
-          });
-    }, 30);
-  });
+          }
+        });
+      }, 30);
+    });
   }
 
   //hämta dagensmat
-  async todayFood(today){
-  return new Promise(resolve => {
-    setTimeout(() => {
-      var word = [];
-      const mat = {
-        text: 'SELECT * FROM menu WHERE date_pk = $1',
-        values: [today]
-      }
-
-      this.con.query(mat, (err, res) => {
-        if(err){
-          console.log(err);
-        }else{
-          if(res.rows == ""){
-            resolve("");
-          }else{
-            var dagens = (res.rows[0]['menu']);
-            word.push(dagens.toLowerCase().split(' '));
-            resolve(word);
-          }
+  async todayFood(today) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        var word = [];
+        const mat = {
+          text: 'SELECT * FROM menu WHERE date_pk = $1',
+          values: [today]
         }
-      });
-    }, 30);
-  });
+
+        this.con.query(mat, (err, res) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (res.rows == "") {
+              resolve("");
+            } else {
+              var dagens = (res.rows[0]['menu']);
+              word.push(dagens.toLowerCase().split(' '));
+              resolve(word);
+            }
+          }
+        });
+      }, 30);
+    });
   }
 
-//hämta betygen från dag
-  async todayGrade(today){
-  return new Promise(resolve => {
-    setTimeout(() => {
-      var grades = new Array();
+  //hämta betygen från dag
+  async todayGrade(today) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        var grades = new Array();
 
         const query = {
           text: 'SELECT * FROM grades WHERE date_pk = $1',
@@ -248,11 +248,11 @@ module.exports = class DatabaseHandler {
             console.log(err.stack);
           } else {
             for (var i = 1; i < res.fields.length; i++) {
-                var fieldName = res.fields[i].name;
-                var grade = new Array();
-                grade[0] = fieldName;
-                grade[1] = res.rows[0][fieldName];
-                grades.push(grade);
+              var fieldName = res.fields[i].name;
+              var grade = new Array();
+              grade[0] = fieldName;
+              grade[1] = res.rows[0][fieldName];
+              grades.push(grade);
 
             }
 
@@ -263,23 +263,23 @@ module.exports = class DatabaseHandler {
     });
   }
 
-//main matod för att kolla vilken fråga som ska vara aktiv.
-  async checkQuestion(socket){
+  //main matod för att kolla vilken fråga som ska vara aktiv.
+  async checkQuestion(socket) {
 
     var today = new Date().toISOString().substring(0, 10);
     var todaysQuestions = new Array();
 
     var grade = await this.todayGrade(today);
-    var totalVotes = Number(Number(grade[0][1])+Number(grade[1][1])+Number(grade[2][1])+Number(grade[3][1]))
+    var totalVotes = Number(Number(grade[0][1]) + Number(grade[1][1]) + Number(grade[2][1]) + Number(grade[3][1]))
     var antalElever = await this.elever();
 
-    if(totalVotes >= antalElever*(1/10) && Number(Number(grade[2][1])+Number(grade[3][1])) >= totalVotes *(2/4) ){
+    if (totalVotes >= antalElever * (1 / 10) && Number(Number(grade[2][1]) + Number(grade[3][1])) >= totalVotes * (2 / 4)) {
 
 
       var word = await this.todayFood(today);
-      for(var i = 0; i < word[0].length; i++){
+      for (var i = 0; i < word[0].length; i++) {
         var mealWord = await this.getMealWord(word[0][i]);
-        if(mealWord != ""){
+        if (mealWord != "") {
           todaysQuestions.push(mealWord);
         }
       }
@@ -287,13 +287,13 @@ module.exports = class DatabaseHandler {
       if (todaysQuestions.length <= 4 && todaysQuestions != undefined) {
         var subquestion = await this.subQuestions(antalElever, todaysQuestions, today);
 
-        if(subquestion == ""){
+        if (subquestion == "") {
           this.question = "";
           socket.emit("ChangeQuestion", "Vad tyckte du om dagensmaten?  What did you think of the food today?")
-        }else{
+        } else {
           this.question = subquestion;
 
-          socket.emit("ChangeQuestion", "Vad tyckte du om "+ subquestion +"?")
+          socket.emit("ChangeQuestion", "Vad tyckte du om " + subquestion + "?")
         }
       }
     }
@@ -307,7 +307,7 @@ module.exports = class DatabaseHandler {
     var x;
     for (var i = 0; i < this.currentSubVotes.length; i++) {
       if (this.currentSubVotes[i]['question'] == this.question) {
-          x = i;
+        x = i;
       }
     }
 
@@ -321,6 +321,7 @@ module.exports = class DatabaseHandler {
 
         query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
 
+
         if (this.question != "") {
           query2 = "UPDATE subQuestions SET v_bad = ($1) WHERE date_fk = ($2) AND question = ($4)"
         }
@@ -332,7 +333,7 @@ module.exports = class DatabaseHandler {
         currentSubVote = Number(this.currentSubVotes[x]['bad']) + 1;
         this.currentVotes[2] = currentVote;
         this.currentSubVotes[2] = currentSubVote;
-        if(this.question != ""){
+        if (this.question != "") {
           query2 = "UPDATE subQuestions SET bad = ($3) WHERE date_fk = ($2) AND question = ($4)"
         }
         query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
@@ -343,7 +344,7 @@ module.exports = class DatabaseHandler {
         currentSubVote = Number(this.currentSubVotes[x]['good']) + 1;
         this.currentVotes[1] = currentVote;
         this.currentSubVotes[1] = currentSubVote;
-        if(this.question != ""){
+        if (this.question != "") {
           query2 = "UPDATE subQuestions SET good = ($3) WHERE date_fk = ($2) AND question = ($4)"
         }
         query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
@@ -354,7 +355,7 @@ module.exports = class DatabaseHandler {
         currentSubVote = Number(this.currentSubVotes[x]['v_good']) + 1;
         this.currentVotes[0] = currentVote;
         this.currentSubVotes[0] = currentSubVote;
-        if(this.question != ""){
+        if (this.question != "") {
           query2 = "UPDATE subQuestions SET v_good = ($3) WHERE date_fk = ($2) AND question = ($4)"
         }
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
@@ -437,14 +438,16 @@ module.exports = class DatabaseHandler {
 
     this.con.query(query, (err, res) => {
 
+
       if(res.rows[0]) {
         if(bcrypt.compareSync(password, res.rows[0]["password"])){
+
           var cookief = socket.handshake.headers.cookie;
           var cookies = cookie.parse(socket.handshake.headers.cookie);
           console.log("login " + cookies['token']);
           if (!cookies['token']) {
             console.log("new token " + username);
-            const payload = {username};
+            const payload = { username };
             const token = jwt.sign(payload, secret, {
               expiresIn: '1h'
             });
@@ -485,29 +488,29 @@ module.exports = class DatabaseHandler {
   checkAuthentication(socket, token, user) {
 
     console.log("checkAuthentication " + user + " ; " + token);
-      const query = {
-        name: 'verifyAuth',
-        text: 'SELECT token from users WHERE username = $1',
-        values: [user]
-      }
+    const query = {
+      name: 'verifyAuth',
+      text: 'SELECT token from users WHERE username = $1',
+      values: [user]
+    }
 
-      this.con.query(query, (err, res) => {
-        if (err) {
-          return console.log(err.stack);
+    this.con.query(query, (err, res) => {
+      if (err) {
+        return console.log(err.stack);
+      } else {
+        console.log(res.rows[0]['token']);
+        console.log(token);
+        if (res.rows[0]['token'] == token) {
+          console.log("auth socket emit");
+          socket.emit('auth', true);
         } else {
-          console.log(res.rows[0]['token']);
-          console.log(token);
-          if (res.rows[0]['token'] == token) {
-            console.log("auth socket emit");
-            socket.emit('auth', true);
-          } else {
-            socket.emit('auth', false);
-          }
+          socket.emit('auth', false);
         }
-      })
+      }
+    })
   }
 
-  updateWaste(waste, date, menu)  {
+  updateWaste(waste, date, menu) {
 
     var query = "UPDATE menu SET waste = $1 WHERE date_pk = $2 AND menu = $3";
     var values = [waste, date, menu];
@@ -558,7 +561,7 @@ module.exports = class DatabaseHandler {
       var linelabels = [];
       var linestats = [];
       var line = [];
-      
+
       for (var i = 2; i < res.rows.length; i++) {
         var date = res.rows[i][dateName];
         linestats.push(res.rows[i][mealRatingName]);
@@ -569,7 +572,7 @@ module.exports = class DatabaseHandler {
         badTotal += parseInt(res.rows[i][badName], 10);
         v_badTotal += parseInt(res.rows[i][v_badName], 10);
       }
-      line = {stats: linestats, labels: linelabels};
+      line = { stats: linestats, labels: linelabels };
       pie.push(v_goodTotal, goodTotal, badTotal, v_badTotal);
       stats.push(pie, line);
       socket.emit('stats', stats);

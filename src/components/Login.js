@@ -47,7 +47,8 @@ export default class Login extends Component {
     render() {
       if (this.state.redirectPath) {
         console.log("redirect to admin");
-        return <Redirect to='/admin' />
+        window.location.href = "/admin";
+        return true;
       }
       return (
           <div>

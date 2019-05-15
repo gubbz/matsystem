@@ -57,6 +57,8 @@ export default class Client extends Component {
                                     allStats={this.props.allStats}
                                     lineStats={this.props.lineStats}
                                     lineLabels={this.props.lineLabels}
+                                    pieStats={this.props.pieStats}
+
                                 />
                             } />
                             <Route path="/meals" render={() => <Meals

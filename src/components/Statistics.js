@@ -11,10 +11,6 @@ export default class Statistics extends Component {
         }
     }
 
-    /*componentWillMount() {
-        this.getChartData();
-    }*/
-
     getLineData = () => {
         return {
             labels: this.props.lineLabels,
@@ -39,7 +35,7 @@ export default class Statistics extends Component {
             datasets: [
                 {
                     label: 'Population',
-                    data: this.props.allStats.pie,
+                    data: this.props.pieStats,
                     backgroundColor: [
                         'rgba(100, 186, 29, 0.6)',
                         'rgba(216, 230, 8, 0.6)',
@@ -57,15 +53,9 @@ export default class Statistics extends Component {
                 <div className="Statistics"
                     style={{ boxShadow: this.props.shadow }}
                 >
-                    <div className="TimePicker">
-                        <p>Tidsperiod: </p>
-                        <p>1v</p>
-                        <p>1m</p>
-                        <p>3m</p>
-                        <p>1å</p>
-                    </div>
                     <div className="StatGrid">
                         <div className="StatLeftColumn">
+                            <h2 className="StatLabels">Total röstfördelning</h2>
                             <Pie
                                 data={this.getPieData}
                                 options={{
@@ -77,7 +67,9 @@ export default class Statistics extends Component {
                                 }}
                             />
                         </div>
+                        <hr className="StatSeparator"/>
                         <div className="StatRightColumn">
+                            <h2 className="StatLabels">Statistik över tid</h2>
                             <Line
                                 data={this.getLineData}
                                 options={{
@@ -105,10 +97,3 @@ export default class Statistics extends Component {
         )
     }
 }
-
-
-/*
-chartData: {
-
-            },
-*/

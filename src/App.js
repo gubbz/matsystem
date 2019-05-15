@@ -26,7 +26,7 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "/";
+const socketURL = "localhost:8080";
 const cookies = new Cookies();
 
 
@@ -43,6 +43,8 @@ var state = {
   planningMeals: [],
 
   allStats: [],
+  lineStats: [],
+
 
   authenticated: false
 }
@@ -161,13 +163,14 @@ class App extends Component {
     })
 
     socket.on('stats', (arr) => {
-      
       this.setState({
-        allStats: {pie: arr[0], line: arr[1]},
+        allStats: { pie: arr[0], line: arr[1] },
+        pieStats: arr[0],
         lineStats: arr[1].stats,
         lineLabels: arr[1].labels,
       });
-    });
+    })
+
   }
 
   updateChart(data, amount) {
@@ -254,6 +257,10 @@ class App extends Component {
                     onSend={this.sendMealInfo}
                     ref={this.child}
                     planningMeals={this.state.planningMeals}
+                    allStats={this.state.allStats}
+                    pieStats={this.state.pieStats}
+                    lineStats={this.state.lineStats}
+                    lineLabels={this.state.lineLabels}
                   />
                 ) : (
                   <Redirect to="/login"/>
@@ -271,6 +278,8 @@ class App extends Component {
                   handleLogin={this.handleLogin}
                   ratedFoods={this.state.ratedFoods}
                   allStats={this.state.allStats}
+                  pieStats={this.state.pieStats}
+
                   lineStats={this.state.lineStats}
                   lineLabels={this.state.lineLabels}
                 />

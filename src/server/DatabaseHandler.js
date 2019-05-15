@@ -302,22 +302,22 @@ module.exports = class DatabaseHandler {
     var query, query2;
     var currentDate = new Date().toISOString().substring(0, 10);
     var x;
-    if(this.question != ""){
+    /*if(this.question != ""){
       for (var i = 0; i < this.currentSubVotes.length; i++) {
         if (this.currentSubVotes[i]['question'] == this.question) {
             x = i;
         }
-      }
+      }*/
     }
 
     switch(typeOfVote)  {
       case "very_bad":
         currentVote = parseInt(this.currentVotes[3], 10) + 1;
-        if (this.question != "") {
+        /*if (this.question != "") {
           currentSubVote = Number(this.currentSubVotes[x]['v_bad']) + 1;
           this.currentSubVotes[3] = currentSubVote;
           query2 = "UPDATE subQuestions SET v_bad = ($3) WHERE date_fk = ($2) AND question = ($4)"
-        }
+        }*/
 
         this.currentVotes[3] = currentVote;
         query = "UPDATE grades SET very_bad = ($1) WHERE date_pk = ($2)";
@@ -326,34 +326,33 @@ module.exports = class DatabaseHandler {
         break;
       case "bad":
         currentVote = parseInt(this.currentVotes[2], 10) + 1;
-        if (this.question != "") {
+        /*if (this.question != "") {
             currentSubVote = Number(this.currentSubVotes[x]['bad']) + 1;
             this.currentSubVotes[2] = currentSubVote;
             query2 = "UPDATE subQuestions SET bad = ($3) WHERE date_fk = ($2) AND question = ($4)"
-        }
+        }*/
         this.currentVotes[2] = currentVote;
         query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
       case "good":
         currentVote = parseInt(this.currentVotes[1], 10) + 1;
-        if (this.question != "") {
+        /*if (this.question != "") {
             currentSubVote = Number(this.currentSubVotes[x]['good']) + 1;
             this.currentSubVotes[1] = currentSubVote;
             query2 = "UPDATE subQuestions SET good = ($3) WHERE date_fk = ($2) AND question = ($4)"
-        }
-
+        }*/
         this.currentVotes[1] = currentVote;
         query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
       case "very_good":
         currentVote = parseInt(this.currentVotes[0], 10) + 1;
-        if (this.question != "") {
+        /*if (this.question != "") {
             currentSubVote = Number(this.currentSubVotes[x]['v_good']) + 1;
             this.currentSubVotes[0] = currentSubVote;
             query2 = "UPDATE subQuestions SET v_good = ($3) WHERE date_fk = ($2) AND question = ($4)"
-        }
+        }*/
         this.currentVotes[0] = currentVote;
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
@@ -372,13 +371,13 @@ module.exports = class DatabaseHandler {
       }
     });
 
-    this.con.query(query2, values, (err, res) => {
+    /*this.con.query(query2, values, (err, res) => {
       if(err){
         console.log(err.stack);
       } else {
         console.log("grades + 1 successful");
       }
-    });
+    });*/
  }
 
   startOfWeek(date) {

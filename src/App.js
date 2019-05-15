@@ -26,8 +26,9 @@ var today;
 var mm;
 var dd;
 
-const socketURL = "localhost:8080";
+const socketURL = "/";
 const cookies = new Cookies();
+
 
 var state = {
   vGood: 0,
@@ -38,9 +39,12 @@ var state = {
   todaysMeal: null,
   displayVote: null,
   isLoading: true,
-
   ratedFoods: [],
   planningMeals: [],
+
+  allStats: [],
+  lineStats: [],
+
 
   authenticated: false
 }
@@ -123,7 +127,6 @@ class App extends Component {
 
 
     socket.on('grades', (arr) => {
-      console.log(arr)
       for (var i = 0; i < arr.length; i++) {
         for (var j = 0; j < arr[i].length; j += 2) {
           this.resetChart(arr[i][j], parseInt(arr[i][j + 1]));
@@ -160,8 +163,14 @@ class App extends Component {
     })
 
     socket.on('stats', (arr) => {
-      this.setState({stats: arr});
+      this.setState({
+        allStats: { pie: arr[0], line: arr[1] },
+        pieStats: arr[0],
+        lineStats: arr[1].stats,
+        lineLabels: arr[1].labels,
+      });
     })
+
   }
 
   updateChart(data, amount) {
@@ -248,6 +257,10 @@ class App extends Component {
                     onSend={this.sendMealInfo}
                     ref={this.child}
                     planningMeals={this.state.planningMeals}
+                    allStats={this.state.allStats}
+                    pieStats={this.state.pieStats}
+                    lineStats={this.state.lineStats}
+                    lineLabels={this.state.lineLabels}
                   />
                 ) : (
                   <Redirect to="/login"/>
@@ -264,7 +277,11 @@ class App extends Component {
                   ref={this.chartElement}
                   handleLogin={this.handleLogin}
                   ratedFoods={this.state.ratedFoods}
-                  stats={this.state.stats}
+                  allStats={this.state.allStats}
+                  pieStats={this.state.pieStats}
+
+                  lineStats={this.state.lineStats}
+                  lineLabels={this.state.lineLabels}
                 />
               } />
 

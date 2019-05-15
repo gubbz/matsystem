@@ -26,24 +26,30 @@
     border-radius: 1000px;
 }
 
+.LandingLogin a {
+    color: white;
+    text-decoration: none;
+}
+
 .LandingLogo {
     margin-right: auto;
     margin-left: 0;
 }
 
 .LandingLogo h1 {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Montserrat Alternates', sans-serif;
+    color: #106870;
     font-weight: 700;
 }
 
 .MobileLandingHeader {
     display: flex;
     align-items: center;
-    padding: 0.5em 5%;
+    padding: 0.5em 6%;
 }
 
 .Section1 {
-    padding: 2em 5%;
+    padding: 2em 6%;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -68,11 +74,18 @@ h2 {
     margin-bottom: 0.6em;
 }
 
+.Section1 button {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0.6em;
+}
+
 .Section1 p {
     margin-bottom: 2em;
     font-size: 18px;
+    font-family: 'Nunito Sans';
     line-height: 1.6;
-    color: grey;
+    color: #495057;
 }
 
 .ImageContainer {
@@ -110,7 +123,6 @@ h2 {
     border: 1px solid #304FFE;
     border-radius: 4px;
     box-sizing: border-box;
-    padding: 0.8em;
     font-size: 16px;
     background: transparent;
     color: #304FFE;
@@ -122,7 +134,6 @@ h2 {
     border: none;
     border-radius: 4px;
     box-sizing: border-box;
-    padding: 0.8em;
     font-size: 16px;
     background: #304FFE;
     color: white;
@@ -168,8 +179,13 @@ h2 {
         max-height: 56px;
     }
     .Buttons button {
-        padding: 0.7em 1.4em;
+        padding: 0;
         margin-right: 1em;
+        height: 3em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 1em;
     }
     .Section1>div {
         flex-basis: 45%;

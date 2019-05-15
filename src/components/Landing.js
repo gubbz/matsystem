@@ -29,7 +29,7 @@ export default class Landing extends Component {
           <div className="LandingHeaderLink" onClick={this.scrollToWhy}>Varför Mealrate</div>
           <div className="LandingHeaderLink" onClick={this.scrollToHow}>Hur fungerar det?</div>
           <div className="LandingHeaderLink" onClick={this.scrollToContact}>Kontakta oss</div>
-          <div className="LandingLogin">Logga in</div>
+          <div className="LandingLogin"><a href="/">Testa</a></div>
         </div>
       );
     } else {
@@ -37,7 +37,7 @@ export default class Landing extends Component {
         <div>
           <div className="MobileLandingHeader" ref={this.scrollTop}>
             <div className="LandingLogo"><h1>mealrate</h1></div>
-            <div className="LandingLogin">Logga in</div>
+            <div className="LandingLogin"><a href="/">Testa</a></div>
           </div>
         </div>
       );
@@ -68,7 +68,7 @@ export default class Landing extends Component {
         <section className="Section1">
           <div className="SectionText">
             <h1>Vad tycker eleverna om maten?</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Med Mealrate får eleverna säga vad de tycker om skolmaten, varje dag.</p>
             <div className="Buttons">
               <button className="_FilledButton"
                 onClick={this.scrollToContact}
@@ -86,7 +86,8 @@ export default class Landing extends Component {
           <div className="SectionText">
             <h2>Varför mealrate?</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nisl orci, hendrerit in turpis ac, placerat porttitor elit. Suspendisse non cursus enim. Etiam porta metus ultrices porta tempus.</p>
+              Matsvinnet i de svenska skolorna är ett stort hot mot miljön och kostar svenska skattebetalare hundratusentals miljoner kronor varje år. Med Mealrate kan skolköken ta reda på exakt vad med skolmaten som fungerar och inte, och de kan på så sätt minimera matsvinnet.
+            </p>
           </div>
           <div className="ImageContainer">
             <img src={Friends} alt="Bild på vänner" className="SectionImage" />
@@ -96,7 +97,8 @@ export default class Landing extends Component {
           <div className="SectionText">
             <h2>Hur fungerar det?</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nisl orci, hendrerit in turpis ac, placerat porttitor elit. Suspendisse non cursus enim. Etiam porta metus ultrices porta tempus.</p>
+              Med Mealrates egenkonstruerade terminal får eleverna ge sin åsikt som skolmaten varje dag och skolköken kan utifrån detta ta reda på vilken mat som eleverna gillar och exakt vad med maten de gillar.  
+            </p>
           </div>
           <div className="ImageContainer">
             <img src={Process} alt="Bild på hur systemet fungerar" className="SectionImage" />
@@ -106,7 +108,8 @@ export default class Landing extends Component {
           <div className="SectionText">
             <h2>Kom igång!</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nisl orci, hendrerit in turpis ac, placerat porttitor elit. Suspendisse non cursus enim. Etiam porta metus ultrices porta tempus.</p>
+              Kontakta oss idag för att ta reda på mer eller om ni är intresserade.
+            </p>
           </div>
           <div className="ImageContainer">
             <img src={Agreement} alt="Bild på handslag" className="AgreementImage" className="SectionImage" />

@@ -49,6 +49,10 @@ export default class Admin extends Component {
                                 <Route path="/admin/statistics" render={() => <Statistics
                                     pageName={"Statistik"}
                                     shadow={0}
+                                    allStats={this.props.allStats}
+                                    lineStats={this.props.lineStats}
+                                    lineLabels={this.props.lineLabels}
+                                    pieStats={this.props.pieStats}
                                 />}
                                 />
                                 <Route path="/admin/question" render={() => <QuestionView

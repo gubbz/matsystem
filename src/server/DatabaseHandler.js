@@ -307,8 +307,8 @@ module.exports = class DatabaseHandler {
         if (this.currentSubVotes[i]['question'] == this.question) {
             x = i;
         }
-      }*/
-    }
+      }
+    }*/
 
     switch(typeOfVote)  {
       case "very_bad":

@@ -439,21 +439,25 @@ module.exports = class DatabaseHandler {
       if(res.rows[0]) {
         if(bcrypt.compareSync(password, res.rows[0]["password"])){
           var cookief = socket.handshake.headers.cookie;
-          var cookies = cookie.parse(socket.handshake.headers.cookie);
-          console.log("login " + cookies['token']);
-          if (!cookies['token']) {
-            console.log("new token " + username);
-            const payload = {username};
-            const token = jwt.sign(payload, secret, {
-              expiresIn: '1h'
-            });
-            console.log("token innan addTokenToDB " + token);
-            self.addTokenToDB(username, res.rows[0]["password"], token, socket, self);
-            console.log("socket emit return login " + token);
-            socket.emit("returnlogin", token, username);
+          if (cookief) {
+            var cookies = cookie.parse(socket.handshake.headers.cookie);
+            console.log("login " + cookies['token']);
+            if (!cookies['token']) {
+              console.log("new token " + username);
+              const payload = {username};
+              const token = jwt.sign(payload, secret, {
+                expiresIn: '1h'
+              });
+              console.log("token innan addTokenToDB " + token);
+              self.addTokenToDB(username, res.rows[0]["password"], token, socket, self);
+              console.log("socket emit return login " + token);
+              socket.emit("returnlogin", token, username);
+            } else {
+              console.log("cookies token exists");
+              self.checkAuthentication(socket, cookies['token'], username);
+            }
           } else {
-            console.log("cookies token exists");
-            self.checkAuthentication(socket, cookies['token'], username);
+            socket.emit('returnlogin', null);
           }
         } else {
           socket.emit('returnlogin', null);

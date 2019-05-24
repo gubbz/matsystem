@@ -23,7 +23,6 @@ export default class QuestionView extends Component {
         this.text = "Vad tyckte du om maten?";
     }
     ChangeQuestion(data){
-
         this.text = data;
         console.log(data);
         this.original = data;

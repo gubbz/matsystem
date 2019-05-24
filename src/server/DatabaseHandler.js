@@ -352,7 +352,7 @@ module.exports = class DatabaseHandler {
       case "good":
         currentVote = parseInt(this.currentVotes[1], 10) + 1;
         if (this.question != "") {
-          console.log("currentSubVote "+this.currentSubVotes[x]['good']);
+          
           currentSubVote = Number(this.currentSubVotes[x]['good']) + 1;
           this.currentSubVotes[x]['good'] = currentSubVote;
           query2 = 'UPDATE "subQuestions" SET bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
@@ -370,7 +370,7 @@ module.exports = class DatabaseHandler {
           query2 = 'UPDATE "subQuestions" SET bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
           currentSubVote = Number(this.currentSubVotes[x]['v_good']) + 1;
           this.currentSubVotes[x]['v_good'] = currentSubVote;
-          console.log("currentSubVote "+this.currentSubVotes[x]['v_good']);
+          
         }
         this.currentVotes[0] = currentVote;
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";

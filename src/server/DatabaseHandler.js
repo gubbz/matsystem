@@ -309,11 +309,9 @@ module.exports = class DatabaseHandler {
             x = i;
 
         }
-
-
-
-
-
+      }
+    }
+    
     switch(typeOfVote)  {
       case "very_bad":
 
@@ -330,9 +328,6 @@ module.exports = class DatabaseHandler {
         query = 'UPDATE "grades" SET very_bad = ($1) WHERE date_pk = ($2)';
         console.log("currentvote: " + currentVote);
         console.log("query i switchen: " + query);
-
-
-
         break;
       case "bad":
         currentVote = parseInt(this.currentVotes[2], 10) + 1;
@@ -409,10 +404,7 @@ module.exports = class DatabaseHandler {
       } else {
         console.log("grades + 1 successful");
       }
-
     });
-
-
  }
 
   startOfWeek(date) {

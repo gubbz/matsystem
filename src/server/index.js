@@ -44,6 +44,7 @@ io.on('connection', (socket) => {
       console.log("Antal sockets anslutna " + socketsConnected.size);
       dbcon.getGrades(socket, "grades");
     }, 60000);
+
   })
 
   socket.on('vote', (typeOfVote) => {

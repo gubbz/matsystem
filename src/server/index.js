@@ -50,6 +50,12 @@ io.on('connection', (socket) => {
     dbcon.getStatistics(socket);
     var menu = dbcon.getMenu();
     socket.emit('menu', menu);
+
+    setInterval(() => {
+      console.log("Antal sockets anslutna " + socketsConnected.size);
+      dbcon.getGrades(socket, "grades");
+    }, 60000);
+
   })
 
   socket.on('vote', (typeOfVote) => {

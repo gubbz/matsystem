@@ -26,7 +26,7 @@ module.exports = class DatabaseHandler {
   }
 
   establishConnection() {
-
+    console.log("början på db conn");
     this.con = new pg.Client({
       host: 'ec2-54-247-72-30.eu-west-1.compute.amazonaws.com',
       user: 'wneyxoesnscgzy',
@@ -80,6 +80,7 @@ module.exports = class DatabaseHandler {
       text: 'SELECT * FROM "subQuestions" WHERE date_fk = ($1)',
       values: [today]
     }
+
     this.con.query(query2, (err, res) => {
       if (err) {
         console.log(err.stack);
@@ -298,19 +299,17 @@ module.exports = class DatabaseHandler {
 
   addVote(typeOfVote) {
 
-    var currentVote, currentSubVote;
-    var query, query2;
+    var currentVote;//, currentSubVote;
+    var query;//, query2;
     var currentDate = new Date().toISOString().substring(0, 10);
     var x;
-    console.log(this.question);
     if(this.question != ""){
       for (var i = 0; i < this.currentSubVotes.length; i++) {
         if (this.currentSubVotes[i]['question'] == this.question) {
             x = i;
 
         }
-      }
-    }
+
 
 
 
@@ -318,14 +317,14 @@ module.exports = class DatabaseHandler {
     switch(typeOfVote)  {
       case "very_bad":
 
-      if (this.question != "") {
 
+        currentVote = parseInt(this.currentVotes[3], 10) + 1;
+
+      if (this.question != "") {
         query2 = 'UPDATE "subQuestions" SET v_bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
         currentSubVote = Number(this.currentSubVotes[x]['v_bad']) + 1;
         this.currentSubVotes[x]['v_bad'] = currentSubVote;
-        console.log("currentSubVote "+this.currentSubVotes[x]['v_bad']);
       }
-
         currentVote = parseInt(this.currentVotes[3], 10) + 1;
         this.currentVotes[3] = currentVote;
         query = 'UPDATE "grades" SET very_bad = ($1) WHERE date_pk = ($2)';
@@ -337,6 +336,7 @@ module.exports = class DatabaseHandler {
         break;
       case "bad":
         currentVote = parseInt(this.currentVotes[2], 10) + 1;
+
         if (this.question != "") {
           currentSubVote = Number(this.currentSubVotes[x]['bad']) + 1;
 
@@ -345,11 +345,16 @@ module.exports = class DatabaseHandler {
 
         }
         this.currentVotes[2] = currentVote;
+
         query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
+        
+        
+        
       case "good":
         currentVote = parseInt(this.currentVotes[1], 10) + 1;
+
         if (this.question != "") {
           console.log("currentSubVote "+this.currentSubVotes[x]['good']);
           currentSubVote = Number(this.currentSubVotes[x]['good']) + 1;
@@ -359,11 +364,14 @@ module.exports = class DatabaseHandler {
         }
 
         this.currentVotes[1] = currentVote;
+
         query = "UPDATE grades SET good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
+        
       case "very_good":
         currentVote = parseInt(this.currentVotes[0], 10) + 1;
+
         if (this.question != "") {
 
           query2 = 'UPDATE "subQuestions" SET bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
@@ -372,6 +380,7 @@ module.exports = class DatabaseHandler {
           console.log("currentSubVote "+this.currentSubVotes[x]['v_good']);
         }
         this.currentVotes[0] = currentVote;
+
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";
         console.log("currentvote: " + currentVote);
         break;
@@ -393,12 +402,14 @@ module.exports = class DatabaseHandler {
       }
     });
 
+
     this.con.query(query, values, (err, res) => {
       if(err){
         console.log(err.stack);
       } else {
         console.log("grades + 1 successful");
       }
+
     });
 
 
@@ -466,19 +477,25 @@ module.exports = class DatabaseHandler {
       if(res.rows[0]) {
         if(bcrypt.compareSync(password, res.rows[0]["password"])){
           var cookief = socket.handshake.headers.cookie;
-          var cookies = cookie.parse(socket.handshake.headers.cookie);
-          console.log("login " + cookies['token']);
-          if (!cookies['token']) {
-            console.log("new token " + username);
-            const payload = {username};
-            const token = jwt.sign(payload, secret, {
-              expiresIn: '1h'
-            });
-            console.log("token innan addTokenToDB " + token);
-            self.addTokenToDB(username, res.rows[0]["password"], token, socket, self);
-            console.log("socket emit return login " + token);
-            socket.emit("returnlogin", token, username);
+          if (cookief) {
+            var cookies = cookie.parse(socket.handshake.headers.cookie);
+            console.log("login " + cookies['token']);
+            if (!cookies['token']) {
+              console.log("new token " + username);
+              const payload = {username};
+              const token = jwt.sign(payload, secret, {
+                expiresIn: '1h'
+              });
+              console.log("token innan addTokenToDB " + token);
+              self.addTokenToDB(username, res.rows[0]["password"], token, socket, self);
+              console.log("socket emit return login " + token);
+              socket.emit("returnlogin", token, username);
+            } else {
+              console.log("cookies token exists");
+              self.checkAuthentication(socket, cookies['token'], username);
+            }
           } else {
+
             console.log("cookies token exists");
             self.checkAuthentication(socket, cookies['token'], username);
 
@@ -550,50 +567,56 @@ module.exports = class DatabaseHandler {
 
 getStatistics(socket) {
 
-  var pie = new Array();
-  var line = new Array();
-  var stats = new Array();
+    var pie = new Array();
+    var stats = new Array();
 
-  const query = {
-    name: 'getStatistics',
-    text: 'SELECT * FROM grades',
-  }
-
-  this.con.query(query, (err, res) => {
-    if(err) {
-      console.log(err.stack);
-    } else {
-      for(var i = 0; i > res.fields.length; i++)
-      var k = res.rows[i];
-        JSON.stringify(k);
-      }
-    var dateName = res.fields[0].name;
-    var v_goodName = res.fields[1].name;
-    var goodName = res.fields[2].name;
-    var badName = res.fields[3].name;
-    var v_badName = res.fields[4].name;
-    var mealRatingName = res.fields[5].name;
-
-    var v_goodTotal = 0;
-    var goodTotal = 0;
-    var badTotal = 0;
-    var v_badTotal = 0;
-
-    for(var i = 2; i < res.rows.length; i++){
-       var linestats = res.rows[i][mealRatingName];
-       var date = res.rows[i][dateName];
-       var linelabels = date.toISOString().substring(5, 7);
-       line.push(linestats, linelabels);
-
-       v_goodTotal += parseInt(res.rows[i][v_goodName], 10);
-       goodTotal += parseInt(res.rows[i][goodName], 10);
-       badTotal += parseInt(res.rows[i][badName], 10);
-       v_badTotal += parseInt(res.rows[i][v_badName], 10);
+    const query = {
+      name: 'getStatistics',
+      text: 'SELECT * FROM grades',
     }
 
-    pie.push(v_goodTotal, goodTotal, badTotal, v_badTotal);
-    stats.push(pie, line);
-    socket.emit('stats', stats);
+    this.con.query(query, (err, res) => {
+      if (err) {
+        console.log(err.stack);
+      } else {
+        for (var i = 0; i > res.fields.length; i++)
+          var k = res.rows[i];
+        JSON.stringify(k);
+      }
+      var dateName = res.fields[0].name;
+      var v_goodName = res.fields[1].name;
+      var goodName = res.fields[2].name;
+      var badName = res.fields[3].name;
+      var v_badName = res.fields[4].name;
+      var mealRatingName = res.fields[5].name;
+
+      var v_goodTotal = 0;
+      var goodTotal = 0;
+      var badTotal = 0;
+      var v_badTotal = 0;
+
+      /**
+       * 
+       */
+
+      var linelabels = [];
+      var linestats = [];
+      var line = [];
+
+      for (var i = 2; i < res.rows.length; i++) {
+        var date = res.rows[i][dateName];
+        linestats.push(res.rows[i][mealRatingName]);
+        linelabels.push(date.toISOString().substring(5, 7));
+
+        v_goodTotal += parseInt(res.rows[i][v_goodName], 10);
+        goodTotal += parseInt(res.rows[i][goodName], 10);
+        badTotal += parseInt(res.rows[i][badName], 10);
+        v_badTotal += parseInt(res.rows[i][v_badName], 10);
+      }
+      line = { stats: linestats, labels: linelabels };
+      pie.push(v_goodTotal, goodTotal, badTotal, v_badTotal);
+      stats.push(pie, line);
+      socket.emit('stats', stats);
       /**
        * skapa array med mycket dåligt, dåligt, bra, mycket bra röster
        * stats ska innehålla piedata och linedata så att dessa går att ta ut
@@ -604,8 +627,8 @@ getStatistics(socket) {
        *     pie = linestats, linelabels
        *  */
 
-  })
-}
+    })
+  }
 
   getTopRatedFood(socket) {
    var meals = new Array();

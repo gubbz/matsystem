@@ -3,9 +3,11 @@ var app     = express();
 const path  = require('path');
 var cookie  = require('cookie');
 const PORT  = process.env.PORT || 8080;
-
+var server = app.listen(PORT);
 const DatabaseHandler = require('./DatabaseHandler.js');
-
+var dbcon = new DatabaseHandler();
+var io     = require('socket.io').listen(server);
+var socketsConnected = new Set();
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(__dirname + '/../../build'));
     app.get('/*',(req, res) => {
@@ -17,11 +19,6 @@ if(process.env.NODE_ENV === 'production'){
   });
 }
 
-var server = app.listen(PORT);
-var io     = require('socket.io').listen(server);
-
-var dbcon = new DatabaseHandler();
-var socketsConnected = new Set();
 
 setInterval(function() {
   console.log("sockets connected " + socketsConnected.size);
@@ -35,15 +32,19 @@ io.on('connection', (socket) => {
     socketsConnected.delete(socket);
   })
 
-  socket.on('response', () => {
-    //console.log("socket.id " + socket.id);
+  socket.on('response', (cookiesExist) => {
+    console.log(cookiesExist);
     dbcon.getGrades(socket, "grades");
     dbcon.checkQuestion(socket);
     dbcon.getTopRatedFood(socket);
     var cookief = socket.handshake.headers.cookie;
-    var cookies = cookie.parse(socket.handshake.headers.cookie);
-    if (cookies['token'] && cookies['user']) {
-      dbcon.checkAuthentication(socket, cookies['token'], cookies['user']);
+    if (cookief) {
+      var cookies = cookie.parse(socket.handshake.headers.cookie);
+      if (cookies['token'] && cookies['user']) {
+        dbcon.checkAuthentication(socket, cookies['token'], cookies['user']);
+      } else {
+        socket.emit('auth', false);
+      }
     } else {
       socket.emit('auth', false);
     }

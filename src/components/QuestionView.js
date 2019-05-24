@@ -13,14 +13,14 @@ export default class QuestionView extends Component {
     constructor(props) {
         var color;
         var text;
-        var original = "Vad tyckte du om maten? \n What did you think about the food?";;
+        var original = "Vad tyckte du om maten?";
         super(props);
         this.displayVote = this.displayVote.bind(this);
     }
 
     componentWillMount() {
         this.text = "white";
-        this.text = "Vad tyckte du om maten? \n What did you think about the food?";
+        this.text = "Vad tyckte du om maten?";
     }
     ChangeQuestion(data){
         this.text = data;
@@ -49,7 +49,7 @@ export default class QuestionView extends Component {
         var that = this;
         setTimeout(function () {
             that.color = "white";
-            that.text = that.original;
+            that.text = "Vad tyckte du om maten?";
             that.forceUpdate();
         }, 1340);
     }
@@ -61,11 +61,7 @@ export default class QuestionView extends Component {
                     backgroundColor: this.color
                 }}
             >
-                <h1
-                    style={{
-                        color: "black"
-                    }}
-                >{this.text}</h1>
+                <h1 className="QuestionText">{this.text}</h1>
                 <div className="emojis">
                     <img src={emoji_verygood} alt="Dåligt"/>
                     <img src={emoji_good} alt="Dåligt" />

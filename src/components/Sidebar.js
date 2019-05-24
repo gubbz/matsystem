@@ -18,9 +18,6 @@ export default class Sidebar extends Component {
                     <div className="SidebarItem"><i className="material-icons">bar_chart</i>
                         <Link to="/admin/statistics" className="SidebarLink">Statistik</Link>
                     </div>
-                    <div className="SidebarItem"><i className="material-icons">settings</i>
-                        <Link to="/admin/settings" className="SidebarLink">Inställningar</Link>
-                    </div>
                     <div className="SidebarItem"><i className="material-icons">exit_to_app</i>
                         <Link to="logout" className="SidebarLink">Logga ut</Link>
                     </div>
@@ -35,9 +32,6 @@ export default class Sidebar extends Component {
                     </div>
                     <div className="SidebarItem">
                         <Link to="/admin/statistics" className="SidebarLink"><i className="material-icons">bar_chart</i></Link>
-                    </div>
-                    <div className="SidebarItem">
-                        <Link to="/admin/settings" className="SidebarLink"><i className="material-icons">settings</i></Link>
                     </div>
                     <div className="SidebarItem">
                         <Link to="logout" className="SidebarLink"><i className="material-icons">exit_to_app</i></Link>

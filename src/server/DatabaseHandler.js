@@ -299,8 +299,8 @@ module.exports = class DatabaseHandler {
 
   addVote(typeOfVote) {
 
-    var currentVote;//, currentSubVote;
-    var query;//, query2;
+    var currentVote, currentSubVote;
+    var query, query2;
     var currentDate = new Date().toISOString().substring(0, 10);
     var x;
     if(this.question != ""){

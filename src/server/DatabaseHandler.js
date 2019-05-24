@@ -297,10 +297,11 @@ module.exports = class DatabaseHandler {
     }
   }
 
-   addVote(typeOfVote) {
+  addVote(typeOfVote) {
 
     var currentVote, currentSubVote;
-    var query, query2;
+    var query;
+    var query2 = 'UPDATE "subQuestions" SET';
     var currentDate = new Date().toISOString().substring(0, 10);
     var x;
     console.log(this.question);
@@ -315,16 +316,18 @@ module.exports = class DatabaseHandler {
 
 
 
-
     switch(typeOfVote)  {
       case "very_bad":
 
-      if (this.question != "") {
+      if (this.question != "" && this.question != undefined) {
 
         query2 = 'UPDATE "subQuestions" SET v_bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
-        currentSubVote = Number(this.currentSubVotes[x]['v_bad']) + 1;
+        if(this.currentSubVotes[x]['v_bad'] == undefined){
+          currentSubVote = 1;
+        }else{
+          currentSubVote = Number(this.currentSubVotes[x]['v_bad']) + 1;
+        }
         this.currentSubVotes[x]['v_bad'] = currentSubVote;
-        console.log("currentSubVote "+this.currentSubVotes[x]['v_bad']);
       }
 
         currentVote = parseInt(this.currentVotes[3], 10) + 1;
@@ -338,12 +341,14 @@ module.exports = class DatabaseHandler {
         break;
       case "bad":
         currentVote = parseInt(this.currentVotes[2], 10) + 1;
-        if (this.question != "") {
-          currentSubVote = Number(this.currentSubVotes[x]['bad']) + 1;
-
+        if (this.question != "" && this.question != undefined) {
+          if(this.currentSubVotes[x]['bad'] == undefined){
+            currentSubVote = 1;
+          }else{
+            currentSubVote = Number(this.currentSubVotes[x]['bad']) + 1;
+          }
           console.log("currentSubVote "+this.currentSubVotes[x]['bad']);
           query2 = 'UPDATE "subQuestions" SET bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
-
         }
         this.currentVotes[2] = currentVote;
         query = "UPDATE grades SET bad = ($1) WHERE date_pk = ($2)";
@@ -351,9 +356,13 @@ module.exports = class DatabaseHandler {
         break;
       case "good":
         currentVote = parseInt(this.currentVotes[1], 10) + 1;
-        if (this.question != "") {
-          
-          currentSubVote = Number(this.currentSubVotes[x]['good']) + 1;
+        if (this.question != "" && this.question != undefined) {
+
+          if(this.currentSubVotes[x]['good'] == undefined){
+            currentSubVote = 1;
+          }else{
+            currentSubVote = Number(this.currentSubVotes[x]['good']) + 1;
+          }
           this.currentSubVotes[x]['good'] = currentSubVote;
           query2 = 'UPDATE "subQuestions" SET bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
 
@@ -368,9 +377,13 @@ module.exports = class DatabaseHandler {
         if (this.question != "") {
 
           query2 = 'UPDATE "subQuestions" SET bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
-          currentSubVote = Number(this.currentSubVotes[x]['v_good']) + 1;
+          if(this.currentSubVotes[x]['v_good'] == undefined){
+            currentSubVote = 1;
+          }else{
+            currentSubVote = Number(this.currentSubVotes[x]['v_good']) + 1;
+          }
           this.currentSubVotes[x]['v_good'] = currentSubVote;
-          
+
         }
         this.currentVotes[0] = currentVote;
         query = "UPDATE grades SET very_good = ($1) WHERE date_pk = ($2)";

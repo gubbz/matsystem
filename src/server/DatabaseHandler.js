@@ -374,9 +374,10 @@ module.exports = class DatabaseHandler {
         break;
       case "very_good":
         currentVote = parseInt(this.currentVotes[0], 10) + 1;
-        if (this.question != "") {
+        if (this.question != "" && this.question != undefined) {
 
           query2 = 'UPDATE "subQuestions" SET bad = ($2) WHERE date_fk = ($1) AND question = ($3)'
+          console.log(this.currentSubVotes[x]['v_good']);
           if(this.currentSubVotes[x]['v_good'] == undefined){
             currentSubVote = 1;
           }else{

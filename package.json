@@ -18,7 +18,7 @@
     "fs": "0.0.1-security",
     "helmet": "^3.16.0",
     "jquery": "^3.3.1",
-    "jsdom": "^14.0.0",
+    "jsdom": "^16.5.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^1.6.5",
     "nodemon": "^1.18.10",
